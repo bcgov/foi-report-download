@@ -5,5 +5,13 @@
   "main": "index.js",
   "repository": "https://github.com/f-w/foi-report-download",
   "author": "f-w <fred.wen@gov.bc.ca>",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "keycloak-connect": "^9.0.0",
+    "pg": "^7.18.2",
+    "session-file-store": "^1.4.0"
+  }
 }
