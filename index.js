@@ -7,7 +7,13 @@
   const res = await client.query('SELECT $1::text as message', ['Hello world!'])
   console.log(res.rows[0].message) // Hello world!
   await client.end()
+})()
 
+const express = require('express')
+const app = express()
+const port = process.env.port || 8080
+app.get('/ping', (req, res) => res.send('ok'))
+app.get('/test-excel', (req, res) => {
   // Require library
   var xl = require('excel4node')
 
@@ -52,6 +58,9 @@
     .bool(true)
     .style(style)
     .style({ font: { size: 14 } })
-
-  wb.write('Excel.xlsx')
-})()
+  wb.write('Excel.xlsx', res)
+})
+app.use(express.static('client'))
+app.listen(port, () =>
+  console.log(`launch http://localhost:${port} to explore`)
+)
