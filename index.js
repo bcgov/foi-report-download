@@ -12,7 +12,31 @@
 const express = require('express')
 const app = express()
 const port = process.env.port || 8080
+const PdfPrinter = require('pdfmake')
+// Define font files
+const fonts = {
+  Roboto: {
+    normal: 'fonts/Roboto-Regular.ttf',
+    bold: 'fonts/Roboto-Medium.ttf',
+    italics: 'fonts/Roboto-Italic.ttf',
+    bolditalics: 'fonts/Roboto-MediumItalic.ttf'
+  }
+}
+
 app.get('/ping', (req, res) => res.send('ok'))
+app.get('/test-pdf', (req, res) => {
+  const printer = new PdfPrinter(fonts)
+  const dd = {
+    content: [
+      'First paragraph',
+      'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines'
+    ]
+  }
+  const options = {}
+  const pdfDoc = printer.createPdfKitDocument(dd, options)
+  pdfDoc.pipe(res)
+  pdfDoc.end()
+})
 app.get('/test-excel', (req, res) => {
   // Require library
   var xl = require('excel4node')
