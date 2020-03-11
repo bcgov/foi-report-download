@@ -1,14 +1,3 @@
-;(async function() {
-  const { Client } = require('pg')
-  const client = new Client({
-    port: process.env.PGPORT || 5439
-  })
-  await client.connect()
-  const res = await client.query('SELECT $1::text as message', ['Hello world!'])
-  console.log(res.rows[0].message) // Hello world!
-  await client.end()
-})()
-
 const express = require('express')
 const app = express()
 const port = process.env.port || 8080
@@ -23,7 +12,17 @@ const fonts = {
   }
 }
 
-app.get('/ping', (req, res) => res.send('ok'))
+app.get('/ping', async (req, res) => {
+  const { Client } = require('pg')
+  const client = new Client({
+    port: process.env.PGPORT || 5439
+  })
+  await client.connect()
+  const output = await client.query('SELECT $1::text as message', ['OK!'])
+  await client.end()
+  res.end(output.rows[0].message)
+})
+
 app.get('/test-pdf', (req, res) => {
   const printer = new PdfPrinter(fonts)
   const dd = {
