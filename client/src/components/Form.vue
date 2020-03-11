@@ -6,7 +6,7 @@
           ref="form"
           v-model="valid"
           lazy-validation
-          action="https://www.yahoo.ca/"
+          action="/download"
           method="post"
         >
           <v-radio-group name="format" row label="File Format">
