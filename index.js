@@ -23,13 +23,13 @@ app.get('/ping', async (req, res) => {
   res.end(rows[0].message)
 })
 
-app.post('/download', async (req, res) => {
+app.post('/FOI-report', async (req, res) => {
   if (!req.body || !req.body.format) {
     res.status(403).end('missing format')
   }
   try {
     const { rows } = await pool.query(
-      `select collector_tstamp,app_id,geo_city from derived.page_views limit 100`
+      `select collector_tstamp ,app_id ,geo_city ,br_family from derived.page_views order by collector_tstamp desc limit 100`
     )
     switch (req.body.format) {
       case 'Excel':
@@ -62,26 +62,41 @@ app.post('/download', async (req, res) => {
           .string('geo_city')
           .style(headerStyle)
 
+        ws.cell(1, 4)
+          .string('br_family')
+          .style(headerStyle)
+
         for (const [i, row] of rows.entries()) {
           ws.cell(i + 2, 1).date(row.collector_tstamp)
           ws.cell(i + 2, 2).string(row.app_id)
           ws.cell(i + 2, 3).string(row.geo_city)
+          ws.cell(i + 2, 4).string(row.br_family)
         }
-        wb.write('FOI-report-download.xlsx', res)
+        wb.write('FOI-report.xlsx', res)
         break
       case 'PDF':
         const printer = new PdfPrinter(fonts)
         const tableBody = rows.map(v => {
-          return [v.collector_tstamp.toString(), v.app_id, v.geo_city]
+          return [
+            v.collector_tstamp.toString(),
+            v.app_id,
+            v.geo_city,
+            v.br_family
+          ]
         })
-        tableBody.unshift(['collector_tstamp', 'app_id', 'geo_city'])
+        tableBody.unshift([
+          'collector_tstamp',
+          'app_id',
+          'geo_city',
+          'br_family'
+        ])
         const dd = {
           content: [
             {
               layout: 'lightHorizontalLines', // optional
               table: {
                 headerRows: 1,
-                widths: ['auto', '*', '*'],
+                widths: ['auto', '*', '*', 'auto'],
                 body: tableBody
               }
             }
@@ -89,6 +104,7 @@ app.post('/download', async (req, res) => {
         }
         const options = {}
         const pdfDoc = printer.createPdfKitDocument(dd, options)
+        res.setHeader('content-disposition','filename="FOI-report.pdf"')
         pdfDoc.pipe(res)
         pdfDoc.end()
         break

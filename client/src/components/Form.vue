@@ -6,7 +6,7 @@
           ref="form"
           v-model="valid"
           lazy-validation
-          action="/download"
+          action="/FOI-report"
           method="post"
         >
           <v-radio-group name="format" row label="File Format" mandatory>
