@@ -2,6 +2,10 @@ const express = require('express')
 const app = express()
 const port = process.env.port || 8080
 const PdfPrinter = require('pdfmake')
+const { Pool } = require('pg')
+const pool = new Pool({
+  port: process.env.PGPORT || 5439
+})
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: true }))
 // Define font files
@@ -15,83 +19,84 @@ const fonts = {
 }
 
 app.get('/ping', async (req, res) => {
-  const { Client } = require('pg')
-  const client = new Client({
-    port: process.env.PGPORT || 5439
-  })
-  await client.connect()
-  const output = await client.query('SELECT $1::text as message', ['OK!'])
-  await client.end()
-  res.end(output.rows[0].message)
+  const { rows } = await pool.query('SELECT $1::text as message', ['OK!'])
+  res.end(rows[0].message)
 })
 
-app.post('/download', (req, res) => {
+app.post('/download', async (req, res) => {
   if (!req.body || !req.body.format) {
     res.status(403).end('missing format')
   }
-  switch (req.body.format) {
-    case 'Excel':
-      // Require library
-      var xl = require('excel4node')
+  try {
+    const { rows } = await pool.query(
+      `select collector_tstamp,app_id,geo_city from derived.page_views limit 100`
+    )
+    switch (req.body.format) {
+      case 'Excel':
+        // Require library
+        const xl = require('excel4node')
 
-      // Create a new instance of a Workbook class
-      var wb = new xl.Workbook()
+        // Create a new instance of a Workbook class
+        const wb = new xl.Workbook()
 
-      // Add Worksheets to the workbook
-      var ws = wb.addWorksheet('Sheet 1')
-      var ws2 = wb.addWorksheet('Sheet 2')
+        // Add Worksheets to the workbook
+        const ws = wb.addWorksheet('Sheet 1')
 
-      // Create a reusable style
-      var style = wb.createStyle({
-        font: {
-          color: '#FF0800',
-          size: 12
-        },
-        numberFormat: '$#,##0.00; ($#,##0.00); -'
-      })
+        // Create a reusable style
+        const headerStyle = wb.createStyle({
+          font: {
+            bold: true
+          }
+        })
 
-      // Set value of cell A1 to 100 as a number type styled with paramaters of style
-      ws.cell(1, 1)
-        .number(100)
-        .style(style)
+        ws.cell(1, 1)
+          .string('collector_tstamp')
+          .style(headerStyle)
+          .style({ alignment: { horizontal: 'right' } })
 
-      // Set value of cell B1 to 200 as a number type styled with paramaters of style
-      ws.cell(1, 2)
-        .number(200)
-        .style(style)
+        ws.cell(1, 2)
+          .string('app_id')
+          .style(headerStyle)
 
-      // Set value of cell C1 to a formula styled with paramaters of style
-      ws.cell(1, 3)
-        .formula('A1 + B1')
-        .style(style)
+        ws.cell(1, 3)
+          .string('geo_city')
+          .style(headerStyle)
 
-      // Set value of cell A2 to 'string' styled with paramaters of style
-      ws.cell(2, 1)
-        .string('string')
-        .style(style)
-
-      // Set value of cell A3 to true as a boolean type styled with paramaters of style but with an adjustment to the font size.
-      ws.cell(3, 1)
-        .bool(true)
-        .style(style)
-        .style({ font: { size: 14 } })
-      wb.write('Excel.xlsx', res)
-      break
-    case 'PDF':
-      const printer = new PdfPrinter(fonts)
-      const dd = {
-        content: [
-          'First paragraph',
-          'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines'
-        ]
-      }
-      const options = {}
-      const pdfDoc = printer.createPdfKitDocument(dd, options)
-      pdfDoc.pipe(res)
-      pdfDoc.end()
-      break
-    default:
-      res.status(403).end('unsupported format')
+        for (const [i, row] of rows.entries()) {
+          ws.cell(i + 2, 1).date(row.collector_tstamp)
+          ws.cell(i + 2, 2).string(row.app_id)
+          ws.cell(i + 2, 3).string(row.geo_city)
+        }
+        wb.write('FOI-report-download.xlsx', res)
+        break
+      case 'PDF':
+        const printer = new PdfPrinter(fonts)
+        const tableBody = rows.map(v => {
+          return [v.collector_tstamp.toString(), v.app_id, v.geo_city]
+        })
+        tableBody.unshift(['collector_tstamp', 'app_id', 'geo_city'])
+        const dd = {
+          content: [
+            {
+              layout: 'lightHorizontalLines', // optional
+              table: {
+                headerRows: 1,
+                widths: ['auto', '*', '*'],
+                body: tableBody
+              }
+            }
+          ]
+        }
+        const options = {}
+        const pdfDoc = printer.createPdfKitDocument(dd, options)
+        pdfDoc.pipe(res)
+        pdfDoc.end()
+        break
+      default:
+        res.status(403).end('unsupported format')
+    }
+  } catch (ex) {
+    res.status(500).end()
   }
 })
 app.use(express.static('client'))
