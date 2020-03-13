@@ -1,6 +1,25 @@
 const express = require('express')
 const app = express()
 const port = process.env.port || 8080
+let session = require('express-session')
+const FileStore = require('session-file-store')(session)
+const Keycloak = require('keycloak-connect')
+const storeOptions = { logFn: () => {} }
+if (process.env.file_store_path) {
+  storeOptions.path = process.env.file_store_path
+}
+const store = new FileStore(storeOptions)
+const keycloak = new Keycloak({ store: store, idpHint: 'idir' })
+app.use(
+  session({
+    name: 'foiRequestDownload',
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: true,
+    store: store
+  })
+)
+app.use(keycloak.middleware())
 const PdfPrinter = require('pdfmake')
 const { Pool } = require('pg')
 const pool = new Pool({
@@ -104,7 +123,7 @@ app.post('/FOI-report', async (req, res) => {
         }
         const options = {}
         const pdfDoc = printer.createPdfKitDocument(dd, options)
-        res.setHeader('content-disposition','filename="FOI-report.pdf"')
+        res.setHeader('content-disposition', 'filename="FOI-report.pdf"')
         pdfDoc.pipe(res)
         pdfDoc.end()
         break
@@ -115,7 +134,7 @@ app.post('/FOI-report', async (req, res) => {
     res.status(500).end()
   }
 })
-app.use(express.static('client'))
+app.use(keycloak.protect(), express.static('client/dist'))
 app.listen(port, () =>
   console.log(`launch http://localhost:${port} to explore`)
 )
