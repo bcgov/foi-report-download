@@ -9,7 +9,7 @@
           action="/download"
           method="post"
         >
-          <v-radio-group name="format" row label="File Format">
+          <v-radio-group name="format" row label="File Format" mandatory>
             <v-radio label="PDF" value="PDF"></v-radio>
             <v-radio label="Excel" value="Excel"></v-radio>
           </v-radio-group>

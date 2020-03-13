@@ -1,27 +1,14 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
+    <v-app-bar app color="#036" dark>
       <div class="d-flex align-center">
         <v-img
           alt="Vuetify Logo"
           class="shrink mr-2"
           contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          :src="require('./assets/logo.svg')"
           transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
+          width="177"
         />
       </div>
 
@@ -38,23 +25,23 @@
     </v-app-bar>
 
     <v-content>
-      <Form/>
+      <Form />
     </v-content>
   </v-app>
 </template>
 
 <script>
-import Form from './components/Form';
+import Form from './components/Form'
 
 export default {
   name: 'App',
 
   components: {
-    Form,
+    Form
   },
 
   data: () => ({
     //
-  }),
-};
+  })
+}
 </script>
