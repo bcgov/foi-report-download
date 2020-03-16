@@ -38,8 +38,12 @@ const fonts = {
 }
 
 app.get('/ping', async (req, res) => {
-  const { rows } = await pool.query('SELECT $1::text as message', ['OK!'])
-  res.end(rows[0].message)
+  try {
+    const { rows } = await pool.query('SELECT $1::text as message', ['OK!'])
+    res.end(rows[0].message)
+  } catch (ex) {
+    res.status(500).end()
+  }
 })
 
 app.post('/FOI-report', async (req, res) => {
@@ -131,7 +135,10 @@ app.post('/FOI-report', async (req, res) => {
         res.status(403).end('unsupported format')
     }
   } catch (ex) {
-    res.status(500).end()
+    if (!res.headersSent) {
+      res.status(500)
+    }
+    res.end()
   }
 })
 app.use(keycloak.protect(), express.static('client/dist'))

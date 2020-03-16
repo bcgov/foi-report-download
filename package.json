@@ -7,7 +7,8 @@
   "author": "f-w <fred.wen@gov.bc.ca>",
   "license": "Apache-2.0",
   "scripts": {
-    "postinstall": "cd client && yarn install && yarn run build && cd .."
+    "postinstall": "cd client && yarn install && yarn run build && cd ..",
+    "start": "node ."
   },
   "dependencies": {
     "body-parser": "^1.19.0",
