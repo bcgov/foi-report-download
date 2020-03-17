@@ -58,6 +58,11 @@ app.post('/FOI-report', async (req, res) => {
     const { rows } = await pool.query(
       `select start_date ,request_id ,applicant_type,description from foi.foi order by start_date desc limit 100`
     )
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); 
+    const yyyy = today.getFullYear();
+
     switch (req.body.format) {
       case 'Excel':
         // Require library
@@ -119,6 +124,10 @@ app.post('/FOI-report', async (req, res) => {
         ])
         const dd = {
           content: [
+            {
+              text: `Report generated: ${yyyy}-${mm}-${day}`,
+              alignment: 'right'
+            },
             {
               layout: 'lightHorizontalLines', // optional
               table: {
