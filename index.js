@@ -10,6 +10,9 @@ if (process.env.file_store_path) {
 }
 const store = new FileStore(storeOptions)
 const keycloak = new Keycloak({ store: store, idpHint: 'idir' })
+if (process.env.trust_proxy) {
+  app.set('trust proxy', process.env.trust_proxy)
+}
 app.use(
   session({
     name: 'foiRequestDownload',
@@ -39,6 +42,7 @@ const fonts = {
 
 app.get('/ping', async (req, res) => {
   try {
+    console.log(req.headers)
     const { rows } = await pool.query('SELECT $1::text as message', ['OK!'])
     res.end(rows[0].message)
   } catch (ex) {
@@ -135,6 +139,7 @@ app.post('/FOI-report', async (req, res) => {
         res.status(403).end('unsupported format')
     }
   } catch (ex) {
+    console.log(ex)
     if (!res.headersSent) {
       res.status(500)
     }
