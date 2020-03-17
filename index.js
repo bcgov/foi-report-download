@@ -56,7 +56,7 @@ app.post('/FOI-report', async (req, res) => {
   }
   try {
     const { rows } = await pool.query(
-      `select collector_tstamp ,app_id ,geo_city ,br_family from derived.page_views order by collector_tstamp desc limit 100`
+      `select start_date ,request_id ,applicant_type,description from foi.foi order by start_date desc limit 100`
     )
     switch (req.body.format) {
       case 'Excel':
@@ -77,27 +77,27 @@ app.post('/FOI-report', async (req, res) => {
         })
 
         ws.cell(1, 1)
-          .string('collector_tstamp')
+          .string('start_date')
           .style(headerStyle)
           .style({ alignment: { horizontal: 'right' } })
 
         ws.cell(1, 2)
-          .string('app_id')
+          .string('request_id')
           .style(headerStyle)
 
         ws.cell(1, 3)
-          .string('geo_city')
+          .string('applicant_type')
           .style(headerStyle)
 
         ws.cell(1, 4)
-          .string('br_family')
+          .string('description')
           .style(headerStyle)
 
         for (const [i, row] of rows.entries()) {
-          ws.cell(i + 2, 1).date(row.collector_tstamp)
-          ws.cell(i + 2, 2).string(row.app_id)
-          ws.cell(i + 2, 3).string(row.geo_city)
-          ws.cell(i + 2, 4).string(row.br_family)
+          ws.cell(i + 2, 1).date(row.start_date)
+          ws.cell(i + 2, 2).string(row.request_id)
+          ws.cell(i + 2, 3).string(row.applicant_type)
+          ws.cell(i + 2, 4).string(row.description)
         }
         wb.write('FOI-report.xlsx', res)
         break
@@ -105,17 +105,17 @@ app.post('/FOI-report', async (req, res) => {
         const printer = new PdfPrinter(fonts)
         const tableBody = rows.map(v => {
           return [
-            v.collector_tstamp.toString(),
-            v.app_id,
-            v.geo_city,
-            v.br_family
+            v.start_date.toString(),
+            v.request_id,
+            v.applicant_type,
+            v.description
           ]
         })
         tableBody.unshift([
-          'collector_tstamp',
-          'app_id',
-          'geo_city',
-          'br_family'
+          'start_date',
+          'request_id',
+          'applicant_type',
+          'description'
         ])
         const dd = {
           content: [
