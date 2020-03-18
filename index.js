@@ -26,7 +26,8 @@ app.use(keycloak.middleware())
 const PdfPrinter = require('pdfmake')
 const { Pool } = require('pg')
 const pool = new Pool({
-  port: process.env.PGPORT || 5439
+  port: process.env.PGPORT || 5439,
+  ssl: true
 })
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -58,10 +59,10 @@ app.post('/FOI-report', async (req, res) => {
     const { rows } = await pool.query(
       `select start_date ,request_id ,applicant_type,description from foi.foi order by start_date desc limit 100`
     )
-    const today = new Date();
-    const day = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); 
-    const yyyy = today.getFullYear();
+    const today = new Date()
+    const day = String(today.getDate()).padStart(2, '0')
+    const mm = String(today.getMonth() + 1).padStart(2, '0')
+    const yyyy = today.getFullYear()
 
     switch (req.body.format) {
       case 'Excel':
