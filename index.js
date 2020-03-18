@@ -54,10 +54,22 @@ app.post('/FOI-report', async (req, res) => {
   if (!req.body || !req.body.format) {
     res.status(403).end('missing format')
   }
+
+  let qryTxt = `select start_date ,request_id ,applicant_type,description from foi.foi`
+  let whereClauses = []
+  let parameters = []
+  let parameterIndex = 0
+  if (req.body.orgCode) {
+    parameters.push("'" + req.body.orgCode.split(',').join(`','`) + "'")
+    whereClauses.push(`proc_org in (${parameters[parameterIndex]})`)
+    parameterIndex++
+  }
+  if (whereClauses.length > 0) {
+    qryTxt += ` WHERE ${whereClauses.join(' AND ')}`
+  }
+  qryTxt += ' order by start_date desc limit 100'
   try {
-    const { rows } = await pool.query(
-      `select start_date ,request_id ,applicant_type,description from foi.foi order by start_date desc limit 100`
-    )
+    const { rows } = await pool.query(qryTxt)
     const today = new Date()
     const day = String(today.getDate()).padStart(2, '0')
     const mm = String(today.getMonth() + 1).padStart(2, '0')

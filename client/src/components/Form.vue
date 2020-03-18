@@ -13,6 +13,7 @@
             :items="orgs"
             name="orgCode"
             label="Organization Code"
+            multiple
             outlined
           ></v-select>
         </v-col>
