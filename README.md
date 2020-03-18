@@ -1,4 +1,4 @@
-# foi-report-download
+# GDX-Analytics-Looker-FOI
 
 ## Project Status
 
