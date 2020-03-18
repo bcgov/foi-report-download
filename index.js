@@ -32,7 +32,7 @@ const pool = new Pool({
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: true }))
 // Define font files
-const fonts = {
+const pdfFonts = {
   Roboto: {
     normal: 'fonts/Roboto-Regular.ttf',
     bold: 'fonts/Roboto-Medium.ttf',
@@ -88,10 +88,6 @@ app.post('/FOI-report', async (req, res) => {
   try {
     const { rows } = await pool.query(qryTxt, parameters)
     const today = new Date()
-    const day = String(today.getDate()).padStart(2, '0')
-    const mm = String(today.getMonth() + 1).padStart(2, '0')
-    const yyyy = today.getFullYear()
-
     switch (req.body.format) {
       case 'Excel':
         // Require library
@@ -150,36 +146,50 @@ app.post('/FOI-report', async (req, res) => {
         wb.write('FOI-report.xlsx', res)
         break
       case 'PDF':
-        const printer = new PdfPrinter(fonts)
+        const printer = new PdfPrinter(pdfFonts)
         const tableBody = rows.map(v => {
           return [
-            v.start_date.toString(),
             v.request_id,
+            v.start_date.toISOString().substring(0, 10),
+            v.duedate.toISOString().substring(0, 10),
+            v.status,
             v.applicant_type,
-            v.description
+            v.description,
+            v.analyst,
+            v.current_activity
           ]
         })
         tableBody.unshift([
-          'start_date',
-          'request_id',
-          'applicant_type',
-          'description'
+          'request id',
+          'start date',
+          'due date',
+          'status',
+          'applicant type',
+          'description',
+          'analyst',
+          'current activity'
         ])
         const dd = {
           content: [
             {
-              text: `Report generated: ${yyyy}-${mm}-${day}`,
+              text: `Report generated: ${today.toISOString().substring(0, 10)}`,
               alignment: 'right'
             },
             {
               layout: 'lightHorizontalLines', // optional
               table: {
                 headerRows: 1,
-                widths: ['auto', '*', '*', 'auto'],
+                widths: [40, 46, 46, 40, 60, '*', 30, 40],
                 body: tableBody
               }
             }
-          ]
+          ],
+          defaultStyle: {
+            fontSize: 9
+          },
+          pageOrientation: 'landscape',
+          pageSize: 'LETTER',
+          pageMargins: 20
         }
         const options = {}
         const pdfDoc = printer.createPdfKitDocument(dd, options)
