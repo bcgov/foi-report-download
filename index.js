@@ -43,7 +43,6 @@ const fonts = {
 
 app.get('/ping', async (req, res) => {
   try {
-    console.log(req.headers)
     const { rows } = await pool.query('SELECT $1::text as message', ['OK!'])
     res.end(rows[0].message)
   } catch (ex) {
