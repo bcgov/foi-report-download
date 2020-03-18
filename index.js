@@ -61,15 +61,30 @@ app.post('/FOI-report', async (req, res) => {
   let parameterIndex = 0
   if (req.body.orgCode) {
     parameters.push("'" + req.body.orgCode.split(',').join(`','`) + "'")
-    whereClauses.push(`proc_org in (${parameters[parameterIndex]})`)
-    parameterIndex++
+    whereClauses.push(`proc_org in (${parameters[parameterIndex++]})`)
+  }
+  if (req.body.applicantType) {
+    parameters.push("'" + req.body.applicantType.split(',').join(`','`) + "'")
+    whereClauses.push(`applicant_type in (${parameters[parameterIndex++]})`)
+  }
+  if (req.body.status) {
+    parameters.push("'" + req.body.status.split(',').join(`','`) + "'")
+    whereClauses.push(`status in (${parameters[parameterIndex++]})`)
+  }
+  if (req.body.dateFrom) {
+    parameters.push(req.body.dateFrom)
+    whereClauses.push(`start_date >= $${++parameterIndex}`)
+  }
+  if (req.body.dateTo) {
+    parameters.push(req.body.dateTo)
+    whereClauses.push(`start_date <= $${++parameterIndex}`)
   }
   if (whereClauses.length > 0) {
     qryTxt += ` WHERE ${whereClauses.join(' AND ')}`
   }
-  qryTxt += ' order by start_date desc limit 100'
+  qryTxt += ' order by start_date desc'
   try {
-    const { rows } = await pool.query(qryTxt)
+    const { rows } = await pool.query(qryTxt, parameters)
     const today = new Date()
     const day = String(today.getDate()).padStart(2, '0')
     const mm = String(today.getMonth() + 1).padStart(2, '0')

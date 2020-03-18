@@ -44,6 +44,7 @@
             :items="applicantType"
             label="Applicant Type"
             name="applicantType"
+            multiple
             outlined
           ></v-select>
         </v-col>
@@ -54,6 +55,7 @@
             :items="status"
             label="Status"
             name="status"
+            multiple
             outlined
           ></v-select>
         </v-col>
