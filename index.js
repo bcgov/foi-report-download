@@ -55,7 +55,9 @@ app.post('/FOI-report', async (req, res) => {
     res.status(403).end('missing format')
   }
 
-  let qryTxt = `select start_date ,request_id ,applicant_type,description from foi.foi`
+  let qryTxt =
+    'select request_id, start_date, duedate, status, applicant_type, ' +
+    'analyst, description, current_activity from foi.foi'
   let whereClauses = []
   let parameters = []
   let parameterIndex = 0
@@ -109,27 +111,41 @@ app.post('/FOI-report', async (req, res) => {
         })
 
         ws.cell(1, 1)
+          .string('request_id')
+          .style(headerStyle)
+        ws.cell(1, 2)
           .string('start_date')
           .style(headerStyle)
           .style({ alignment: { horizontal: 'right' } })
-
-        ws.cell(1, 2)
-          .string('request_id')
-          .style(headerStyle)
-
         ws.cell(1, 3)
+          .string('duedate')
+          .style(headerStyle)
+          .style({ alignment: { horizontal: 'right' } })
+        ws.cell(1, 4)
+          .string('status')
+          .style(headerStyle)
+        ws.cell(1, 5)
           .string('applicant_type')
           .style(headerStyle)
-
-        ws.cell(1, 4)
+        ws.cell(1, 6)
           .string('description')
+          .style(headerStyle)
+        ws.cell(1, 7)
+          .string('analyst')
+          .style(headerStyle)
+        ws.cell(1, 8)
+          .string('current_activity')
           .style(headerStyle)
 
         for (const [i, row] of rows.entries()) {
-          ws.cell(i + 2, 1).date(row.start_date)
-          ws.cell(i + 2, 2).string(row.request_id)
-          ws.cell(i + 2, 3).string(row.applicant_type)
-          ws.cell(i + 2, 4).string(row.description)
+          ws.cell(i + 2, 1).string(row.request_id)
+          ws.cell(i + 2, 2).date(row.start_date)
+          ws.cell(i + 2, 3).date(row.duedate)
+          ws.cell(i + 2, 4).string(row.status)
+          ws.cell(i + 2, 5).string(row.applicant_type)
+          ws.cell(i + 2, 6).string(row.description)
+          ws.cell(i + 2, 7).string(row.analyst)
+          ws.cell(i + 2, 8).string(row.current_activity)
         }
         wb.write('FOI-report.xlsx', res)
         break
