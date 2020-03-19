@@ -63,6 +63,7 @@ app.post('/FOI-report', async (req, res) => {
   let whereClauses = []
   let parameters = []
   let filterMessages = []
+  let sortMessages = ['Report is sorted by start date in descending order']
   let parameterIndex = 0
   if (req.body.orgCode) {
     parameters.push("'" + req.body.orgCode.split(',').join(`','`) + "'")
@@ -183,12 +184,14 @@ app.post('/FOI-report', async (req, res) => {
               columns: [
                 {
                   width: 'auto',
-                  stack: !filterMessages
-                    ? []
-                    : [
-                        'Report is generated using filters',
-                        { ul: filterMessages }
-                      ]
+                  stack: sortMessages.concat(
+                    !filterMessages
+                      ? []
+                      : [
+                          'Report is generated using filters',
+                          { ul: filterMessages }
+                        ]
+                  )
                 },
                 {
                   text: `Report generated: ${today
