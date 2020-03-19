@@ -194,9 +194,10 @@ app.post('/FOI-report', async (req, res) => {
                   )
                 },
                 {
-                  text: `Report generated: ${today
-                    .toISOString()
-                    .substring(0, 10)}`,
+                  stack: [
+                    `Report generated on: ${today.toISOString().substring(0, 10)}`,
+                    `Total records: ${rows.length}`
+                  ],
                   width: '*',
                   alignment: 'right'
                 }
