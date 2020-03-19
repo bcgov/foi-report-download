@@ -61,29 +61,35 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-radio-group name="format" row label="File Format" mandatory>
-          <v-radio label="PDF" value="PDF"></v-radio>
-          <v-radio label="Excel" value="Excel"></v-radio>
-        </v-radio-group>
+        <v-col class="d-flex" cols="12">
+          <v-radio-group name="format" row label="File Format" mandatory>
+            <v-radio label="PDF" value="PDF"></v-radio>
+            <v-radio label="Excel" value="Excel"></v-radio>
+          </v-radio-group>
+        </v-col>
       </v-row>
       <v-row>
-        <v-alert type="warning">
-          Report is limited to 5000 records.
-        </v-alert>
+        <v-col class="d-flex" cols="12">
+          <v-alert type="warning">
+            Report is limited to 5000 records.
+          </v-alert>
+        </v-col>
       </v-row>
       <v-row>
-        <v-btn
-          :disabled="!valid"
-          color="success"
-          class="mr-4"
-          type="submit"
-          @click="validate"
-        >
-          Submit
-        </v-btn>
-        <v-btn color="error" class="mr-4" @click="reset">
-          Reset
-        </v-btn>
+        <v-col class="d-flex" cols="12">
+          <v-btn
+            :disabled="!valid"
+            color="success"
+            class="mr-4"
+            type="submit"
+            @click="validate"
+          >
+            Submit
+          </v-btn>
+          <v-btn color="error" class="mr-4" @click="reset">
+            Reset
+          </v-btn>
+        </v-col>
       </v-row>
     </v-container>
   </v-form>
