@@ -92,7 +92,7 @@ app.post('/FOI-report', async (req, res) => {
   if (whereClauses.length > 0) {
     qryTxt += ` WHERE ${whereClauses.join(' AND ')}`
   }
-  qryTxt += ' order by start_date desc'
+  qryTxt += ' order by start_date desc limit 5000'
   try {
     const { rows } = await pool.query(qryTxt, parameters)
     const today = new Date()

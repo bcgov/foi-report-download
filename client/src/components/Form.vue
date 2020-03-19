@@ -21,7 +21,7 @@
       <v-row>
         <v-col class="d-flex" cols="12" sm="6">
           <v-row>
-            <v-col cols="12">From Date (inclusive)</v-col>
+            <v-col cols="12">Start Date From (inclusive)</v-col>
             <v-col cols="12"
               ><v-date-picker name="dateFrom" v-model="dateFrom"></v-date-picker
             ></v-col>
@@ -30,7 +30,7 @@
         </v-col>
         <v-col class="d-flex" cols="12" sm="6">
           <v-row>
-            <v-col cols="12">To Date (inclusive)</v-col>
+            <v-col cols="12">Start Date To (inclusive)</v-col>
             <v-col cols="12"
               ><v-date-picker name="dateTo" v-model="dateTo"></v-date-picker
             ></v-col>
@@ -67,6 +67,11 @@
         </v-radio-group>
       </v-row>
       <v-row>
+        <v-alert type="warning">
+          Report is limited to 5000 records.
+        </v-alert>
+      </v-row>
+      <v-row>
         <v-btn
           :disabled="!valid"
           color="success"
@@ -85,10 +90,12 @@
 </template>
 
 <script>
+let oneMonthAgo = new Date()
+oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
 export default {
   data: () => ({
     valid: true,
-    dateFrom: undefined,
+    dateFrom: oneMonthAgo.toISOString().substr(0, 10),
     dateTo: undefined,
     status: [
       'Assigned',
