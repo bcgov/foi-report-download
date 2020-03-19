@@ -21,7 +21,7 @@
       <v-row>
         <v-col class="d-flex" cols="12" sm="6">
           <v-row>
-            <v-col cols="12">From Date</v-col>
+            <v-col cols="12">From Date (inclusive)</v-col>
             <v-col cols="12"
               ><v-date-picker name="dateFrom" v-model="dateFrom"></v-date-picker
             ></v-col>
@@ -30,7 +30,7 @@
         </v-col>
         <v-col class="d-flex" cols="12" sm="6">
           <v-row>
-            <v-col cols="12">To Date</v-col>
+            <v-col cols="12">To Date (inclusive)</v-col>
             <v-col cols="12"
               ><v-date-picker name="dateTo" v-model="dateTo"></v-date-picker
             ></v-col>

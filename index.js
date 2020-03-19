@@ -27,7 +27,9 @@ const PdfPrinter = require('pdfmake')
 const { Pool } = require('pg')
 const pool = new Pool({
   port: process.env.PGPORT || 5439,
-  ssl: true
+  ssl: {
+    rejectUnauthorized: false
+  }
 })
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -60,26 +62,32 @@ app.post('/FOI-report', async (req, res) => {
     'analyst, description, current_activity from foi.foi'
   let whereClauses = []
   let parameters = []
+  let filterMessages = []
   let parameterIndex = 0
   if (req.body.orgCode) {
     parameters.push("'" + req.body.orgCode.split(',').join(`','`) + "'")
     whereClauses.push(`proc_org in (${parameters[parameterIndex++]})`)
-  }
-  if (req.body.applicantType) {
-    parameters.push("'" + req.body.applicantType.split(',').join(`','`) + "'")
-    whereClauses.push(`applicant_type in (${parameters[parameterIndex++]})`)
-  }
-  if (req.body.status) {
-    parameters.push("'" + req.body.status.split(',').join(`','`) + "'")
-    whereClauses.push(`status in (${parameters[parameterIndex++]})`)
+    filterMessages.push(`organization code in (${req.body.orgCode})`)
   }
   if (req.body.dateFrom) {
     parameters.push(req.body.dateFrom)
     whereClauses.push(`start_date >= $${++parameterIndex}`)
+    filterMessages.push(`start date ≥ ${req.body.dateFrom}`)
   }
   if (req.body.dateTo) {
     parameters.push(req.body.dateTo)
     whereClauses.push(`start_date <= $${++parameterIndex}`)
+    filterMessages.push(`start date ≤ ${req.body.dateTo}`)
+  }
+  if (req.body.applicantType) {
+    parameters.push("'" + req.body.applicantType.split(',').join(`','`) + "'")
+    whereClauses.push(`applicant_type in (${parameters[parameterIndex++]})`)
+    filterMessages.push(`applicant type in (${req.body.applicantType})`)
+  }
+  if (req.body.status) {
+    parameters.push("'" + req.body.status.split(',').join(`','`) + "'")
+    whereClauses.push(`status in (${parameters[parameterIndex++]})`)
+    filterMessages.push(`status in (${req.body.status})`)
   }
   if (whereClauses.length > 0) {
     qryTxt += ` WHERE ${whereClauses.join(' AND ')}`
@@ -172,8 +180,24 @@ app.post('/FOI-report', async (req, res) => {
         const dd = {
           content: [
             {
-              text: `Report generated: ${today.toISOString().substring(0, 10)}`,
-              alignment: 'right'
+              columns: [
+                {
+                  width: 'auto',
+                  stack: !filterMessages
+                    ? []
+                    : [
+                        'Report is generated using filters',
+                        { ul: filterMessages }
+                      ]
+                },
+                {
+                  text: `Report generated: ${today
+                    .toISOString()
+                    .substring(0, 10)}`,
+                  width: '*',
+                  alignment: 'right'
+                }
+              ]
             },
             {
               layout: 'lightHorizontalLines', // optional
