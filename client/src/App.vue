@@ -69,6 +69,11 @@ export default {
 }
 </script>
 
+<style lang="scss">
+@import '~roboto-fontface/css/roboto/roboto-fontface.css';
+@import '~@mdi/font/css/materialdesignicons.min.css';
+</style>
+
 <style scoped lang="scss">
 .v-app-bar {
   border-bottom: 2px solid #fcba19 !important;

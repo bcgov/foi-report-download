@@ -71,7 +71,7 @@
       <v-row>
         <v-col class="d-flex" cols="12">
           <v-alert type="warning">
-            Report is limited to 5000 records.
+            Report is limited to 5,000 records.
           </v-alert>
         </v-col>
       </v-row>
