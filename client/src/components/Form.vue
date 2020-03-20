@@ -96,12 +96,11 @@
 </template>
 
 <script>
-let oneMonthAgo = new Date()
-oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
+import moment from 'moment'
 export default {
   data: () => ({
     valid: true,
-    dateFrom: oneMonthAgo.toISOString().substr(0, 10),
+    dateFrom: moment().add(-1,'M').format('YYYY-MM-DD'),
     dateTo: undefined,
     status: [
       'Amended',

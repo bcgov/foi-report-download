@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const port = process.env.port || 8080
 let session = require('express-session')
+const moment = require('moment')
 const FileStore = require('session-file-store')(session)
 const Keycloak = require('keycloak-connect')
 const storeOptions = { logFn: () => {} }
@@ -96,7 +97,6 @@ app.post('/FOI-report', async (req, res) => {
   qryTxt += ' order by start_date desc limit 5000'
   try {
     const { rows } = await pool.query(qryTxt, parameters)
-    const today = new Date()
     switch (req.body.format) {
       case 'Excel':
         // Require library
@@ -159,8 +159,8 @@ app.post('/FOI-report', async (req, res) => {
         const tableBody = rows.map(v => {
           return [
             v.request_id,
-            v.start_date.toISOString().substring(0, 10),
-            v.duedate.toISOString().substring(0, 10),
+            moment(v.start_date).format('YYYY-MM-DD'),
+            moment(v.duedate).format('YYYY-MM-DD'),
             v.status,
             v.applicant_type,
             v.description,
@@ -188,14 +188,14 @@ app.post('/FOI-report', async (req, res) => {
                     !filterMessages
                       ? []
                       : [
-                          'Report is generated using filters',
+                          'Report is filtered by',
                           { ul: filterMessages }
                         ]
                   )
                 },
                 {
                   stack: [
-                    `Report generated on: ${today.toISOString().substring(0, 10)}`,
+                    `Report generated on: ${moment().format('YYYY-MM-DD')}`,
                     `Total records: ${rows.length}`
                   ],
                   width: '*',
