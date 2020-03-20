@@ -106,7 +106,9 @@ app.post('/FOI-report', async (req, res) => {
         const wb = new xl.Workbook()
 
         // Add Worksheets to the workbook
-        const ws = wb.addWorksheet('Sheet 1')
+        const ws = wb.addWorksheet(
+          `FOI Report ${moment().format('YYYY-MM-DD')}`
+        )
 
         // Create a reusable style
         const headerStyle = wb.createStyle({
@@ -115,42 +117,52 @@ app.post('/FOI-report', async (req, res) => {
           }
         })
 
-        ws.cell(1, 1)
+        let currRow = 1
+        if (filterMessages.length > 0) {
+          ws.cell(currRow, 1, currRow + filterMessages.length - 1, 1, true)
+            .string('Report is filtered by')
+            .style({ alignment: { vertical: 'center' } })
+          for (const item of filterMessages) {
+            ws.cell(currRow++, 2).string(item)
+          }
+        }
+        ws.cell(currRow, 1)
           .string('request_id')
           .style(headerStyle)
-        ws.cell(1, 2)
+        ws.cell(currRow, 2)
           .string('start_date')
           .style(headerStyle)
           .style({ alignment: { horizontal: 'right' } })
-        ws.cell(1, 3)
+        ws.cell(currRow, 3)
           .string('duedate')
           .style(headerStyle)
           .style({ alignment: { horizontal: 'right' } })
-        ws.cell(1, 4)
+        ws.cell(currRow, 4)
           .string('status')
           .style(headerStyle)
-        ws.cell(1, 5)
+        ws.cell(currRow, 5)
           .string('applicant_type')
           .style(headerStyle)
-        ws.cell(1, 6)
+        ws.cell(currRow, 6)
           .string('description')
           .style(headerStyle)
-        ws.cell(1, 7)
+        ws.cell(currRow, 7)
           .string('analyst')
           .style(headerStyle)
-        ws.cell(1, 8)
+        ws.cell(currRow, 8)
           .string('current_activity')
           .style(headerStyle)
+        currRow++
 
         for (const [i, row] of rows.entries()) {
-          ws.cell(i + 2, 1).string(row.request_id)
-          ws.cell(i + 2, 2).date(row.start_date)
-          ws.cell(i + 2, 3).date(row.duedate)
-          ws.cell(i + 2, 4).string(row.status)
-          ws.cell(i + 2, 5).string(row.applicant_type)
-          ws.cell(i + 2, 6).string(row.description)
-          ws.cell(i + 2, 7).string(row.analyst)
-          ws.cell(i + 2, 8).string(row.current_activity)
+          ws.cell(i + currRow, 1).string(row.request_id)
+          ws.cell(i + currRow, 2).date(row.start_date)
+          ws.cell(i + currRow, 3).date(row.duedate)
+          ws.cell(i + currRow, 4).string(row.status)
+          ws.cell(i + currRow, 5).string(row.applicant_type)
+          ws.cell(i + currRow, 6).string(row.description)
+          ws.cell(i + currRow, 7).string(row.analyst)
+          ws.cell(i + currRow, 8).string(row.current_activity)
         }
         wb.write('FOI-report.xlsx', res)
         break
@@ -187,10 +199,7 @@ app.post('/FOI-report', async (req, res) => {
                   stack: sortMessages.concat(
                     !filterMessages
                       ? []
-                      : [
-                          'Report is filtered by',
-                          { ul: filterMessages }
-                        ]
+                      : ['Report is filtered by', { ul: filterMessages }]
                   )
                 },
                 {
