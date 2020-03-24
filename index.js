@@ -246,6 +246,8 @@ app.post('/FOI-report', async (req, res) => {
   }
 })
 app.use(keycloak.protect(), express.static('client/dist'))
-app.listen(port, () =>
+app.listen(port, function() {
+  // don't timeout in 2min for node<13
+  this.setTimeout(0)
   console.log(`launch http://localhost:${port} to explore`)
-)
+})
