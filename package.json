@@ -16,9 +16,11 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "keycloak-connect": "^9.0.0",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "pdfmake": "^0.1.65",
     "pg": "^7.18.2",
+    "pg-parameterize": "^2.0.2",
     "session-file-store": "^1.4.0"
   }
 }

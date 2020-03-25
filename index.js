@@ -6,6 +6,8 @@ const moment = require('moment')
 const FileStore = require('session-file-store')(session)
 const Keycloak = require('keycloak-connect')
 const storeOptions = { logFn: () => {} }
+const pgParametrize = require('pg-parameterize')
+const _ = require('lodash')
 if (process.env.file_store_path) {
   storeOptions.path = process.env.file_store_path
 }
@@ -65,30 +67,34 @@ app.post('/FOI-report', async (req, res) => {
   let parameters = []
   let filterMessages = []
   let sortMessages = ['Report is sorted by start date in descending order']
-  let parameterIndex = 0
   if (req.body.orgCode) {
-    parameters.push("'" + req.body.orgCode.split(',').join(`','`) + "'")
-    whereClauses.push(`proc_org in (${parameters[parameterIndex++]})`)
+    const orgCodes = req.body.orgCode.split(',')
+    parameters.push(orgCodes)
+    whereClauses.push(`proc_org in ${pgParametrize.toTuple([orgCodes])}`)
     filterMessages.push(`organization code in (${req.body.orgCode})`)
   }
   if (req.body.dateFrom) {
     parameters.push(req.body.dateFrom)
-    whereClauses.push(`start_date >= $${++parameterIndex}`)
+    whereClauses.push('start_date >= ?')
     filterMessages.push(`start date ≥ ${req.body.dateFrom}`)
   }
   if (req.body.dateTo) {
     parameters.push(req.body.dateTo)
-    whereClauses.push(`start_date <= $${++parameterIndex}`)
+    whereClauses.push('start_date <= ?')
     filterMessages.push(`start date ≤ ${req.body.dateTo}`)
   }
   if (req.body.applicantType) {
-    parameters.push("'" + req.body.applicantType.split(',').join(`','`) + "'")
-    whereClauses.push(`applicant_type in (${parameters[parameterIndex++]})`)
+    const applicantTypes = req.body.applicantType.split(',')
+    parameters.push(applicantTypes)
+    whereClauses.push(
+      `applicant_type in ${pgParametrize.toTuple([applicantTypes])}`
+    )
     filterMessages.push(`applicant type in (${req.body.applicantType})`)
   }
   if (req.body.status) {
-    parameters.push("'" + req.body.status.split(',').join(`','`) + "'")
-    whereClauses.push(`status in (${parameters[parameterIndex++]})`)
+    const statuses = req.body.status.split(',')
+    parameters.push(statuses)
+    whereClauses.push(`status in ${pgParametrize.toTuple([statuses])}`)
     filterMessages.push(`status in (${req.body.status})`)
   }
   if (whereClauses.length > 0) {
@@ -96,7 +102,10 @@ app.post('/FOI-report', async (req, res) => {
   }
   qryTxt += ' order by start_date desc limit 5000'
   try {
-    const { rows } = await pool.query(qryTxt, parameters)
+    const { rows } = await pool.query(
+      pgParametrize.toOrdinal(qryTxt),
+      _.flatten(parameters)
+    )
     switch (req.body.format) {
       case 'Excel':
         // Require library
