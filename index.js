@@ -48,6 +48,42 @@ const orgMap = {
   TAC: 'Ministry of Tourism, Arts and Culture',
   TRA: 'Ministry of Transportation and Infrastructure'
 }
+
+const commonOrgGroup = {
+  ...Object.keys(orgMap).reduce((a, e) => ((a[e] = [e]), a), {}),
+  EMP: ['EMP', 'EGM'],
+  MAH: ['MAH', 'CSC'],
+  MOE: ['MOE', 'EAO'],
+  EMP: ['EMP', 'EGM', 'NGD'],
+  PSS: ['PSS', 'EMB'],
+  MAG: ['MAG', 'JAG'],
+  JTT: ['JTT', 'JTI', 'MIT', 'MSB'],
+  FIN: ['FIN', 'PSA']
+}
+
+const orgGroupByDate = [
+  {
+    date: moment('2012-01-01'),
+    orgGroup: {
+      ...commonOrgGroup,
+      CTZ: [...commonOrgGroup.CTZ, 'BRD'],
+      FIN: [...commonOrgGroup.FIN, 'GCP'],
+      EMP: [...commonOrgGroup.EMP, 'HOU'],
+      JTT: [...commonOrgGroup.JTT, 'LDB'],
+      MAG: [...commonOrgGroup.MAG, 'OCC']
+    }
+  },
+  {
+    date: moment('2015-07-01'),
+    orgGroup: {
+      ...commonOrgGroup,
+      FIN: [...commonOrgGroup.FIN, 'BRD'],
+      CTZ: [...commonOrgGroup.CTZ, 'GCP'],
+      MAH: [...commonOrgGroup.MAH, 'HOU'],
+      PSS: [...commonOrgGroup.PSS, 'LDB', 'OCC']
+    }
+  }
+]
 const statusMap = {
   'All Open': [
     'Amended',
