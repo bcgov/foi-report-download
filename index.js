@@ -107,15 +107,25 @@ app.post('/FOI-report', async (req, res) => {
     whereClauses.push(`proc_org in ${pgParametrize.toTuple([orgCodes])}`)
     filterMessages.push(`organization code in (${req.body.orgCode})`)
   }
-  if (req.body.dateFrom) {
-    parameters.push(req.body.dateFrom)
+  if (req.body.startDateFrom) {
+    parameters.push(req.body.startDateFrom)
     whereClauses.push('start_date >= ?')
-    filterMessages.push(`start date ≥ ${req.body.dateFrom}`)
+    filterMessages.push(`start date ≥ ${req.body.startDateFrom}`)
   }
-  if (req.body.dateTo) {
-    parameters.push(req.body.dateTo)
+  if (req.body.startDateTo) {
+    parameters.push(req.body.startDateTo)
     whereClauses.push('start_date <= ?')
-    filterMessages.push(`start date ≤ ${req.body.dateTo}`)
+    filterMessages.push(`start date ≤ ${req.body.startDateTo}`)
+  }
+  if (req.body.dueDateFrom) {
+    parameters.push(req.body.dueDateFrom)
+    whereClauses.push('duedate >= ?')
+    filterMessages.push(`due date ≥ ${req.body.dueDateFrom}`)
+  }
+  if (req.body.dueDateTo) {
+    parameters.push(req.body.dueDateTo)
+    whereClauses.push('duedate <= ?')
+    filterMessages.push(`due date ≤ ${req.body.dueDateTo}`)
   }
   if (req.body.applicantType) {
     const applicantTypes = req.body.applicantType.split(',')
