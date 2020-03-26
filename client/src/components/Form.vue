@@ -20,6 +20,29 @@
       </v-row>
       <v-row>
         <v-col class="d-flex" cols="12" sm="6">
+          <v-select
+            :items="applicantType"
+            label="Applicant Type"
+            name="applicantType"
+            multiple
+            outlined
+          ></v-select>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="d-flex" cols="12" sm="6">
+          <v-select
+            :items="status"
+            label="Status"
+            name="status"
+            v-model="defaultStatus"
+            multiple
+            outlined
+          ></v-select>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="d-flex" cols="12" sm="6">
           <v-row>
             <v-col cols="12">Start Date From (inclusive)</v-col>
             <v-col cols="12"
@@ -36,28 +59,6 @@
             ></v-col>
             <input type="hidden" name="dateTo" :value="dateTo" />
           </v-row>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col class="d-flex" cols="12" sm="6">
-          <v-select
-            :items="applicantType"
-            label="Applicant Type"
-            name="applicantType"
-            multiple
-            outlined
-          ></v-select>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col class="d-flex" cols="12" sm="6">
-          <v-select
-            :items="status"
-            label="Status"
-            name="status"
-            multiple
-            outlined
-          ></v-select>
         </v-col>
       </v-row>
       <v-row>
@@ -100,22 +101,16 @@ import moment from 'moment'
 export default {
   data: () => ({
     valid: true,
-    dateFrom: moment().add(-1,'M').format('YYYY-MM-DD'),
+    dateFrom: moment()
+      .add(-1, 'M')
+      .format('YYYY-MM-DD'),
     dateTo: undefined,
+    defaultStatus: ['All Open'],
     status: [
-      'Amended',
-      'Assigned',
-      'Closed',
-      'DAddRvwLog',
-      'Disposition Accepted',
-      'Documents Added',
-      'Documents Delivered',
-      'On Hold-Fee Related',
-      'On Hold-Need Info/Clarification',
-      'On Hold-Other',
-      'Perfected',
-      'Received',
-      'Request for Docs Sent'
+      'All Open',
+      'All Open excluding on-hold',
+      'All On-Hold',
+      'All Closed'
     ],
     applicantType: [
       'Business',
