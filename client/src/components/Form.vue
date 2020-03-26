@@ -21,9 +21,10 @@
       <v-row>
         <v-col class="d-flex" cols="12" sm="6">
           <v-select
-            :items="applicantType"
-            label="Applicant Type"
-            name="applicantType"
+            :items="status"
+            label="Status"
+            name="status"
+            v-model="defaultStatus"
             multiple
             outlined
           ></v-select>
@@ -32,10 +33,9 @@
       <v-row>
         <v-col class="d-flex" cols="12" sm="6">
           <v-select
-            :items="status"
-            label="Status"
-            name="status"
-            v-model="defaultStatus"
+            :items="applicantType"
+            label="Applicant Type"
+            name="applicantType"
             multiple
             outlined
           ></v-select>
