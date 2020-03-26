@@ -42,22 +42,54 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col class="d-flex" cols="12" sm="6">
+        <v-col class="d-flex" cols="7" md="4">
           <v-row>
             <v-col cols="12">Start Date From (inclusive)</v-col>
             <v-col cols="12"
-              ><v-date-picker name="dateFrom" v-model="dateFrom"></v-date-picker
+              ><v-date-picker
+                name="startDateFrom"
+                v-model="startDateFrom"
+              ></v-date-picker
             ></v-col>
-            <input type="hidden" name="dateFrom" :value="dateFrom" />
+            <input type="hidden" name="startDateFrom" :value="startDateFrom" />
           </v-row>
         </v-col>
-        <v-col class="d-flex" cols="12" sm="6">
+        <v-col class="d-flex" cols="7" md="4">
           <v-row>
             <v-col cols="12">Start Date To (inclusive)</v-col>
             <v-col cols="12"
-              ><v-date-picker name="dateTo" v-model="dateTo"></v-date-picker
+              ><v-date-picker
+                name="startDateTo"
+                v-model="startDateTo"
+              ></v-date-picker
             ></v-col>
-            <input type="hidden" name="dateTo" :value="dateTo" />
+            <input type="hidden" name="startDateTo" :value="startDateTo" />
+          </v-row>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="d-flex" cols="7" md="4">
+          <v-row>
+            <v-col cols="12">Due Date From (inclusive)</v-col>
+            <v-col cols="12"
+              ><v-date-picker
+                name="dueDateFrom"
+                v-model="dueDateFrom"
+              ></v-date-picker
+            ></v-col>
+            <input type="hidden" name="dueDateFrom" :value="dueDateFrom" />
+          </v-row>
+        </v-col>
+        <v-col class="d-flex" cols="7" md="4">
+          <v-row>
+            <v-col cols="12">Due Date To (inclusive)</v-col>
+            <v-col cols="12"
+              ><v-date-picker
+                name="dueDateTo"
+                v-model="dueDateTo"
+              ></v-date-picker
+            ></v-col>
+            <input type="hidden" name="dueDateTo" :value="dueDateTo" />
           </v-row>
         </v-col>
       </v-row>
@@ -97,14 +129,13 @@
 </template>
 
 <script>
-import moment from 'moment'
 export default {
   data: () => ({
     valid: true,
-    dateFrom: moment()
-      .add(-1, 'M')
-      .format('YYYY-MM-DD'),
-    dateTo: undefined,
+    startDateFrom: undefined,
+    startDateTo: undefined,
+    dueDateFrom: undefined,
+    dueDateTo: undefined,
     defaultStatus: ['All Open'],
     status: [
       'All Open',
