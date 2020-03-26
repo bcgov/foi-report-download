@@ -9,6 +9,39 @@ const storeOptions = { logFn: () => {} }
 const pgParametrize = require('pg-parameterize')
 const _ = require('lodash')
 const pastDueMsg = 'Past due open records are displayed in red'
+const statusMap = {
+  'All Open': [
+    'Amended',
+    'Assigned',
+    'DAddRvwLog',
+    'Disposition Accepted',
+    'Documents Added',
+    'Documents Delivered',
+    'On Hold-Fee Related',
+    'On Hold-Need Info/Clarification',
+    'On Hold-Other',
+    'Perfected',
+    'Received',
+    'Request for Docs Sent'
+  ],
+  'All On-Hold': [
+    'On Hold-Fee Related',
+    'On Hold-Need Info/Clarification',
+    'On Hold-Other'
+  ],
+  'All Open excluding on-hold': [
+    'Amended',
+    'Assigned',
+    'DAddRvwLog',
+    'Disposition Accepted',
+    'Documents Added',
+    'Documents Delivered',
+    'Perfected',
+    'Received',
+    'Request for Docs Sent'
+  ],
+  'All Closed': ['Closed']
+}
 if (process.env.file_store_path) {
   storeOptions.path = process.env.file_store_path
 }
@@ -94,8 +127,11 @@ app.post('/FOI-report', async (req, res) => {
   }
   if (req.body.status) {
     const statuses = req.body.status.split(',')
-    parameters.push(statuses)
-    whereClauses.push(`status in ${pgParametrize.toTuple([statuses])}`)
+    const qryStatuses = _.uniq(
+      statuses.reduce((a, e) => a.concat(statusMap[e]), [])
+    )
+    parameters.push(qryStatuses)
+    whereClauses.push(`status in ${pgParametrize.toTuple([qryStatuses])}`)
     filterMessages.push(`status in (${req.body.status})`)
   }
   if (whereClauses.length > 0) {
