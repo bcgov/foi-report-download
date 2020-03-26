@@ -8,6 +8,7 @@ const Keycloak = require('keycloak-connect')
 const storeOptions = { logFn: () => {} }
 const pgParametrize = require('pg-parameterize')
 const _ = require('lodash')
+const pastDueMsg = 'Past due open records are displayed in red'
 if (process.env.file_store_path) {
   storeOptions.path = process.env.file_store_path
 }
@@ -125,6 +126,14 @@ app.post('/FOI-report', async (req, res) => {
             bold: true
           }
         })
+        const dataRowStyle = wb.createStyle({
+          alignment: { wrapText: true, vertical: 'top' }
+        })
+
+        ws.column(1).setWidth(18)
+        ws.column(4).setWidth(16)
+        ws.column(5).setWidth(16)
+        ws.column(6).setWidth(50)
 
         let currRow = 1
         if (filterMessages.length > 0) {
@@ -134,6 +143,9 @@ app.post('/FOI-report', async (req, res) => {
           for (const item of filterMessages) {
             ws.cell(currRow++, 2).string(item)
           }
+        }
+        if (rows.some(e => e.duedate < new Date() && e.status !== 'Closed')) {
+          ws.cell(currRow++, 1).string(pastDueMsg)
         }
         ws.cell(currRow, 1)
           .string('request_id')
@@ -164,14 +176,42 @@ app.post('/FOI-report', async (req, res) => {
         currRow++
 
         for (const [i, row] of rows.entries()) {
-          ws.cell(i + currRow, 1).string(row.request_id)
-          ws.cell(i + currRow, 2).date(row.start_date)
-          ws.cell(i + currRow, 3).date(row.duedate)
-          ws.cell(i + currRow, 4).string(row.status)
-          ws.cell(i + currRow, 5).string(row.applicant_type)
-          ws.cell(i + currRow, 6).string(row.description)
-          ws.cell(i + currRow, 7).string(row.analyst)
-          ws.cell(i + currRow, 8).string(row.current_activity)
+          let color = 'black'
+          if (row.duedate < new Date() && rows.status !== 'Closed') {
+            color = 'red'
+          }
+          ws.cell(i + currRow, 1)
+            .string(row.request_id)
+            .style(dataRowStyle)
+            .style({ font: { color: color } })
+          ws.cell(i + currRow, 2)
+            .date(row.start_date)
+            .style(dataRowStyle)
+            .style({ font: { color: color } })
+          ws.cell(i + currRow, 3)
+            .date(row.duedate)
+            .style(dataRowStyle)
+            .style({ font: { color: color } })
+          ws.cell(i + currRow, 4)
+            .string(row.status)
+            .style(dataRowStyle)
+            .style({ font: { color: color } })
+          ws.cell(i + currRow, 5)
+            .string(row.applicant_type)
+            .style(dataRowStyle)
+            .style({ font: { color: color } })
+          ws.cell(i + currRow, 6)
+            .string(row.description)
+            .style(dataRowStyle)
+            .style({ font: { color: color } })
+          ws.cell(i + currRow, 7)
+            .string(row.analyst)
+            .style(dataRowStyle)
+            .style({ font: { color: color } })
+          ws.cell(i + currRow, 8)
+            .string(row.current_activity)
+            .style(dataRowStyle)
+            .style({ font: { color: color } })
         }
         wb.write('FOI-report.xlsx', res)
         break
@@ -184,7 +224,7 @@ app.post('/FOI-report', async (req, res) => {
             color = 'red'
             if (!hasOverdueOpenRows) {
               hasOverdueOpenRows = true
-              pdfOnlyMessages.push('Past due open records are displayed in red')
+              pdfOnlyMessages.push(pastDueMsg)
             }
           }
           return [
