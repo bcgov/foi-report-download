@@ -9,6 +9,45 @@ const storeOptions = { logFn: () => {} }
 const pgParametrize = require('pg-parameterize')
 const _ = require('lodash')
 const pastDueMsg = 'Past due open records are displayed in red'
+const orgMap = {
+  AED: 'Ministry of Advanced Education, Skills and Training',
+  AGR: 'Ministry of Agriculture',
+  BRD: 'Board Resourcing and Development Office',
+  CFD: 'Ministry of Children and Family Development',
+  CSC: 'Ministry of Community, Sport and Cultural Development',
+  CTZ: "Ministry of Citizens' Services",
+  EAO: 'Environmental Assessment Office',
+  EDU: 'Ministry of Education',
+  EGM: 'Ministry of Energy and Mines',
+  EMB: 'Emergency Management BC',
+  EMP: 'Ministry of Energy, Mines and Petroleum Resources',
+  FIN: 'Ministry of Finance',
+  FNR:
+    'Ministry of Forests, Lands, Natural Resource Operations and Rural Development',
+  GCP: 'Government Communications and Public Engagement',
+  HOU: 'Office of Housing and Construction Standards',
+  HTH: 'Ministry of Health',
+  IRR: 'Ministry of Indigenous Relations and Reconciliation',
+  JAG: 'Ministry of Justice and Attorney General',
+  JTI: 'Ministry of Jobs, Tourism, and Innovation',
+  JTT: 'Ministry of Jobs, Economic Development and Competitiveness',
+  LBR: 'Ministry of Labour',
+  LDB: 'Liquor Distribution Branch',
+  MAG: 'Ministry of Attorney General',
+  MAH: 'Ministry of Municipal Affairs and Housing',
+  MHA: 'Ministry of Mental Health and Addictions',
+  MIT: 'Ministry of International Trade',
+  MOE: 'Ministry of Environment and Climate Change Strategy',
+  MSB: 'Ministry of Small Business and Red Tape Reduction',
+  MSD: 'Ministry of Social Development and Poverty Reduction',
+  NGD: 'Ministry of Natural Gas Development',
+  OCC: 'Office of the Chief Coroner',
+  OOP: 'Office of the Premier',
+  PSA: 'Public Service Agency',
+  PSS: 'Ministry of Public Safety and Solicitor General',
+  TAC: 'Ministry of Tourism, Arts and Culture',
+  TRA: 'Ministry of Transportation and Infrastructure'
+}
 const statusMap = {
   'All Open': [
     'Amended',

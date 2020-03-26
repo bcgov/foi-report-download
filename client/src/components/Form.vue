@@ -12,7 +12,7 @@
           <v-select
             :items="orgs"
             name="orgCode"
-            label="Organization Code"
+            label="Organization"
             multiple
             outlined
           ></v-select>
@@ -155,43 +155,67 @@ export default {
       'Researcher'
     ],
     orgs: [
-      'AED',
-      'AGR',
-      'BRD',
-      'CFD',
-      'CLB',
-      'CTZ',
-      'EAO',
-      'EDU',
-      'EMB',
-      'EMP',
-      'FIN',
-      'FNR',
-      'GCP',
-      'HOU',
-      'HSA',
-      'HTH',
-      'IIO',
-      'IRR',
-      'JTT',
-      'LBR',
-      'LDB',
-      'MAG',
-      'MAH',
-      'MGC',
-      'MHA',
-      'MIT',
-      'MOE',
-      'MSB',
-      'MSD',
-      'NGD',
-      'OBC',
-      'OCC',
-      'OOP',
-      'PSA',
-      'PSS',
-      'TAC',
-      'TRA'
+      {
+        value: 'AED',
+        text: 'AED - Ministry of Advanced Education, Skills and Training'
+      },
+      { value: 'AGR', text: 'AGR - Ministry of Agriculture' },
+      {
+        value: 'CFD',
+        text: 'CFD - Ministry of Children and Family Development'
+      },
+      { value: 'CTZ', text: "CTZ - Ministry of Citizens' Services" },
+      { value: 'EAO', text: 'EAO - Environmental Assessment Office' },
+      { value: 'EDU', text: 'EDU - Ministry of Education' },
+      { value: 'EMB', text: 'EMB - Emergency Management BC' },
+      {
+        value: 'EMP',
+        text: 'EMP - Ministry of Energy, Mines and Petroleum Resources'
+      },
+      { value: 'FIN', text: 'FIN - Ministry of Finance' },
+      {
+        value: 'FNR',
+        text:
+          'FNR - Ministry of Forests, Lands, Natural Resource Operations and Rural Development'
+      },
+      {
+        value: 'GCP',
+        text: 'GCP - Government Communications and Public Engagement'
+      },
+      { value: 'HTH', text: 'HTH - Ministry of Health' },
+      {
+        value: 'IRR',
+        text: 'IRR - Ministry of Indigenous Relations and Reconciliation'
+      },
+      {
+        value: 'JTT',
+        text: 'JTT - Ministry of Jobs, Economic Development and Competitiveness'
+      },
+      { value: 'LBR', text: 'LBR - Ministry of Labour' },
+      { value: 'LDB', text: 'LDB - Liquor Distribution Branch' },
+      { value: 'MAG', text: 'MAG - Ministry of Attorney General' },
+      { value: 'MAH', text: 'MAH - Ministry of Municipal Affairs and Housing' },
+      { value: 'MHA', text: 'MHA - Ministry of Mental Health and Addictions' },
+      {
+        value: 'MOE',
+        text: 'MOE - Ministry of Environment and Climate Change Strategy'
+      },
+      {
+        value: 'MSD',
+        text: 'MSD - Ministry of Social Development and Poverty Reduction'
+      },
+      { value: 'OCC', text: 'OCC - Office of the Chief Coroner' },
+      { value: 'OOP', text: 'OOP - Office of the Premier' },
+      { value: 'PSA', text: 'PSA - Public Service Agency' },
+      {
+        value: 'PSS',
+        text: 'PSS - Ministry of Public Safety and Solicitor General'
+      },
+      { value: 'TAC', text: 'TAC - Ministry of Tourism, Arts and Culture' },
+      {
+        value: 'TRA',
+        text: 'TRA - Ministry of Transportation and Infrastructure'
+      }
     ]
   }),
 
