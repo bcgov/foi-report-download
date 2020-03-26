@@ -66,7 +66,7 @@ app.post('/FOI-report', async (req, res) => {
   let whereClauses = []
   let parameters = []
   let filterMessages = []
-  let sortMessages = ['Report is sorted by start date in descending order']
+  let pdfOnlyMessages = ['Report is sorted by start date in descending order']
   if (req.body.orgCode) {
     const orgCodes = req.body.orgCode.split(',')
     parameters.push(orgCodes)
@@ -177,16 +177,25 @@ app.post('/FOI-report', async (req, res) => {
         break
       case 'PDF':
         const printer = new PdfPrinter(pdfFonts)
+        let hasOverdueOpenRows = false
         const tableBody = rows.map(v => {
+          let color = 'black'
+          if (v.duedate < new Date() && v.status !== 'Closed') {
+            color = 'red'
+            if (!hasOverdueOpenRows) {
+              hasOverdueOpenRows = true
+              pdfOnlyMessages.push('Past due open records are displayed in red')
+            }
+          }
           return [
-            v.request_id,
-            moment(v.start_date).format('YYYY-MM-DD'),
-            moment(v.duedate).format('YYYY-MM-DD'),
-            v.status,
-            v.applicant_type,
-            v.description,
-            v.analyst,
-            v.current_activity
+            { text: v.request_id, color: color },
+            { text: moment(v.start_date).format('YYYY-MM-DD'), color: color },
+            { text: moment(v.duedate).format('YYYY-MM-DD'), color: color },
+            { text: v.status, color: color },
+            { text: v.applicant_type, color: color },
+            { text: v.description, color: color },
+            { text: v.analyst, color: color },
+            { text: v.current_activity, color: color }
           ]
         })
         tableBody.unshift([
@@ -202,10 +211,14 @@ app.post('/FOI-report', async (req, res) => {
         const dd = {
           content: [
             {
+              image: 'citz.jpg',
+              width: 150
+            },
+            {
               columns: [
                 {
                   width: 'auto',
-                  stack: sortMessages.concat(
+                  stack: pdfOnlyMessages.concat(
                     !filterMessages
                       ? []
                       : ['Report is filtered by', { ul: filterMessages }]
