@@ -45,7 +45,10 @@
       <v-row>
         <v-col cols="12" sm="1">Start Date</v-col>
         <v-col cols="12" sm="3"
-          ><date-input label="From (inclusive)" name="startDateFrom"></date-input
+          ><date-input
+            label="From (inclusive)"
+            name="startDateFrom"
+          ></date-input
         ></v-col>
         <v-col cols="12" sm="3"
           ><date-input label="To (inclusive)" name="startDateTo"></date-input
@@ -69,7 +72,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12">
+        <v-col class='d-flex' cols="12">
           <v-alert type="warning">
             Report is limited to 5,000 records.
           </v-alert>
