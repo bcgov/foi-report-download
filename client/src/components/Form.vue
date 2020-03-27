@@ -8,7 +8,7 @@
   >
     <v-container>
       <v-row>
-        <v-col class="d-flex" cols="12" sm="6">
+        <v-col cols="12" sm="6">
           <v-select
             :items="orgs"
             name="orgCode"
@@ -19,7 +19,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col class="d-flex" cols="12" sm="6">
+        <v-col cols="12" sm="6">
           <v-select
             :items="status"
             label="Status"
@@ -31,7 +31,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col class="d-flex" cols="12" sm="6">
+        <v-col cols="12" sm="6">
           <v-select
             :items="applicantType"
             label="Applicant Type"
@@ -42,25 +42,25 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col class="d-flex" cols="12" sm="1">Start Date</v-col>
-        <v-col class="d-flex" cols="12" sm="3"
-          ><date-input label="From" name="startDateFrom"></date-input
+        <v-col cols="12" sm="1">Start Date</v-col>
+        <v-col cols="12" sm="3"
+          ><date-input label="From (inclusive)" name="startDateFrom"></date-input
         ></v-col>
-        <v-col class="d-flex" cols="12" sm="3"
-          ><date-input label="To" name="startDateTo"></date-input
-        ></v-col>
-      </v-row>
-      <v-row>
-        <v-col class="d-flex" cols="12" sm="1">Due Date</v-col>
-        <v-col class="d-flex" cols="12" sm="3"
-          ><date-input label="From" name="dueDateFrom"></date-input
-        ></v-col>
-        <v-col class="d-flex" cols="12" sm="3"
-          ><date-input label="To" name="dueDateTo"></date-input
+        <v-col cols="12" sm="3"
+          ><date-input label="To (inclusive)" name="startDateTo"></date-input
         ></v-col>
       </v-row>
       <v-row>
-        <v-col class="d-flex" cols="12">
+        <v-col cols="12" sm="1">Due Date</v-col>
+        <v-col cols="12" sm="3"
+          ><date-input label="From (inclusive)" name="dueDateFrom"></date-input
+        ></v-col>
+        <v-col cols="12" sm="3"
+          ><date-input label="To (inclusive)" name="dueDateTo"></date-input
+        ></v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12">
           <v-radio-group name="format" row label="File Format" mandatory>
             <v-radio label="PDF" value="PDF"></v-radio>
             <v-radio label="Excel" value="Excel"></v-radio>
@@ -68,14 +68,14 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col class="d-flex" cols="12">
+        <v-col cols="12">
           <v-alert type="warning">
             Report is limited to 5,000 records.
           </v-alert>
         </v-col>
       </v-row>
       <v-row>
-        <v-col class="d-flex" cols="12">
+        <v-col cols="12">
           <v-btn
             :disabled="!valid"
             color="success"
