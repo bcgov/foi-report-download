@@ -195,7 +195,7 @@ app.post('/FOI-report', async (req, res) => {
       whereClauses.push(`proc_org in ${pgParametrize.toTuple([qryOrgCodes])}`)
       i === 0 &&
         filterMessages.push(
-          `organization code in (${orgCodes.map(e => orgMap[e]).join(', ')})`
+          `organization in (${orgCodes.map(e => orgMap[e]).join(', ')})`
         )
     }
     if (req.body.startDateFrom) {
