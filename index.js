@@ -163,7 +163,7 @@ app.get('/ping', async (req, res) => {
     res.status(500).end()
   }
 })
-
+app.use(keycloak.protect())
 app.post('/FOI-report', async (req, res) => {
   if (!req.body || !req.body.format) {
     res.status(403).end('missing format')
@@ -447,7 +447,13 @@ app.post('/FOI-report', async (req, res) => {
     res.end()
   }
 })
-app.use(keycloak.protect(), express.static('client/dist'))
+app.set('view engine', 'ejs')
+app.set('views', 'client/dist')
+app.engine('html', require('ejs').renderFile)
+app.get('/', function(req, res) {
+  res.render('index.html')
+})
+app.use(express.static('client/dist'))
 app.listen(port, function() {
   // don't timeout in 2min for node<13
   this.setTimeout(0)
