@@ -15,7 +15,7 @@
         :name="name"
         clearable
         readonly
-        prepend-icon="event"
+        prepend-icon="mdi-calendar"
         v-on="on"
       ></v-text-field>
     </template>
