@@ -169,59 +169,78 @@ app.post('/FOI-report', async (req, res) => {
     res.status(403).end('missing format')
   }
 
-  let qryTxt =
+  const selectStmt =
     'select request_id, start_date, duedate, status, applicant_type, ' +
     'analyst, description, current_activity from foi.foi'
-  let whereClauses = []
+  let qryTxt = ''
   let parameters = []
   let filterMessages = []
   let pdfOnlyMessages = ['Report is sorted by start date in descending order']
-  if (req.body.orgCode) {
-    const orgCodes = req.body.orgCode.split(',')
-    parameters.push(orgCodes)
-    whereClauses.push(`proc_org in ${pgParametrize.toTuple([orgCodes])}`)
-    filterMessages.push(`organization code in (${req.body.orgCode})`)
+  for (const [i, e] of orgGroupByDate.entries()) {
+    qryTxt += i === 0 ? '' : ' union '
+    qryTxt += selectStmt
+    let whereClauses = []
+    parameters.push(e.date.format('YYYY-MM-DD'))
+    whereClauses.push(`start_date >= ?`)
+    if (i < orgGroupByDate.length - 1) {
+      parameters.push(orgGroupByDate[i + 1].date.format('YYYY-MM-DD'))
+      whereClauses.push(`start_date < ?`)
+    }
+    if (req.body.orgCode) {
+      const orgCodes = req.body.orgCode.split(',')
+      const qryOrgCodes = _.uniq(
+        orgCodes.reduce((a, c) => a.concat(orgGroupByDate[i].orgGroup[c]), [])
+      )
+      parameters.push(qryOrgCodes)
+      whereClauses.push(`proc_org in ${pgParametrize.toTuple([qryOrgCodes])}`)
+      i === 0 &&
+        filterMessages.push(
+          `organization code in (${orgCodes.map(e => orgMap[e]).join(', ')})`
+        )
+    }
+    if (req.body.startDateFrom) {
+      parameters.push(req.body.startDateFrom)
+      whereClauses.push('start_date >= ?')
+      i === 0 && filterMessages.push(`start date ≥ ${req.body.startDateFrom}`)
+    }
+    if (req.body.startDateTo) {
+      parameters.push(req.body.startDateTo)
+      whereClauses.push('start_date <= ?')
+      i === 0 && filterMessages.push(`start date ≤ ${req.body.startDateTo}`)
+    }
+    if (req.body.dueDateFrom) {
+      parameters.push(req.body.dueDateFrom)
+      whereClauses.push('duedate >= ?')
+      i === 0 && filterMessages.push(`due date ≥ ${req.body.dueDateFrom}`)
+    }
+    if (req.body.dueDateTo) {
+      parameters.push(req.body.dueDateTo)
+      whereClauses.push('duedate <= ?')
+      i === 0 && filterMessages.push(`due date ≤ ${req.body.dueDateTo}`)
+    }
+    if (req.body.applicantType) {
+      const applicantTypes = req.body.applicantType.split(',')
+      parameters.push(applicantTypes)
+      whereClauses.push(
+        `applicant_type in ${pgParametrize.toTuple([applicantTypes])}`
+      )
+      i === 0 &&
+        filterMessages.push(`applicant type in (${req.body.applicantType})`)
+    }
+    if (req.body.status) {
+      const statuses = req.body.status.split(',')
+      const qryStatuses = _.uniq(
+        statuses.reduce((a, e) => a.concat(statusMap[e]), [])
+      )
+      parameters.push(qryStatuses)
+      whereClauses.push(`status in ${pgParametrize.toTuple([qryStatuses])}`)
+      i === 0 && filterMessages.push(`status in (${req.body.status})`)
+    }
+    if (whereClauses.length > 0) {
+      qryTxt += ` WHERE ${whereClauses.join(' AND ')}`
+    }
   }
-  if (req.body.startDateFrom) {
-    parameters.push(req.body.startDateFrom)
-    whereClauses.push('start_date >= ?')
-    filterMessages.push(`start date ≥ ${req.body.startDateFrom}`)
-  }
-  if (req.body.startDateTo) {
-    parameters.push(req.body.startDateTo)
-    whereClauses.push('start_date <= ?')
-    filterMessages.push(`start date ≤ ${req.body.startDateTo}`)
-  }
-  if (req.body.dueDateFrom) {
-    parameters.push(req.body.dueDateFrom)
-    whereClauses.push('duedate >= ?')
-    filterMessages.push(`due date ≥ ${req.body.dueDateFrom}`)
-  }
-  if (req.body.dueDateTo) {
-    parameters.push(req.body.dueDateTo)
-    whereClauses.push('duedate <= ?')
-    filterMessages.push(`due date ≤ ${req.body.dueDateTo}`)
-  }
-  if (req.body.applicantType) {
-    const applicantTypes = req.body.applicantType.split(',')
-    parameters.push(applicantTypes)
-    whereClauses.push(
-      `applicant_type in ${pgParametrize.toTuple([applicantTypes])}`
-    )
-    filterMessages.push(`applicant type in (${req.body.applicantType})`)
-  }
-  if (req.body.status) {
-    const statuses = req.body.status.split(',')
-    const qryStatuses = _.uniq(
-      statuses.reduce((a, e) => a.concat(statusMap[e]), [])
-    )
-    parameters.push(qryStatuses)
-    whereClauses.push(`status in ${pgParametrize.toTuple([qryStatuses])}`)
-    filterMessages.push(`status in (${req.body.status})`)
-  }
-  if (whereClauses.length > 0) {
-    qryTxt += ` WHERE ${whereClauses.join(' AND ')}`
-  }
+
   qryTxt += ' order by start_date desc limit 5000'
   try {
     const { rows } = await pool.query(
