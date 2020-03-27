@@ -42,56 +42,22 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col class="d-flex" cols="7" md="4">
-          <v-row>
-            <v-col cols="12">Start Date From (inclusive)</v-col>
-            <v-col cols="12"
-              ><v-date-picker
-                name="startDateFrom"
-                v-model="startDateFrom"
-              ></v-date-picker
-            ></v-col>
-            <input type="hidden" name="startDateFrom" :value="startDateFrom" />
-          </v-row>
-        </v-col>
-        <v-col class="d-flex" cols="7" md="4">
-          <v-row>
-            <v-col cols="12">Start Date To (inclusive)</v-col>
-            <v-col cols="12"
-              ><v-date-picker
-                name="startDateTo"
-                v-model="startDateTo"
-              ></v-date-picker
-            ></v-col>
-            <input type="hidden" name="startDateTo" :value="startDateTo" />
-          </v-row>
-        </v-col>
+        <v-col class="d-flex" cols="12" sm="1">Start Date</v-col>
+        <v-col class="d-flex" cols="12" sm="3"
+          ><date-input label="From" name="startDateFrom"></date-input
+        ></v-col>
+        <v-col class="d-flex" cols="12" sm="3"
+          ><date-input label="To" name="startDateTo"></date-input
+        ></v-col>
       </v-row>
       <v-row>
-        <v-col class="d-flex" cols="7" md="4">
-          <v-row>
-            <v-col cols="12">Due Date From (inclusive)</v-col>
-            <v-col cols="12"
-              ><v-date-picker
-                name="dueDateFrom"
-                v-model="dueDateFrom"
-              ></v-date-picker
-            ></v-col>
-            <input type="hidden" name="dueDateFrom" :value="dueDateFrom" />
-          </v-row>
-        </v-col>
-        <v-col class="d-flex" cols="7" md="4">
-          <v-row>
-            <v-col cols="12">Due Date To (inclusive)</v-col>
-            <v-col cols="12"
-              ><v-date-picker
-                name="dueDateTo"
-                v-model="dueDateTo"
-              ></v-date-picker
-            ></v-col>
-            <input type="hidden" name="dueDateTo" :value="dueDateTo" />
-          </v-row>
-        </v-col>
+        <v-col class="d-flex" cols="12" sm="1">Due Date</v-col>
+        <v-col class="d-flex" cols="12" sm="3"
+          ><date-input label="From" name="dueDateFrom"></date-input
+        ></v-col>
+        <v-col class="d-flex" cols="12" sm="3"
+          ><date-input label="To" name="dueDateTo"></date-input
+        ></v-col>
       </v-row>
       <v-row>
         <v-col class="d-flex" cols="12">
@@ -129,7 +95,11 @@
 </template>
 
 <script>
+import DateInput from './date-input'
 export default {
+  components: {
+    DateInput
+  },
   data: () => ({
     valid: true,
     startDateFrom: undefined,
