@@ -14,6 +14,7 @@
         :label="label"
         :name="name"
         clearable
+        readonly
         prepend-icon="event"
         v-on="on"
       ></v-text-field>
