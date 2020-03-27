@@ -1,6 +1,7 @@
 <template>
   <v-form
     ref="form"
+    autocomplete="off"
     v-model="valid"
     lazy-validation
     action="/FOI-report"
