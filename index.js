@@ -117,13 +117,13 @@ const statusMap = {
   ],
   'All Closed': ['Closed']
 }
-if (process.env.file_store_path) {
-  storeOptions.path = process.env.file_store_path
+if (process.env.FILE_STORE_PATH) {
+  storeOptions.path = process.env.FILE_STORE_PATH
 }
 const store = new FileStore(storeOptions)
 const keycloak = new Keycloak({ store: store, idpHint: 'idir' })
-if (process.env.trust_proxy) {
-  app.set('trust proxy', process.env.trust_proxy)
+if (process.env.TRUST_PROXY) {
+  app.set('trust proxy', process.env.TRUST_PROXY)
 }
 app.use(
   session({
