@@ -72,8 +72,8 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col class='d-flex' cols="12">
-          <v-alert type="warning">
+        <v-col class="d-flex" cols="12">
+          <v-alert type="warning" icon="mdi-alert-circle">
             Report is limited to 5,000 records.
           </v-alert>
         </v-col>
