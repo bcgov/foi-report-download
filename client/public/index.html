@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <link rel="icon" href="favicon.ico" />
     <title>FOI Report Download</title>
     <!-- Snowplow starts plowing - Standalone vA.2.10.2 -->
     <script type="text/javascript">
@@ -26,10 +26,10 @@
         window,
         document,
         'script',
-        'https://sp-js.apps.gov.bc.ca/MDWay3UqFnIiGVLIo7aoMi4xMC4y.js',
+        '<%=process.env.SNOWPLOW_TRACKER_URL %>',
         'snowplow'
       )
-      var collector = 'spm.gov.bc.ca'
+      var collector = '<%=process.env.SNOWPLOW_COLLECTOR_HOST%>'
       window.snowplow('newTracker', 'rt', collector, {
         appId: 'Snowplow_standalone',
         platform: 'web',
