@@ -9,17 +9,10 @@ module.exports = {
     }
   },
   chainWebpack: config => {
-    config.module
-      .rule('html')
-      .test(/\.html$/)
-      .use('html-loader')
-      .loader('html-loader')
-      .tap(options => {
-        // modify the options...
-        return {
-          minimize: false
-        }
-      })
-      .end()
+    config.plugin('html').tap(args => {
+      args[0].template = '!!html-loader?minimize=false!' + args[0].template
+      args[0].minify = false
+      return args
+    })
   }
 }

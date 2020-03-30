@@ -399,7 +399,7 @@ app.post('/FOI-report', async (req, res) => {
                 {
                   width: 'auto',
                   stack: pdfOnlyMessages.concat(
-                    !filterMessages
+                    filterMessages.length === 0
                       ? []
                       : ['Report is filtered by', { ul: filterMessages }]
                   )
