@@ -12,6 +12,7 @@
         <v-col cols="12" sm="6">
           <v-select
             :items="orgs"
+            v-model="selectedOrgs"
             name="orgCode"
             label="Organization"
             multiple
@@ -25,7 +26,7 @@
             :items="status"
             label="Status"
             name="status"
-            v-model="defaultStatus"
+            v-model="selectedStatus"
             multiple
             outlined
           ></v-select>
@@ -35,6 +36,7 @@
         <v-col cols="12" sm="6">
           <v-select
             :items="applicantType"
+            v-model="selectedApplicantType"
             label="Applicant Type"
             name="applicantType"
             multiple
@@ -47,25 +49,44 @@
         <v-col cols="12" sm="3"
           ><date-input
             label="From (inclusive)"
+            v-model="startDateFrom"
             name="startDateFrom"
           ></date-input
         ></v-col>
         <v-col cols="12" sm="3"
-          ><date-input label="To (inclusive)" name="startDateTo"></date-input
+          ><date-input
+            label="To (inclusive)"
+            v-model="startDateTo"
+            name="startDateTo"
+          ></date-input
         ></v-col>
       </v-row>
       <v-row>
         <v-col cols="12" sm="1">Due Date</v-col>
         <v-col cols="12" sm="3"
-          ><date-input label="From (inclusive)" name="dueDateFrom"></date-input
+          ><date-input
+            label="From (inclusive)"
+            v-model="dueDateFrom"
+            name="dueDateFrom"
+          ></date-input
         ></v-col>
         <v-col cols="12" sm="3"
-          ><date-input label="To (inclusive)" name="dueDateTo"></date-input
+          ><date-input
+            label="To (inclusive)"
+            v-model="dueDateTo"
+            name="dueDateTo"
+          ></date-input
         ></v-col>
       </v-row>
       <v-row>
         <v-col cols="12">
-          <v-radio-group name="format" row label="File Format" mandatory>
+          <v-radio-group
+            name="format"
+            row
+            label="File Format"
+            v-model="fileFormat"
+            mandatory
+          >
             <v-radio label="PDF" value="PDF"></v-radio>
             <v-radio label="Excel" value="Excel"></v-radio>
           </v-radio-group>
@@ -106,17 +127,19 @@ export default {
   },
   data: () => ({
     valid: true,
-    startDateFrom: undefined,
-    startDateTo: undefined,
-    dueDateFrom: undefined,
-    dueDateTo: undefined,
-    defaultStatus: ['All Open'],
+    startDateFrom: null,
+    startDateTo: null,
+    dueDateFrom: null,
+    dueDateTo: null,
+    fileFormat: 'PDF',
+    selectedStatus: ['All Open'],
     status: [
       'All Open',
       'All Open excluding on-hold',
       'All On-Hold',
       'All Closed'
     ],
+    selectedApplicantType: [],
     applicantType: [
       'Business',
       'Individual',
@@ -128,6 +151,7 @@ export default {
       'Political Party',
       'Researcher'
     ],
+    selectedOrgs: [],
     orgs: [
       {
         value: 'AED',

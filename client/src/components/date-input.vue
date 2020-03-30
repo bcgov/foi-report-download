@@ -29,10 +29,17 @@
 
 <script>
 export default {
-  props: ['label', 'name'],
-  data: () => ({
-    date: undefined,
-    menu: false
-  })
+  props: ['label', 'name', 'value'],
+  data: function() {
+    return {
+      date: this.value,
+      menu: false
+    }
+  },
+  watch: {
+    date: function(newDate) {
+      this.$emit('input', newDate)
+    }
+  }
 }
 </script>
