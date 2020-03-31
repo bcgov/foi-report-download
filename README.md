@@ -5,6 +5,8 @@
 This project is currently under development and actively supported by the GDX Analytics Team.
 
 ## Features
+This is an intranet web-app allowing authenticated users to specify filters and 
+download FOI report in PDF or Excel format.
 
 ## Configuration
 
@@ -22,8 +24,10 @@ This project is currently under development and actively supported by the GDX An
 | TRUST_PROXY             | No        |            | express.js trust proxy     |
 
 ## Getting Help
+Please contact the GDX Service desk via the [GCPE GDX Client Service Desk Portal](https://apps.gcpe.gov.bc.ca/jira/servicedesk/customer/portal/9). 
 
 ## Contributors
+See [contributors](https://github.com/bcgov/foi-report-download/graphs/contributors).
 
 ## License
 
