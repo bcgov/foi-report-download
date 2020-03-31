@@ -220,21 +220,18 @@ export default {
   methods: {
     validate() {
       this.$refs.form.validate()
-      let postData = {}
-      this.selectedOrgs.length > 0 &&
-        (postData.organization = this.selectedOrgs)
-      this.status.length > 0 && (postData.status = this.selectedStatus)
-      this.selectedApplicantType.length > 0 &&
-        (postData.applicant_type = this.selectedApplicantType)
-      this.startDateFrom && (postData.start_date_start = this.startDateFrom)
-      this.startDateTo && (postData.start_date_end = this.startDateTo)
-      this.dueDateFrom && (postData.due_date_start = this.dueDateFrom)
-      this.dueDateTo && (postData.due_date_end = this.dueDateTo)
-      this.fileFormat && (postData.file_format = this.fileFormat)
-
       window.snowplow('trackSelfDescribingEvent', {
         schema: 'iglu:ca.bc.gov.foi/foi_report/jsonschema/1-0-0',
-        data: postData
+        data: {
+          organization: this.selectedOrgs,
+          status: this.selectedStatus,
+          applicant_type: this.selectedApplicantType,
+          start_date_start: this.startDateFrom,
+          start_date_end: this.startDateTo,
+          due_date_start: this.dueDateFrom,
+          due_date_end: this.dueDateTo,
+          file_format: this.fileFormat
+        }
       })
     },
     reset() {
