@@ -130,7 +130,11 @@ const summaryStatusMap = {
     'Received',
     'Request for Docs Sent'
   ],
-  onHold: ['On Hold-Fee Related', 'On Hold-Other']
+  onHold: [
+    'On Hold-Fee Related',
+    'On Hold-Need Info/Clarification',
+    'On Hold-Other'
+  ]
 }
 
 const generalSummaryApplicantTypes = [
