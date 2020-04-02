@@ -417,8 +417,6 @@ app.post('/FOI-report', async (req, res) => {
               }
             } else if (summaryStatusMap.onHold.indexOf(e.status) >= 0) {
               acc[idx].counts.onHold += e.count
-            } else {
-              console.log('general ' + e.status)
             }
             return acc
           },
@@ -467,8 +465,6 @@ app.post('/FOI-report', async (req, res) => {
               }
             } else if (summaryStatusMap.onHold.indexOf(e.status) >= 0) {
               acc.onHold += e.count
-            } else {
-              console.log(e.status)
             }
             return acc
           },
@@ -559,7 +555,8 @@ app.post('/FOI-report', async (req, res) => {
                     body: personalSummaryTableBody
                   }
                 }
-              ]
+              ],
+              pageBreak: 'after'
             },
             {
               columns: [
