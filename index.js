@@ -89,34 +89,62 @@ const statusMap = {
     'Amended',
     'Assigned',
     'DAddRvwLog',
-    'Disposition Accepted',
-    'Documents Added',
-    'Documents Delivered',
-    'On Hold-Fee Related',
-    'On Hold-Need Info/Clarification',
-    'On Hold-Other',
+    'Disposition Accepted',
+    'Documents Added',
+    'Documents Delivered',
+    'On Hold-Fee Related',
+    'On Hold-Need Info/Clarification',
+    'On Hold-Other',
     'Perfected',
     'Received',
-    'Request for Docs Sent'
+    'Request for Docs Sent'
   ],
   'All On-Hold': [
-    'On Hold-Fee Related',
-    'On Hold-Need Info/Clarification',
-    'On Hold-Other'
+    'On Hold-Fee Related',
+    'On Hold-Need Info/Clarification',
+    'On Hold-Other'
   ],
   'All Open excluding on-hold': [
     'Amended',
     'Assigned',
     'DAddRvwLog',
-    'Disposition Accepted',
-    'Documents Added',
-    'Documents Delivered',
+    'Disposition Accepted',
+    'Documents Added',
+    'Documents Delivered',
     'Perfected',
     'Received',
-    'Request for Docs Sent'
+    'Request for Docs Sent'
   ],
   'All Closed': ['Closed']
 }
+
+const summaryStatusMap = {
+  open: [
+    'Amended',
+    'Assigned',
+    'DAddRvwLog',
+    'Disposition Accepted',
+    'Documents Added',
+    'Documents Delivered',
+    'Perfected',
+    'Received',
+    'Request for Docs Sent'
+  ],
+  onHold: ['On Hold-Fee Related', 'On Hold-Other']
+}
+
+const generalSummaryApplicantTypes = [
+  'Business',
+  'Decline to Identify',
+  'Individual',
+  'Interest Group',
+  'Law Firm',
+  'Media',
+  'Other Governments',
+  'Other Public Body',
+  'Political Party',
+  'Researcher'
+]
 if (process.env.FILE_STORE_PATH) {
   storeOptions.path = process.env.FILE_STORE_PATH
 }
@@ -172,75 +200,82 @@ app.post('/FOI-report', async (req, res) => {
   const selectStmt =
     'select request_id, start_date, duedate, status, applicant_type, ' +
     'analyst, description, current_activity from foi.foi'
-  let qryTxt = ''
-  let parameters = []
+  const summarySelectStmt =
+    'select type, applicant_type, status, case when ' +
+    'duedate < trunc(getdate()) then true else false end ' +
+    'as is_past_due from foi.foi'
   let filterMessages = []
   let pdfOnlyMessages = ['Report is sorted by start date in descending order']
-  for (const [i, e] of orgGroupByDate.entries()) {
-    qryTxt += i === 0 ? '' : ' union '
-    qryTxt += selectStmt
-    let whereClauses = []
-    parameters.push(e.date.format('YYYY-MM-DD'))
-    whereClauses.push(`start_date >= ?`)
-    if (i < orgGroupByDate.length - 1) {
-      parameters.push(orgGroupByDate[i + 1].date.format('YYYY-MM-DD'))
-      whereClauses.push(`start_date < ?`)
-    }
-    if (req.body.orgCode) {
-      const orgCodes = req.body.orgCode.split(',')
-      const qryOrgCodes = _.uniq(
-        orgCodes.reduce((a, c) => a.concat(orgGroupByDate[i].orgGroup[c]), [])
-      )
-      parameters.push(qryOrgCodes)
-      whereClauses.push(`proc_org in ${pgParametrize.toTuple([qryOrgCodes])}`)
-      i === 0 &&
-        filterMessages.push(
-          `organization in (${orgCodes.map(e => orgMap[e]).join(', ')})`
+  function composeQry(selectStmt, includeAllWhereClauses) {
+    let parameters = []
+    let qryTxt = ''
+    for (const [i, e] of orgGroupByDate.entries()) {
+      qryTxt += i === 0 ? '' : ' union all '
+      qryTxt += selectStmt
+      let whereClauses = []
+      parameters.push(e.date.format('YYYY-MM-DD'))
+      whereClauses.push(`start_date >= ?`)
+      if (i < orgGroupByDate.length - 1) {
+        parameters.push(orgGroupByDate[i + 1].date.format('YYYY-MM-DD'))
+        whereClauses.push(`start_date < ?`)
+      }
+      if (req.body.orgCode) {
+        const orgCodes = req.body.orgCode.split(',')
+        const qryOrgCodes = _.uniq(
+          orgCodes.reduce((a, c) => a.concat(orgGroupByDate[i].orgGroup[c]), [])
         )
+        parameters.push(qryOrgCodes)
+        whereClauses.push(`proc_org in ${pgParametrize.toTuple([qryOrgCodes])}`)
+        i === 0 &&
+          filterMessages.push(
+            `organization in (${orgCodes.map(e => orgMap[e]).join(', ')})`
+          )
+      }
+      if (req.body.startDateFrom) {
+        parameters.push(req.body.startDateFrom)
+        whereClauses.push('start_date >= ?')
+        i === 0 && filterMessages.push(`start date ≥ ${req.body.startDateFrom}`)
+      }
+      if (req.body.startDateTo) {
+        parameters.push(req.body.startDateTo)
+        whereClauses.push('start_date <= ?')
+        i === 0 && filterMessages.push(`start date ≤ ${req.body.startDateTo}`)
+      }
+      if (req.body.dueDateFrom) {
+        parameters.push(req.body.dueDateFrom)
+        whereClauses.push('duedate >= ?')
+        i === 0 && filterMessages.push(`due date ≥ ${req.body.dueDateFrom}`)
+      }
+      if (req.body.dueDateTo) {
+        parameters.push(req.body.dueDateTo)
+        whereClauses.push('duedate <= ?')
+        i === 0 && filterMessages.push(`due date ≤ ${req.body.dueDateTo}`)
+      }
+      if (req.body.applicantType && includeAllWhereClauses) {
+        const applicantTypes = req.body.applicantType.split(',')
+        parameters.push(applicantTypes)
+        whereClauses.push(
+          `applicant_type in ${pgParametrize.toTuple([applicantTypes])}`
+        )
+        i === 0 &&
+          filterMessages.push(`applicant type in (${req.body.applicantType})`)
+      }
+      if (req.body.status && includeAllWhereClauses) {
+        const statuses = req.body.status.split(',')
+        const qryStatuses = _.uniq(
+          statuses.reduce((a, e) => a.concat(statusMap[e]), [])
+        )
+        parameters.push(qryStatuses)
+        whereClauses.push(`status in ${pgParametrize.toTuple([qryStatuses])}`)
+        i === 0 && filterMessages.push(`status in (${req.body.status})`)
+      }
+      if (whereClauses.length > 0) {
+        qryTxt += ` WHERE ${whereClauses.join(' AND ')}`
+      }
     }
-    if (req.body.startDateFrom) {
-      parameters.push(req.body.startDateFrom)
-      whereClauses.push('start_date >= ?')
-      i === 0 && filterMessages.push(`start date ≥ ${req.body.startDateFrom}`)
-    }
-    if (req.body.startDateTo) {
-      parameters.push(req.body.startDateTo)
-      whereClauses.push('start_date <= ?')
-      i === 0 && filterMessages.push(`start date ≤ ${req.body.startDateTo}`)
-    }
-    if (req.body.dueDateFrom) {
-      parameters.push(req.body.dueDateFrom)
-      whereClauses.push('duedate >= ?')
-      i === 0 && filterMessages.push(`due date ≥ ${req.body.dueDateFrom}`)
-    }
-    if (req.body.dueDateTo) {
-      parameters.push(req.body.dueDateTo)
-      whereClauses.push('duedate <= ?')
-      i === 0 && filterMessages.push(`due date ≤ ${req.body.dueDateTo}`)
-    }
-    if (req.body.applicantType) {
-      const applicantTypes = req.body.applicantType.split(',')
-      parameters.push(applicantTypes)
-      whereClauses.push(
-        `applicant_type in ${pgParametrize.toTuple([applicantTypes])}`
-      )
-      i === 0 &&
-        filterMessages.push(`applicant type in (${req.body.applicantType})`)
-    }
-    if (req.body.status) {
-      const statuses = req.body.status.split(',')
-      const qryStatuses = _.uniq(
-        statuses.reduce((a, e) => a.concat(statusMap[e]), [])
-      )
-      parameters.push(qryStatuses)
-      whereClauses.push(`status in ${pgParametrize.toTuple([qryStatuses])}`)
-      i === 0 && filterMessages.push(`status in (${req.body.status})`)
-    }
-    if (whereClauses.length > 0) {
-      qryTxt += ` WHERE ${whereClauses.join(' AND ')}`
-    }
+    return { query: qryTxt, parameters }
   }
-
+  let { query: qryTxt, parameters } = composeQry(selectStmt, true)
   qryTxt += ' order by start_date desc limit 5000'
   try {
     const { rows } = await pool.query(
@@ -356,6 +391,113 @@ app.post('/FOI-report', async (req, res) => {
         wb.write('FOI-report.xlsx', res)
         break
       case 'PDF':
+        let { query: qryTxt, parameters } = composeQry(summarySelectStmt, false)
+        qryTxt = `select type, applicant_type, status, is_past_due::boolean, count(*)::integer as count from (${qryTxt}) group by 1,2,3,4`
+        const { rows: summaryRows } = await pool.query(
+          pgParametrize.toOrdinal(qryTxt),
+          _.flatten(parameters)
+        )
+        const generalSummary = summaryRows.reduce(
+          (acc, e) => {
+            if (e.type !== 'General') {
+              return acc
+            }
+            const idx = generalSummaryApplicantTypes.indexOf(e.applicant_type)
+            if (idx < 0) {
+              return acc
+            }
+            if (summaryStatusMap.open.indexOf(e.status) >= 0) {
+              acc[idx].counts.open += e.count
+              if (e.is_past_due) {
+                acc[idx].counts.openAndOverDue += e.count
+              }
+            } else if (summaryStatusMap.onHold.indexOf(e.status) >= 0) {
+              acc[idx].counts.onHold += e.count
+            } else {
+              console.log('general ' + e.status)
+            }
+            return acc
+          },
+          generalSummaryApplicantTypes.map(e => ({
+            applicantType: e,
+            counts: {
+              open: 0,
+              onHold: 0,
+              openAndOverDue: 0
+            }
+          }))
+        )
+        let generalSummaryTableBody = generalSummary.map((v, i) => {
+          return [
+            i === 0 ? { text: 'General', rowSpan: generalSummary.length } : '',
+            { text: v.applicantType },
+            { text: v.counts.open },
+            { text: v.counts.onHold },
+            { text: v.counts.openAndOverDue }
+          ]
+        })
+        generalSummaryTableBody.unshift([
+          '',
+          '',
+          'Open',
+          'On-Hold',
+          'Currently Open and Overdue'
+        ])
+        generalSummaryTableBody.unshift([
+          '',
+          '',
+          { text: 'General Requests', colSpan: 3, alignment: 'center' },
+          '',
+          ''
+        ])
+
+        const personalSummary = summaryRows.reduce(
+          (acc, e) => {
+            if (e.type !== 'Personal') {
+              return acc
+            }
+            if (summaryStatusMap.open.indexOf(e.status) >= 0) {
+              acc.open += e.count
+              if (e.is_past_due) {
+                acc.openAndOverDue += e.count
+              }
+            } else if (summaryStatusMap.onHold.indexOf(e.status) >= 0) {
+              acc.onHold += e.count
+            } else {
+              console.log(e.status)
+            }
+            return acc
+          },
+          {
+            open: 0,
+            onHold: 0,
+            openAndOverDue: 0
+          }
+        )
+        let personalSummaryTableBody = [
+          [
+            'Personal',
+            'Total',
+            personalSummary.open,
+            personalSummary.onHold,
+            personalSummary.openAndOverDue
+          ]
+        ]
+        personalSummaryTableBody.unshift([
+          '',
+          '',
+          'Open',
+          'On-Hold',
+          'Currently Open and Overdue'
+        ])
+        personalSummaryTableBody.unshift([
+          '',
+          '',
+          { text: 'Personal Requests', colSpan: 3, alignment: 'center' },
+          '',
+          ''
+        ])
+
         const printer = new PdfPrinter(pdfFonts)
         let hasOverdueOpenRows = false
         const tableBody = rows.map(v => {
@@ -393,6 +535,24 @@ app.post('/FOI-report', async (req, res) => {
             {
               image: 'citz.jpg',
               width: 150
+            },
+            {
+              columns: [
+                {
+                  layout: 'lightHorizontalLines',
+                  table: {
+                    headerRows: 2,
+                    body: generalSummaryTableBody
+                  }
+                },
+                {
+                  layout: 'lightHorizontalLines',
+                  table: {
+                    headerRows: 2,
+                    body: personalSummaryTableBody
+                  }
+                }
+              ]
             },
             {
               columns: [
