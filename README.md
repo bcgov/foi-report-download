@@ -36,7 +36,6 @@ VS Code is the preferred dev tool.
   ```
   git clone https://github.com/bcgov/foi-report-download.git
   cd foi-report-download
-  cp ~/keycloak.json .
   npm i -g yarn
   yarn install
   ```
