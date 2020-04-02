@@ -431,9 +431,9 @@ app.post('/FOI-report', async (req, res) => {
           return [
             i === 0 ? { text: 'General', rowSpan: generalSummary.length } : '',
             { text: v.applicantType },
-            { text: v.counts.open },
-            { text: v.counts.onHold },
-            { text: v.counts.openAndOverDue }
+            { text: v.counts.open, style: { alignment: 'right' } },
+            { text: v.counts.onHold, style: { alignment: 'right' } },
+            { text: v.counts.openAndOverDue, style: { alignment: 'right' } }
           ]
         })
         generalSummaryTableBody.unshift([
@@ -478,9 +478,12 @@ app.post('/FOI-report', async (req, res) => {
           [
             'Personal',
             'Total',
-            personalSummary.open,
-            personalSummary.onHold,
-            personalSummary.openAndOverDue
+            { text: personalSummary.open, style: { alignment: 'right' } },
+            { text: personalSummary.onHold, style: { alignment: 'right' } },
+            {
+              text: personalSummary.openAndOverDue,
+              style: { alignment: 'right' }
+            }
           ]
         ]
         personalSummaryTableBody.unshift([
