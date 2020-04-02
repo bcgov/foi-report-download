@@ -21,7 +21,38 @@ download FOI report in PDF or Excel format.
 | SNOWPLOW_COLLECTOR_HOST | Yes       |            | snowplow collector host    |
 | FILE_STORE_PATH         | No        | ./sessions | path to session file store |
 | TRUST_PROXY             | No        |            | express.js trust proxy     |
-| TRUST_PROXY             | No        |            | express.js trust proxy     |
+
+## Setup Dev Environment
+VS Code is the preferred dev tool.
+### Prerequisites
+  * localhost has access to Redshift
+  * localhost has Node.js installed
+  * localhost has applicable env var above defined
+  * access to Keycloak realm admin console
+  * setup a Keycloak client with http://localhost:8080 as *Root URL*
+  
+### Install & Launch
+1. Run
+  ```
+  git clone https://github.com/bcgov/foi-report-download.git
+  cd foi-report-download
+  cp ~/keycloak.json .
+  npm i -g yarn
+  yarn install
+  ```
+2. Download keycloak.json from Keycloak admin console client's Installation tab to ./keycloak.json
+3. Run
+   ```
+   yarn run start
+   ```
+  
+    If everything works out, the output should be something like
+    ```
+    yarn run v1.22.4
+    $ node .
+    launch http://localhost:8080 to explore
+    ```
+4. Open http://localhost:8080 in browser and login to the app.
 
 ## Getting Help
 Please contact the GDX Service desk via the [GCPE GDX Client Service Desk Portal](https://apps.gcpe.gov.bc.ca/jira/servicedesk/customer/portal/9). 
