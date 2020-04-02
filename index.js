@@ -231,6 +231,7 @@ app.post('/FOI-report', async (req, res) => {
         parameters.push(qryOrgCodes)
         whereClauses.push(`proc_org in ${pgParametrize.toTuple([qryOrgCodes])}`)
         i === 0 &&
+          includeAllWhereClauses &&
           filterMessages.push(
             `organization in (${orgCodes.map(e => orgMap[e]).join(', ')})`
           )
@@ -238,22 +239,30 @@ app.post('/FOI-report', async (req, res) => {
       if (req.body.startDateFrom) {
         parameters.push(req.body.startDateFrom)
         whereClauses.push('start_date >= ?')
-        i === 0 && filterMessages.push(`start date ≥ ${req.body.startDateFrom}`)
+        i === 0 &&
+          includeAllWhereClauses &&
+          filterMessages.push(`start date ≥ ${req.body.startDateFrom}`)
       }
       if (req.body.startDateTo) {
         parameters.push(req.body.startDateTo)
         whereClauses.push('start_date <= ?')
-        i === 0 && filterMessages.push(`start date ≤ ${req.body.startDateTo}`)
+        i === 0 &&
+          includeAllWhereClauses &&
+          filterMessages.push(`start date ≤ ${req.body.startDateTo}`)
       }
       if (req.body.dueDateFrom) {
         parameters.push(req.body.dueDateFrom)
         whereClauses.push('duedate >= ?')
-        i === 0 && filterMessages.push(`due date ≥ ${req.body.dueDateFrom}`)
+        i === 0 &&
+          includeAllWhereClauses &&
+          filterMessages.push(`due date ≥ ${req.body.dueDateFrom}`)
       }
       if (req.body.dueDateTo) {
         parameters.push(req.body.dueDateTo)
         whereClauses.push('duedate <= ?')
-        i === 0 && filterMessages.push(`due date ≤ ${req.body.dueDateTo}`)
+        i === 0 &&
+          includeAllWhereClauses &&
+          filterMessages.push(`due date ≤ ${req.body.dueDateTo}`)
       }
       if (req.body.applicantType && includeAllWhereClauses) {
         const applicantTypes = req.body.applicantType.split(',')
@@ -262,6 +271,7 @@ app.post('/FOI-report', async (req, res) => {
           `applicant_type in ${pgParametrize.toTuple([applicantTypes])}`
         )
         i === 0 &&
+          includeAllWhereClauses &&
           filterMessages.push(`applicant type in (${req.body.applicantType})`)
       }
       if (req.body.status && includeAllWhereClauses) {
@@ -271,7 +281,9 @@ app.post('/FOI-report', async (req, res) => {
         )
         parameters.push(qryStatuses)
         whereClauses.push(`status in ${pgParametrize.toTuple([qryStatuses])}`)
-        i === 0 && filterMessages.push(`status in (${req.body.status})`)
+        i === 0 &&
+          includeAllWhereClauses &&
+          filterMessages.push(`status in (${req.body.status})`)
       }
       if (whereClauses.length > 0) {
         qryTxt += ` WHERE ${whereClauses.join(' AND ')}`
