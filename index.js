@@ -335,7 +335,11 @@ app.post('/FOI-report', async (req, res) => {
             ws.cell(currRow++, 2).string(item)
           }
         }
-        if (rows.some(e => e.duedate < new Date() && e.status !== 'Closed')) {
+        if (
+          rows.some(
+            e => e.duedate < moment().startOf('day') && e.status !== 'Closed'
+          )
+        ) {
           ws.cell(currRow++, 1).string(pastDueMsg)
         }
         ws.cell(currRow, 1)
@@ -368,7 +372,10 @@ app.post('/FOI-report', async (req, res) => {
 
         for (const [i, row] of rows.entries()) {
           let color = 'black'
-          if (row.duedate < new Date() && rows.status !== 'Closed') {
+          if (
+            row.duedate < moment().startOf('day') &&
+            rows.status !== 'Closed'
+          ) {
             color = 'red'
           }
           ws.cell(i + currRow, 1)
@@ -517,7 +524,7 @@ app.post('/FOI-report', async (req, res) => {
         let hasOverdueOpenRows = false
         const tableBody = rows.map(v => {
           let color = 'black'
-          if (v.duedate < new Date() && v.status !== 'Closed') {
+          if (v.duedate < moment().startOf('day') && v.status !== 'Closed') {
             color = 'red'
             if (!hasOverdueOpenRows) {
               hasOverdueOpenRows = true
