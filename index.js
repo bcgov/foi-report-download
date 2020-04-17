@@ -8,7 +8,7 @@ const Keycloak = require('keycloak-connect')
 const storeOptions = { logFn: () => {} }
 const pgParametrize = require('pg-parameterize')
 const _ = require('lodash')
-const pastDueMsg = 'Past due open records are displayed in red'
+const pastDueMsg = 'Overdue requests are displayed in red'
 const orgMap = {
   AED: 'Ministry of Advanced Education, Skills and Training',
   AGR: 'Ministry of Agriculture',
@@ -203,7 +203,7 @@ app.post('/FOI-report', async (req, res) => {
 
   const selectStmt =
     'select request_id, applicant_type, description, start_date, duedate, ' +
-    'current_activity, analyst, no_pages_in_request::integer ' +
+    'current_activity, analyst, no_pages_in_request::integer, end_date, status ' +
     'from foi.foi'
   const summarySelectStmt =
     'select type, applicant_type, status, case when ' +
@@ -369,8 +369,9 @@ app.post('/FOI-report', async (req, res) => {
         for (const [i, row] of rows.entries()) {
           let color = 'black'
           if (
-            row.duedate < moment().startOf('day') &&
-            rows.status !== 'Closed'
+            (row.duedate < moment().startOf('day') &&
+              row.status !== 'Closed') ||
+            (row.duedate < row.end_date && row.status === 'Closed')
           ) {
             color = 'red'
           }
@@ -520,7 +521,10 @@ app.post('/FOI-report', async (req, res) => {
         let hasOverdueOpenRows = false
         const tableBody = rows.map((v) => {
           let color = 'black'
-          if (v.duedate < moment().startOf('day') && v.status !== 'Closed') {
+          if (
+            (v.duedate < moment().startOf('day') && v.status !== 'Closed') ||
+            (v.duedate < v.end_date && v.status === 'Closed')
+          ) {
             color = 'red'
             if (!hasOverdueOpenRows) {
               hasOverdueOpenRows = true
@@ -597,7 +601,7 @@ app.post('/FOI-report', async (req, res) => {
               layout: 'lightHorizontalLines', // optional
               table: {
                 headerRows: 1,
-                widths: [40, 60, '*', 46, 46, 40, 40, 40],
+                widths: [40, 60, 320, 46, 46, 40, 50, '*'],
                 body: tableBody,
               },
             },
