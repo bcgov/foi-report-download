@@ -272,7 +272,6 @@ app.post('/FOI-report', async (req, res) => {
           `applicant_type in ${pgParametrize.toTuple([applicantTypes])}`
         )
         i === 0 &&
-          includeAllWhereClauses &&
           filterMessages.push(`applicant type in (${req.body.applicantType})`)
       }
       if (req.body.status && includeAllWhereClauses) {
@@ -282,9 +281,29 @@ app.post('/FOI-report', async (req, res) => {
         )
         parameters.push(qryStatuses)
         whereClauses.push(`status in ${pgParametrize.toTuple([qryStatuses])}`)
-        i === 0 &&
-          includeAllWhereClauses &&
-          filterMessages.push(`status in (${req.body.status})`)
+        i === 0 && filterMessages.push(`status in (${req.body.status})`)
+      }
+      if (req.body.isOverdue && includeAllWhereClauses) {
+        const isOverdueArr = req.body.isOverdue.split(',')
+        if (
+          isOverdueArr.indexOf('true') >= 0 &&
+          isOverdueArr.indexOf('false') >= 0
+        ) {
+        } else if (isOverdueArr.indexOf('true') >= 0) {
+          whereClauses.push(
+            `(status <> 'Closed' AND duedate < '${moment().format(
+              'YYYY-MM-DD'
+            )}' ` + `OR status = 'Closed' AND duedate < end_date)`
+          )
+          i === 0 && filterMessages.push('Overdue requests')
+        } else if (isOverdueArr.indexOf('false') >= 0) {
+          whereClauses.push(
+            `(status <> 'Closed' AND duedate >= '${moment().format(
+              'YYYY-MM-DD'
+            )}' ` + `OR status = 'Closed' AND duedate >= end_date)`
+          )
+          i === 0 && filterMessages.push('Non-overdue requests')
+        }
       }
       if (whereClauses.length > 0) {
         qryTxt += ` WHERE ${whereClauses.join(' AND ')}`
