@@ -114,13 +114,20 @@
       <v-row>
         <v-col cols="12">
           <v-btn
-            :disabled="!valid"
+            :disabled="!valid || isSubmitting"
             color="success"
             class="mr-4"
             type="submit"
             @click="validate"
           >
-            Submit
+            <span v-if="!isSubmitting">Submit</span>
+            <v-progress-circular
+              indeterminate
+              color="white"
+              class="mx-3"
+              v-if="isSubmitting"
+              >Submit</v-progress-circular
+            >
           </v-btn>
           <v-btn color="error" class="mr-4" @click="reset">
             Reset
@@ -128,6 +135,7 @@
         </v-col>
       </v-row>
     </v-container>
+    <input type="hidden" name="downloadToken" :value="downloadToken" />
   </v-form>
 </template>
 
@@ -138,6 +146,9 @@ export default {
     DateInput,
   },
   data: () => ({
+    downloadTimer: null,
+    downloadToken: '',
+    isSubmitting: false,
     valid: true,
     startDateFrom: null,
     startDateTo: null,
@@ -251,9 +262,51 @@ export default {
           file_format: this.fileFormat,
         },
       })
+      this.blockResubmit()
     },
     reset() {
       this.$refs.form.reset()
+    },
+    getCookie(name) {
+      var parts = document.cookie.split(name + '=')
+      if (parts.length == 2)
+        return parts
+          .pop()
+          .split(';')
+          .shift()
+    },
+    expireCookie(cName) {
+      document.cookie =
+        encodeURIComponent(cName) +
+        '=deleted; expires=' +
+        new Date(0).toUTCString()
+    },
+    setFormToken() {
+      this.downloadToken = new Date().getTime()
+    },
+    // Prevents double-submits by waiting for a cookie from the server.
+    blockResubmit() {
+      window.setTimeout(
+        function() {
+          this.isSubmitting = true
+        }.bind(this),
+        0
+      )
+      this.setFormToken()
+      this.downloadTimer = window.setInterval(
+        function() {
+          var token = this.getCookie('downloadToken')
+          if (token == this.downloadToken) {
+            this.unblockSubmit()
+          }
+        }.bind(this),
+        1000
+      )
+    },
+    unblockSubmit() {
+      this.isSubmitting = false
+      window.clearInterval(this.downloadTimer)
+      this.expireCookie('downloadToken')
     },
   },
 }

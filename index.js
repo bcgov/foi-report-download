@@ -197,10 +197,13 @@ app.get('/ping', async (req, res) => {
 })
 app.use(keycloak.protect())
 app.post('/FOI-report', async (req, res) => {
+  if (req.body.downloadToken) {
+    res.cookie('downloadToken', req.body.downloadToken)
+  }
   if (!req.body || !req.body.format) {
     res.status(403).end('missing format')
   }
-
+  
   const selectStmt =
     'select request_id, applicant_type, description, start_date, duedate, ' +
     'current_activity, analyst, no_pages_in_request::integer, end_date, status ' +
