@@ -203,7 +203,7 @@ app.post('/FOI-report', async (req, res) => {
   if (!req.body || !req.body.format) {
     res.status(403).end('missing format')
   }
-  
+
   const selectStmt =
     'select request_id, applicant_type, description, start_date, duedate, ' +
     'current_activity, analyst, no_pages_in_request::integer, end_date, status ' +
@@ -637,7 +637,10 @@ app.post('/FOI-report', async (req, res) => {
         }
         const options = {}
         const pdfDoc = printer.createPdfKitDocument(dd, options)
-        res.setHeader('content-disposition', 'filename="FOI-report.pdf"')
+        res.setHeader(
+          'content-disposition',
+          'attachment; filename="FOI-report.pdf"'
+        )
         pdfDoc.pipe(res)
         pdfDoc.end()
         break
