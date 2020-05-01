@@ -162,8 +162,9 @@ export default {
       'All On-Hold',
       'All Closed',
     ],
-    selectedApplicantType: [],
+    selectedApplicantType: [null],
     applicantType: [
+      { value: null, text: '(All Applicant Types)' },
       'Business',
       'Individual',
       'Interest Group',
@@ -174,13 +175,14 @@ export default {
       'Political Party',
       'Researcher',
     ],
-    selectedOrgs: [],
     selectedIsOverdue: [true, false],
     isOverdue: [
       { value: true, text: 'Overdue requests' },
       { value: false, text: 'Non-overdue requests' },
     ],
+    selectedOrgs: [null],
     orgs: [
+      { value: null, text: '(All Organizations)' },
       {
         value: 'AED',
         text: 'AED - Ministry of Advanced Education, Skills and Training',
@@ -245,8 +247,27 @@ export default {
       },
     ],
   }),
-
+  watch: {
+    selectedOrgs: function(newVal) {
+      this.allItemToggler(newVal, 'selectedOrgs')
+    },
+    selectedApplicantType: function(newVal) {
+      this.allItemToggler(newVal, 'selectedApplicantType')
+    },
+  },
   methods: {
+    allItemToggler(newVal, dataField) {
+      if (newVal.length === 0) {
+        return this[dataField].push(null)
+      }
+      let nullIdx = newVal.indexOf(null)
+      if (nullIdx < 0) return
+      if (newVal.length === 1 && nullIdx === 0) return
+      if (nullIdx === newVal.length - 1) {
+        newVal.splice(0, newVal.length - 1)
+      }
+      this[dataField].splice(nullIdx, 1)
+    },
     validate() {
       this.$refs.form.validate()
       window.snowplow('trackSelfDescribingEvent', {
