@@ -313,6 +313,7 @@ export default {
         }.bind(this),
         0
       )
+      document.body.style.cursor = 'wait'
       this.setFormToken()
       this.downloadTimer = window.setInterval(
         function() {
@@ -326,6 +327,7 @@ export default {
     },
     unblockSubmit() {
       this.isSubmitting = false
+      document.body.style.cursor = 'unset'
       window.clearInterval(this.downloadTimer)
       this.expireCookie('downloadToken')
     },
