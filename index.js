@@ -148,6 +148,14 @@ const generalSummaryApplicantTypes = [
   'Political Party',
   'Researcher',
 ]
+
+const typeMap = {
+  Generals: ['General'],
+  Personals: ['Personal'],
+  Consultations: ['Consultation'],
+  'OIPC Reviews/Complaints': ['Review', 'Complaint'],
+}
+
 if (process.env.FILE_STORE_PATH) {
   storeOptions.path = process.env.FILE_STORE_PATH
 }
@@ -206,7 +214,7 @@ app.post('/FOI-report', async (req, res) => {
   const selectStmt =
     'select request_id, applicant_type, description, start_date, duedate, ' +
     'current_activity, analyst, no_pages_in_request::integer, end_date, ' +
-    'status, publication from foi.foi'
+    'status, publication, type from foi.foi'
   const summarySelectStmt =
     'select type, applicant_type, status, case when ' +
     'duedate < trunc(getdate()) then true else false end ' +
@@ -307,6 +315,10 @@ app.post('/FOI-report', async (req, res) => {
           i === 0 && filterMessages.push('Non-overdue requests')
         }
       }
+      // types
+      let types = _.flatten(Object.values(typeMap))
+      parameters.push(types)
+      whereClauses.push(`type in ${pgParametrize.toTuple([types])}`)
       if (whereClauses.length > 0) {
         qryTxt += ` WHERE ${whereClauses.join(' AND ')}`
       }
@@ -627,28 +639,7 @@ app.post('/FOI-report', async (req, res) => {
               ],
             },
             {
-              layout: {
-                // modified version of lightHorizontalLines with reduced padding
-                // https://github.com/bpampuch/pdfmake/blob/f9c81aab71df3336d569dbd900c87c173d37636c/src/tableLayouts.js#L40
-                hLineWidth(i, node) {
-                  if (i === 0 || i === node.table.body.length) {
-                    return 0
-                  }
-                  return i === node.table.headerRows ? 2 : 1
-                },
-                vLineWidth(i) {
-                  return 0
-                },
-                hLineColor(i) {
-                  return i === 1 ? 'black' : '#aaa'
-                },
-                paddingLeft(i) {
-                  return i === 0 ? 0 : 4
-                },
-                paddingRight(i, node) {
-                  return i === node.table.widths.length - 1 ? 0 : 4
-                },
-              }, // optional
+              layout: 'modifiedLightHorizontalLines',
               table: {
                 headerRows: 1,
                 widths: [40, 40, 320, 46, 46, 40, 50, 34, '*'],
@@ -663,7 +654,32 @@ app.post('/FOI-report', async (req, res) => {
           pageSize: 'LETTER',
           pageMargins: 20,
         }
-        const options = {}
+        const options = {
+          tableLayouts: {
+            modifiedLightHorizontalLines: {
+              // modified version of lightHorizontalLines with reduced padding
+              // https://github.com/bpampuch/pdfmake/blob/f9c81aab71df3336d569dbd900c87c173d37636c/src/tableLayouts.js#L40
+              hLineWidth(i, node) {
+                if (i === 0 || i === node.table.body.length) {
+                  return 0
+                }
+                return i === node.table.headerRows ? 2 : 1
+              },
+              vLineWidth(i) {
+                return 0
+              },
+              hLineColor(i) {
+                return i === 1 ? 'black' : '#aaa'
+              },
+              paddingLeft(i) {
+                return i === 0 ? 0 : 4
+              },
+              paddingRight(i, node) {
+                return i === node.table.widths.length - 1 ? 0 : 4
+              },
+            },
+          },
+        }
         const pdfDoc = printer.createPdfKitDocument(dd, options)
         res.setHeader(
           'content-disposition',
