@@ -139,7 +139,6 @@ const summaryStatusMap = {
 
 const generalSummaryApplicantTypes = [
   'Business',
-  'Decline to Identify',
   'Individual',
   'Interest Group',
   'Law Firm',
