@@ -50,6 +50,8 @@
               <li>
                 Click submit to run the report.
               </li>
+              <li>Wait for a download notification or for your report to open in a new tab. This may take a minute.</li>
+              <li>If you would like to run another report, please save this copy and then hit the back button to return to the home page to run another report.</li>
             </ol>
             </p>
             <h2>FOI Performance and other statistics:</h2>
@@ -78,7 +80,7 @@
                 New FOI response packages that are suitable for publication are
                 published on the
                 <a
-                  href="https://www2.gov.bc.ca/gov/content/governments/about-the-bc-government/open-government/open-information"
+                  href="https://www2.gov.bc.ca/gov/content/governments/about-the-bc-government/open-government/open-information/search-open-information-resources"
                   >Open Information</a
                 >
                 website daily and a number of other proactive disclosure
