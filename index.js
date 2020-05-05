@@ -206,8 +206,8 @@ app.post('/FOI-report', async (req, res) => {
 
   const selectStmt =
     'select request_id, applicant_type, description, start_date, duedate, ' +
-    'current_activity, analyst, no_pages_in_request::integer, end_date, status ' +
-    'from foi.foi'
+    'current_activity, analyst, no_pages_in_request::integer, end_date, ' +
+    'status, publication from foi.foi'
   const summarySelectStmt =
     'select type, applicant_type, status, case when ' +
     'duedate < trunc(getdate()) then true else false end ' +
@@ -352,6 +352,7 @@ app.post('/FOI-report', async (req, res) => {
         ws.column(6).setWidth(18)
         ws.column(7).setWidth(14)
         ws.column(8).setWidth(18)
+        ws.column(9).setWidth(18)
 
         let currRow = 1
         if (filterMessages.length > 0) {
@@ -386,6 +387,7 @@ app.post('/FOI-report', async (req, res) => {
           .string('No Pages in Request')
           .style(headerStyle)
           .style({ alignment: { horizontal: 'right' } })
+        ws.cell(currRow, 9).string('Publication Status').style(headerStyle)
         currRow++
 
         for (const [i, row] of rows.entries()) {
@@ -427,6 +429,10 @@ app.post('/FOI-report', async (req, res) => {
             .style({ font: { color: color } })
           ws.cell(i + currRow, 8)
             .number(row.no_pages_in_request)
+            .style(dataRowStyle)
+            .style({ font: { color: color } })
+          ws.cell(i + currRow, 9)
+            .string(row.publication)
             .style(dataRowStyle)
             .style({ font: { color: color } })
         }
@@ -562,6 +568,7 @@ app.post('/FOI-report', async (req, res) => {
             { text: v.current_activity, color: color },
             { text: v.analyst, color: color },
             { text: v.no_pages_in_request, color: color, alignment: 'right' },
+            { text: v.publication, color: color },
           ]
         })
         tableBody.unshift([
@@ -573,6 +580,7 @@ app.post('/FOI-report', async (req, res) => {
           'Current Action',
           'Analyst',
           { text: 'No Pages in Request', alignment: 'right' },
+          'Publication Status',
         ])
         const dd = {
           content: [
@@ -620,10 +628,31 @@ app.post('/FOI-report', async (req, res) => {
               ],
             },
             {
-              layout: 'lightHorizontalLines', // optional
+              layout: {
+                // modified version of lightHorizontalLines with reduced padding
+                // https://github.com/bpampuch/pdfmake/blob/f9c81aab71df3336d569dbd900c87c173d37636c/src/tableLayouts.js#L40
+                hLineWidth(i, node) {
+                  if (i === 0 || i === node.table.body.length) {
+                    return 0
+                  }
+                  return i === node.table.headerRows ? 2 : 1
+                },
+                vLineWidth(i) {
+                  return 0
+                },
+                hLineColor(i) {
+                  return i === 1 ? 'black' : '#aaa'
+                },
+                paddingLeft(i) {
+                  return i === 0 ? 0 : 4
+                },
+                paddingRight(i, node) {
+                  return i === node.table.widths.length - 1 ? 0 : 4
+                },
+              }, // optional
               table: {
                 headerRows: 1,
-                widths: [40, 60, 320, 46, 46, 40, 50, '*'],
+                widths: [40, 40, 320, 46, 46, 40, 50, 34, '*'],
                 body: tableBody,
               },
             },
