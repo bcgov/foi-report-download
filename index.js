@@ -340,11 +340,6 @@ app.post('/FOI-report', async (req, res) => {
         // Create a new instance of a Workbook class
         const wb = new xl.Workbook()
 
-        // Add Worksheets to the workbook
-        const ws = wb.addWorksheet(
-          `FOI Report ${moment().format('YYYY-MM-DD')}`
-        )
-
         // Create a reusable style
         const headerStyle = wb.createStyle({
           font: {
@@ -355,97 +350,108 @@ app.post('/FOI-report', async (req, res) => {
           alignment: { wrapText: true, vertical: 'top' },
         })
 
-        ws.column(1).setWidth(18)
-        ws.column(2).setWidth(16)
-        ws.column(3).setWidth(50)
-        ws.column(4).setWidth(14)
-        ws.column(5).setWidth(14)
-        ws.column(6).setWidth(18)
-        ws.column(7).setWidth(14)
-        ws.column(8).setWidth(18)
-        ws.column(9).setWidth(18)
+        for (type of Object.keys(typeMap)) {
+          // Add Worksheets to the workbook
+          // ws tab doesn't allow slash
+          const ws = wb.addWorksheet(type.replace('/', ' or '))
+          ws.column(1).setWidth(18)
+          ws.column(2).setWidth(16)
+          ws.column(3).setWidth(50)
+          ws.column(4).setWidth(14)
+          ws.column(5).setWidth(14)
+          ws.column(6).setWidth(18)
+          ws.column(7).setWidth(14)
+          ws.column(8).setWidth(18)
+          ws.column(9).setWidth(18)
 
-        let currRow = 1
-        if (filterMessages.length > 0) {
-          ws.cell(currRow, 1, currRow + filterMessages.length - 1, 1, true)
-            .string('Report is filtered by')
-            .style({ alignment: { vertical: 'center' } })
-          for (const item of filterMessages) {
-            ws.cell(currRow++, 2).string(item)
+          let currRow = 1
+          if (filterMessages.length > 0) {
+            ws.cell(currRow, 1, currRow + filterMessages.length - 1, 1, true)
+              .string('Report is filtered by')
+              .style({ alignment: { vertical: 'center' } })
+            for (const item of filterMessages) {
+              ws.cell(currRow++, 2).string(item)
+            }
           }
-        }
-        if (
-          rows.some(
-            (e) => e.duedate < moment().startOf('day') && e.status !== 'Closed'
-          )
-        ) {
-          ws.cell(currRow++, 1).string(pastDueMsg)
-        }
-        ws.cell(currRow, 1).string('Request #').style(headerStyle)
-        ws.cell(currRow, 2).string('Applicant Type').style(headerStyle)
-        ws.cell(currRow, 3).string('Description').style(headerStyle)
-        ws.cell(currRow, 4)
-          .string('Start Date')
-          .style(headerStyle)
-          .style({ alignment: { horizontal: 'right' } })
-        ws.cell(currRow, 5)
-          .string('Due Date')
-          .style(headerStyle)
-          .style({ alignment: { horizontal: 'right' } })
-        ws.cell(currRow, 6).string('Current Action').style(headerStyle)
-        ws.cell(currRow, 7).string('Analyst').style(headerStyle)
-        ws.cell(currRow, 8)
-          .string('No Pages in Request')
-          .style(headerStyle)
-          .style({ alignment: { horizontal: 'right' } })
-        ws.cell(currRow, 9).string('Publication Status').style(headerStyle)
-        currRow++
-
-        for (const [i, row] of rows.entries()) {
-          let color = 'black'
           if (
-            (row.duedate < moment().startOf('day') &&
-              row.status !== 'Closed') ||
-            (row.duedate < row.end_date && row.status === 'Closed')
+            rows.some(
+              (e) =>
+                e.duedate < moment().startOf('day') && e.status !== 'Closed'
+            )
           ) {
-            color = 'red'
+            ws.cell(currRow++, 1).string(pastDueMsg)
           }
-          ws.cell(i + currRow, 1)
-            .string(row.request_id)
-            .style(dataRowStyle)
-            .style({ font: { color: color } })
-          ws.cell(i + currRow, 2)
-            .string(row.applicant_type)
-            .style(dataRowStyle)
-            .style({ font: { color: color } })
-          ws.cell(i + currRow, 3)
-            .string(row.description)
-            .style(dataRowStyle)
-            .style({ font: { color: color } })
-          ws.cell(i + currRow, 4)
-            .date(row.start_date)
-            .style(dataRowStyle)
-            .style({ font: { color: color } })
-          ws.cell(i + currRow, 5)
-            .date(row.duedate)
-            .style(dataRowStyle)
-            .style({ font: { color: color } })
-          ws.cell(i + currRow, 6)
-            .string(row.current_activity)
-            .style(dataRowStyle)
-            .style({ font: { color: color } })
-          ws.cell(i + currRow, 7)
-            .string(row.analyst)
-            .style(dataRowStyle)
-            .style({ font: { color: color } })
-          ws.cell(i + currRow, 8)
-            .number(row.no_pages_in_request)
-            .style(dataRowStyle)
-            .style({ font: { color: color } })
-          ws.cell(i + currRow, 9)
-            .string(row.publication)
-            .style(dataRowStyle)
-            .style({ font: { color: color } })
+          ws.cell(currRow, 1).string('Request #').style(headerStyle)
+          ws.cell(currRow, 2).string('Applicant Type').style(headerStyle)
+          ws.cell(currRow, 3).string('Description').style(headerStyle)
+          ws.cell(currRow, 4)
+            .string('Start Date')
+            .style(headerStyle)
+            .style({ alignment: { horizontal: 'right' } })
+          ws.cell(currRow, 5)
+            .string('Due Date')
+            .style(headerStyle)
+            .style({ alignment: { horizontal: 'right' } })
+          ws.cell(currRow, 6).string('Current Action').style(headerStyle)
+          ws.cell(currRow, 7).string('Analyst').style(headerStyle)
+          ws.cell(currRow, 8)
+            .string('No Pages in Request')
+            .style(headerStyle)
+            .style({ alignment: { horizontal: 'right' } })
+          ws.cell(currRow, 9).string('Publication Status').style(headerStyle)
+          currRow++
+
+          let i = -1
+          for (const row of rows) {
+            if (typeMap[type].indexOf(row.type) < 0) {
+              continue
+            }
+            i++
+            let color = 'black'
+            if (
+              (row.duedate < moment().startOf('day') &&
+                row.status !== 'Closed') ||
+              (row.duedate < row.end_date && row.status === 'Closed')
+            ) {
+              color = 'red'
+            }
+            ws.cell(i + currRow, 1)
+              .string(row.request_id)
+              .style(dataRowStyle)
+              .style({ font: { color: color } })
+            ws.cell(i + currRow, 2)
+              .string(row.applicant_type)
+              .style(dataRowStyle)
+              .style({ font: { color: color } })
+            ws.cell(i + currRow, 3)
+              .string(row.description)
+              .style(dataRowStyle)
+              .style({ font: { color: color } })
+            ws.cell(i + currRow, 4)
+              .date(row.start_date)
+              .style(dataRowStyle)
+              .style({ font: { color: color } })
+            ws.cell(i + currRow, 5)
+              .date(row.duedate)
+              .style(dataRowStyle)
+              .style({ font: { color: color } })
+            ws.cell(i + currRow, 6)
+              .string(row.current_activity)
+              .style(dataRowStyle)
+              .style({ font: { color: color } })
+            ws.cell(i + currRow, 7)
+              .string(row.analyst)
+              .style(dataRowStyle)
+              .style({ font: { color: color } })
+            ws.cell(i + currRow, 8)
+              .number(row.no_pages_in_request)
+              .style(dataRowStyle)
+              .style({ font: { color: color } })
+            ws.cell(i + currRow, 9)
+              .string(row.publication)
+              .style(dataRowStyle)
+              .style({ font: { color: color } })
+          }
         }
         wb.write('FOI-report.xlsx', res)
         break
