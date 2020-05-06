@@ -558,41 +558,57 @@ app.post('/FOI-report', async (req, res) => {
 
         const printer = new PdfPrinter(pdfFonts)
         let hasOverdueOpenRows = false
-        const tableBody = rows.map((v) => {
-          let color = 'black'
-          if (
-            (v.duedate < moment().startOf('day') && v.status !== 'Closed') ||
-            (v.duedate < v.end_date && v.status === 'Closed')
-          ) {
-            color = 'red'
-            if (!hasOverdueOpenRows) {
-              hasOverdueOpenRows = true
-              pdfOnlyMessages.push(pastDueMsg)
+        const tableBodyArray = Object.keys(typeMap).map((e) => {
+          const tableBody = rows.reduce((a, v) => {
+            if (typeMap[e].indexOf(v.type) < 0) return a
+            let color = 'black'
+            if (
+              (v.duedate < moment().startOf('day') && v.status !== 'Closed') ||
+              (v.duedate < v.end_date && v.status === 'Closed')
+            ) {
+              color = 'red'
+              if (!hasOverdueOpenRows) {
+                hasOverdueOpenRows = true
+                pdfOnlyMessages.push(pastDueMsg)
+              }
             }
-          }
-          return [
-            { text: v.request_id, color: color },
-            { text: v.applicant_type, color: color },
-            { text: v.description, color: color },
-            { text: moment(v.start_date).format('YYYY-MM-DD'), color: color },
-            { text: moment(v.duedate).format('YYYY-MM-DD'), color: color },
-            { text: v.current_activity, color: color },
-            { text: v.analyst, color: color },
-            { text: v.no_pages_in_request, color: color, alignment: 'right' },
-            { text: v.publication, color: color },
-          ]
+            a.push([
+              { text: v.request_id, color: color },
+              { text: v.applicant_type, color: color },
+              { text: v.description, color: color },
+              { text: moment(v.start_date).format('YYYY-MM-DD'), color: color },
+              { text: moment(v.duedate).format('YYYY-MM-DD'), color: color },
+              { text: v.current_activity, color: color },
+              { text: v.analyst, color: color },
+              { text: v.no_pages_in_request, color: color, alignment: 'right' },
+              { text: v.publication, color: color },
+            ])
+            return a
+          }, [])
+          tableBody.unshift([
+            'Request #',
+            'Applicant Type',
+            'Description',
+            'Start Date',
+            'Due Date',
+            'Current Action',
+            'Analyst',
+            { text: 'No Pages in Request', alignment: 'right' },
+            'Publication Status',
+          ])
+          tableBody.unshift([
+            { text: e, colSpan: 9, alignment: 'center' },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+          ])
+          return tableBody
         })
-        tableBody.unshift([
-          'Request #',
-          'Applicant Type',
-          'Description',
-          'Start Date',
-          'Due Date',
-          'Current Action',
-          'Analyst',
-          { text: 'No Pages in Request', alignment: 'right' },
-          'Publication Status',
-        ])
         const dd = {
           content: [
             {
@@ -641,9 +657,36 @@ app.post('/FOI-report', async (req, res) => {
             {
               layout: 'modifiedLightHorizontalLines',
               table: {
-                headerRows: 1,
+                headerRows: 2,
                 widths: [40, 40, 320, 46, 46, 40, 50, 34, '*'],
-                body: tableBody,
+                body: tableBodyArray[0],
+              },
+              pageBreak: 'after',
+            },
+            {
+              layout: 'modifiedLightHorizontalLines',
+              table: {
+                headerRows: 2,
+                widths: [40, 40, 320, 46, 46, 40, 50, 34, '*'],
+                body: tableBodyArray[1],
+              },
+              pageBreak: 'after',
+            },
+            {
+              layout: 'modifiedLightHorizontalLines',
+              table: {
+                headerRows: 2,
+                widths: [40, 40, 320, 46, 46, 40, 50, 34, '*'],
+                body: tableBodyArray[2],
+              },
+              pageBreak: 'after',
+            },
+            {
+              layout: 'modifiedLightHorizontalLines',
+              table: {
+                headerRows: 2,
+                widths: [40, 40, 320, 46, 46, 40, 50, 34, '*'],
+                body: tableBodyArray[3],
               },
             },
           ],
