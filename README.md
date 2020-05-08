@@ -30,6 +30,7 @@ VS Code is the preferred dev tool.
   * localhost has applicable env var above defined
   * access to Keycloak realm admin console
   * setup a Keycloak client with http://localhost:8080 as *Root URL*
+  * Node.js 10.15.1 (other Node.js versions may work but have not been tested)
   
 ### Install & Launch
 1. Run
