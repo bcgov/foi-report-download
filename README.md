@@ -1,4 +1,4 @@
-# GDX-Analytics-Looker-FOI
+# FOI Report Download
 
 ## Project Status
 
@@ -54,7 +54,7 @@ VS Code is the preferred dev tool.
 4. Open http://localhost:8080 in browser and login to the app.
 
 ## Getting Help
-Please contact the GDX Service desk via the [GCPE GDX Client Service Desk Portal](https://apps.gcpe.gov.bc.ca/jira/servicedesk/customer/portal/9). 
+For any questions regarding this project, please contact the GDX Analytics Team.
 
 ## Contributors
 See [contributors](https://github.com/bcgov/foi-report-download/graphs/contributors).
