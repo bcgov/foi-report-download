@@ -2,12 +2,6 @@
   "folders": [
     {
       "path": "."
-    },
-    {
-      "path": "../notification"
-    },
-    {
-      "path": "../aqadvisories-eservice"
     }
   ],
   "settings": {}
