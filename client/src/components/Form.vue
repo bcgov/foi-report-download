@@ -271,11 +271,12 @@ export default {
     validate() {
       this.$refs.form.validate()
       window.snowplow('trackSelfDescribingEvent', {
-        schema: 'iglu:ca.bc.gov.foi/foi_report/jsonschema/1-0-0',
+        schema: 'iglu:ca.bc.gov.foi/foi_report/jsonschema/2-0-0',
         data: {
           organization: this.selectedOrgs,
           status: this.selectedStatus,
           applicant_type: this.selectedApplicantType,
+          overdue: this.selectedIsOverdue,
           start_date_start: this.startDateFrom,
           start_date_end: this.startDateTo,
           due_date_start: this.dueDateFrom,
