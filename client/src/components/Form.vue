@@ -143,7 +143,7 @@
 import DateInput from './date-input'
 export default {
   components: {
-    DateInput,
+    DateInput
   },
   data: () => ({
     downloadTimer: null,
@@ -160,7 +160,7 @@ export default {
       'All Open',
       'All Open excluding on-hold',
       'All On-Hold',
-      'All Closed',
+      'All Closed'
     ],
     selectedApplicantType: [null],
     applicantType: [
@@ -173,24 +173,24 @@ export default {
       'Other Governments',
       'Other Public Body',
       'Political Party',
-      'Researcher',
+      'Researcher'
     ],
     selectedIsOverdue: [true, false],
     isOverdue: [
       { value: true, text: 'Overdue requests' },
-      { value: false, text: 'Non-overdue requests' },
+      { value: false, text: 'Non-overdue requests' }
     ],
     selectedOrgs: [null],
     orgs: [
       { value: null, text: '(All Organizations)' },
       {
         value: 'AED',
-        text: 'AED - Ministry of Advanced Education, Skills and Training',
+        text: 'AED - Ministry of Advanced Education, Skills and Training'
       },
       { value: 'AGR', text: 'AGR - Ministry of Agriculture' },
       {
         value: 'CFD',
-        text: 'CFD - Ministry of Children and Family Development',
+        text: 'CFD - Ministry of Children and Family Development'
       },
       { value: 'CTZ', text: "CTZ - Ministry of Citizens' Services" },
       { value: 'EAO', text: 'EAO - Environmental Assessment Office' },
@@ -198,27 +198,26 @@ export default {
       { value: 'EMB', text: 'EMB - Emergency Management BC' },
       {
         value: 'EMP',
-        text: 'EMP - Ministry of Energy, Mines and Petroleum Resources',
+        text: 'EMP - Ministry of Energy, Mines and Petroleum Resources'
       },
       { value: 'FIN', text: 'FIN - Ministry of Finance' },
       {
         value: 'FNR',
         text:
-          'FNR - Ministry of Forests, Lands, Natural Resource Operations and Rural Development',
+          'FNR - Ministry of Forests, Lands, Natural Resource Operations and Rural Development'
       },
       {
         value: 'GCP',
-        text: 'GCP - Government Communications and Public Engagement',
+        text: 'GCP - Government Communications and Public Engagement'
       },
       { value: 'HTH', text: 'HTH - Ministry of Health' },
       {
         value: 'IRR',
-        text: 'IRR - Ministry of Indigenous Relations and Reconciliation',
+        text: 'IRR - Ministry of Indigenous Relations and Reconciliation'
       },
       {
         value: 'JTT',
-        text:
-          'JTT - Ministry of Jobs, Economic Development and Competitiveness',
+        text: 'JTT - Ministry of Jobs, Economic Development and Competitiveness'
       },
       { value: 'LBR', text: 'LBR - Ministry of Labour' },
       { value: 'LDB', text: 'LDB - Liquor Distribution Branch' },
@@ -227,25 +226,25 @@ export default {
       { value: 'MHA', text: 'MHA - Ministry of Mental Health and Addictions' },
       {
         value: 'MOE',
-        text: 'MOE - Ministry of Environment and Climate Change Strategy',
+        text: 'MOE - Ministry of Environment and Climate Change Strategy'
       },
       {
         value: 'MSD',
-        text: 'MSD - Ministry of Social Development and Poverty Reduction',
+        text: 'MSD - Ministry of Social Development and Poverty Reduction'
       },
       { value: 'OCC', text: 'OCC - Office of the Chief Coroner' },
       { value: 'OOP', text: 'OOP - Office of the Premier' },
       { value: 'PSA', text: 'PSA - Public Service Agency' },
       {
         value: 'PSS',
-        text: 'PSS - Ministry of Public Safety and Solicitor General',
+        text: 'PSS - Ministry of Public Safety and Solicitor General'
       },
       { value: 'TAC', text: 'TAC - Ministry of Tourism, Arts and Culture' },
       {
         value: 'TRA',
-        text: 'TRA - Ministry of Transportation and Infrastructure',
-      },
-    ],
+        text: 'TRA - Ministry of Transportation and Infrastructure'
+      }
+    ]
   }),
   watch: {
     selectedOrgs: function(newVal) {
@@ -253,7 +252,7 @@ export default {
     },
     selectedApplicantType: function(newVal) {
       this.allItemToggler(newVal, 'selectedApplicantType')
-    },
+    }
   },
   methods: {
     allItemToggler(newVal, dataField) {
@@ -270,19 +269,23 @@ export default {
     },
     validate() {
       this.$refs.form.validate()
+      let snowPlowIsOverdue = 'All'
+      if (this.selectedIsOverdue.length === 1) {
+        snowPlowIsOverdue = this.selectedIsOverdue[0] === true ? 'Yes' : 'No'
+      }
       window.snowplow('trackSelfDescribingEvent', {
         schema: 'iglu:ca.bc.gov.foi/foi_report/jsonschema/2-0-0',
         data: {
           organization: this.selectedOrgs,
           status: this.selectedStatus,
           applicant_type: this.selectedApplicantType,
-          overdue: this.selectedIsOverdue,
+          is_overdue: snowPlowIsOverdue,
           start_date_start: this.startDateFrom,
           start_date_end: this.startDateTo,
           due_date_start: this.dueDateFrom,
           due_date_end: this.dueDateTo,
-          file_format: this.fileFormat,
-        },
+          file_format: this.fileFormat
+        }
       })
       this.blockResubmit()
     },
@@ -331,7 +334,7 @@ export default {
       document.body.style.cursor = 'unset'
       window.clearInterval(this.downloadTimer)
       this.expireCookie('downloadToken')
-    },
-  },
+    }
+  }
 }
 </script>
