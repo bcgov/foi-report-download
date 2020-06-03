@@ -1,15 +1,14 @@
 # FOI Report Download
----
+
+## Project Status
+
+This project is currently under development and actively supported by the GDX Analytics Team.
+
+## Features
 This is an intranet web-app allowing authenticated users to specify filters and 
 download FOI report in PDF or Excel format.
 
-## Features
-* SiteMinder login
-* A form allowing user to specify filters and reporting file format
-* Download report in either pdf or Excel format
-
-## Usage
-### Configuration
+## Configuration
 
 | Environment Variable    | Mandatory | Default    | Description                |
 | ----------------------- | --------- | ---------- | -------------------------- |
@@ -23,16 +22,16 @@ download FOI report in PDF or Excel format.
 | FILE_STORE_PATH         | No        | ./sessions | path to session file store |
 | TRUST_PROXY             | No        |            | express.js trust proxy     |
 
-#### Development
+## Setup Dev Environment
 VS Code is the preferred dev tool.
-##### Requirements
+### Prerequisites
   * localhost has access to Redshift
   * localhost has Node.js v10.15.1 installed (other Node.js versions may work but have not been tested)
   * localhost has applicable env var above defined
   * access to Keycloak realm admin console
   * setup a Keycloak client with http://localhost:8080 as *Root URL*
   
-##### Install & Launch
+### Install & Launch
 1. Run
   ```
   git clone https://github.com/bcgov/foi-report-download.git
@@ -54,25 +53,12 @@ VS Code is the preferred dev tool.
     ```
 4. Open http://localhost:8080 in browser and login to the app.
 
-## Project Status
+## Getting Help
+For any questions regarding this project, please contact the GDX Analytics Team.
 
-This project is currently under development and actively supported by the GDX Analytics Team.
+## Contributors
+See [contributors](https://github.com/bcgov/foi-report-download/graphs/contributors).
 
-## Related Repositories
- 
-### [GDX-Analytics/](https://github.com/bcgov/GDX-Analytics)
-This is the central repository for work by the GDX Analytics Team.
- 
-## Getting Help or Reporting an Issue
-
-For any questions regarding this project, or for inquiries about starting a new analytics account, please contact the GDX Analytics Team.
- 
-## How to Contribute
- 
-If you would like to contribute to the guide, please see our [CONTRIBUTING](CONTRIBUTING.md) guideleines.
- 
-Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
- 
 ## License
 
 Copyright 2015 Province of British Columbia
