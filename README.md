@@ -69,7 +69,11 @@ This is the GDX Analytics project for the FOI Project's Lookml.
 ## Getting Help or Reporting an Issue
 
 For any questions regarding this project, or for inquiries about starting a new analytics account, please contact the GDX Analytics Team.
+
+## Contributors
  
+The GDX Analytics Team are the main contributors to this project and maintain the code.
+
 ## License
 
 ```
