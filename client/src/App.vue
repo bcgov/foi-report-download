@@ -29,30 +29,38 @@
               also based on your feedback, we have included an option to have
               the report produced in either Excel or PDF format.
             </p>
-            <h2>Instructions for use:</h2>
             <p>
-            <ol>
-              <li>Select your organization from the drop down menu.</li>
-              <li>
-                Select the file status you would like to report on or leave it
-                at the default All Open setting.
-              </li>
-              <li>
-                Select the applicant types you would like to report on or leave
-                it at the default All Applicants setting.
-              </li>
-              <li>
-                Enter the applicable start or due date ranges.
-              </li>
-              <li>
-                Select your preferred file format.
-              </li>
-              <li>
-                Click submit to run the report.
-              </li>
-              <li>Wait for a download notification or for your report to open in a new tab. This may take a minute.</li>
-              <li>If you would like to run another report, please save this copy and then hit the back button to return to the home page to run another report.</li>
-            </ol>
+              <v-expansion-panels>
+                <v-expansion-panel>
+                  <v-expansion-panel-header><h2>Instructions for use:</h2></v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <p>
+                    <ol>
+                      <li>Select your organization from the drop down menu.</li>
+                      <li>
+                        Select the file status you would like to report on or leave it
+                        at the default All Open setting.
+                      </li>
+                      <li>
+                        Select the applicant types you would like to report on or leave
+                        it at the default All Applicants setting.
+                      </li>
+                      <li>
+                        Enter the applicable start or due date ranges.
+                      </li>
+                      <li>
+                        Select your preferred file format.
+                      </li>
+                      <li>
+                        Click submit to run the report.
+                      </li>
+                      <li>Wait for a download notification or for your report to open in a new tab. This may take a minute.</li>
+                      <li>If you would like to run another report, please save this copy and then hit the back button to return to the home page to run another report.</li>
+                    </ol>
+                    </p>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
             </p>
             <h2>FOI Performance and other statistics:</h2>
             <p>
