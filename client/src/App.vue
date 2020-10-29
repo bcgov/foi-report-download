@@ -68,7 +68,7 @@
               <li>
                 IAO’s
                 <a
-                  href="https://sharedservices.gov.bc.ca/IAO_2.0/RSU/Dashboards/Forms/AllItems.aspx"
+                  href="https://citz.sp.gov.bc.ca/sites/CIRMO/IAO/FOI_Intel/Dashboards/Forms/AllItems.aspx"
                   >Dashboards</a
                 >
                 will take you to three Excel spreadsheets that have pivot tables
