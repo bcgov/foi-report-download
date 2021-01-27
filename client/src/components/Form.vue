@@ -185,9 +185,9 @@ export default {
       { value: null, text: '(All Organizations)' },
       {
         value: 'AED',
-        text: 'AED - Ministry of Advanced Education, Skills and Training'
+        text: 'AED - Ministry of Advanced Education and Skills Training'
       },
-      { value: 'AGR', text: 'AGR - Ministry of Agriculture' },
+      { value: 'AGR', text: 'AGR - Ministry of Agriculture, Food and Fisheries' },
       {
         value: 'CFD',
         text: 'CFD - Ministry of Children and Family Development'
@@ -197,8 +197,8 @@ export default {
       { value: 'EDU', text: 'EDU - Ministry of Education' },
       { value: 'EMB', text: 'EMB - Emergency Management BC' },
       {
-        value: 'EMP',
-        text: 'EMP - Ministry of Energy, Mines and Petroleum Resources'
+        value: 'EML',
+        text: 'EML - Ministry of Energy, Mines and Low Carbon Innovation'
       },
       { value: 'FIN', text: 'FIN - Ministry of Finance' },
       {
@@ -216,13 +216,13 @@ export default {
         text: 'IRR - Ministry of Indigenous Relations and Reconciliation'
       },
       {
-        value: 'JTT',
-        text: 'JTT - Ministry of Jobs, Economic Development and Competitiveness'
+        value: 'JER',
+        text: 'JER - Ministry of Jobs, Economic Recovery and Innovation'
       },
       { value: 'LBR', text: 'LBR - Ministry of Labour' },
       { value: 'LDB', text: 'LDB - Liquor Distribution Branch' },
       { value: 'MAG', text: 'MAG - Ministry of Attorney General' },
-      { value: 'MAH', text: 'MAH - Ministry of Municipal Affairs and Housing' },
+      { value: 'MMA', text: 'MMA - Ministry of Municipal Affairs' },
       { value: 'MHA', text: 'MHA - Ministry of Mental Health and Addictions' },
       {
         value: 'MOE',
@@ -239,7 +239,7 @@ export default {
         value: 'PSS',
         text: 'PSS - Ministry of Public Safety and Solicitor General'
       },
-      { value: 'TAC', text: 'TAC - Ministry of Tourism, Arts and Culture' },
+      { value: 'TAC', text: 'TAC - Ministry of Tourism, Arts, Culture and Sport' },
       {
         value: 'TRA',
         text: 'TRA - Ministry of Transportation and Infrastructure'

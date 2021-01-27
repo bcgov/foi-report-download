@@ -51,13 +51,13 @@ const orgMap = {
 
 const commonOrgGroup = {
   ...Object.keys(orgMap).reduce((a, e) => ((a[e] = [e]), a), {}),
-  EMP: ['EMP', 'EGM'],
-  MAH: ['MAH', 'CSC'],
+  EML: ['EML', 'EGM'],
+  MMA: ['MMA', 'CSC'],
   MOE: ['MOE', 'EAO'],
-  EMP: ['EMP', 'EGM', 'NGD'],
+  EML: ['EML', 'EGM', 'NGD'],
   PSS: ['PSS', 'EMB'],
   MAG: ['MAG', 'JAG'],
-  JTT: ['JTT', 'JTI', 'MIT', 'MSB'],
+  JER: ['JER', 'JTI', 'MIT', 'MSB'],
   FIN: ['FIN', 'PSA'],
 }
 
@@ -68,8 +68,8 @@ const orgGroupByDate = [
       ...commonOrgGroup,
       CTZ: [...commonOrgGroup.CTZ, 'BRD'],
       FIN: [...commonOrgGroup.FIN, 'GCP'],
-      EMP: [...commonOrgGroup.EMP, 'HOU'],
-      JTT: [...commonOrgGroup.JTT, 'LDB'],
+      EML: [...commonOrgGroup.EML, 'HOU'],
+      JER: [...commonOrgGroup.JER, 'LDB'],
       MAG: [...commonOrgGroup.MAG, 'OCC'],
     },
   },
@@ -79,7 +79,7 @@ const orgGroupByDate = [
       ...commonOrgGroup,
       FIN: [...commonOrgGroup.FIN, 'BRD'],
       CTZ: [...commonOrgGroup.CTZ, 'GCP'],
-      MAH: [...commonOrgGroup.MAH, 'HOU'],
+      MMA: [...commonOrgGroup.MMA, 'HOU'],
       PSS: [...commonOrgGroup.PSS, 'LDB', 'OCC'],
     },
   },
