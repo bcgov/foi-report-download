@@ -188,6 +188,8 @@ export default {
         text: 'AED - Ministry of Advanced Education and Skills Training'
       },
       { value: 'AGR', text: 'AGR - Ministry of Agriculture, Food and Fisheries' },
+      { value: 'CAS', text: 'CAS - Crown Agencies Secretariat' },
+
       {
         value: 'CFD',
         text: 'CFD - Ministry of Children and Family Development'

@@ -13,6 +13,7 @@ const orgMap = {
   AED: 'Ministry of Advanced Education and Skills Training',
   AGR: 'Ministry of Agriculture, Food and Fisheries',
   BRD: 'Board Resourcing and Development Office',
+  CAS: 'Crown Agencies Secretariat',
   CFD: 'Ministry of Children and Family Development',
   CSC: 'Ministry of Community, Sport and Cultural Development',
   CTZ: "Ministry of Citizens' Services",
@@ -81,6 +82,15 @@ const orgGroupByDate = [
       CTZ: [...commonOrgGroup.CTZ, 'GCP'],
       MMA: [...commonOrgGroup.MMA, 'HOU'],
       PSS: [...commonOrgGroup.PSS, 'LDB', 'OCC'],
+    },
+  },
+  {
+    date: moment('2020-11-26'),
+    orgGroup: {
+      ...commonOrgGroup,
+      EML: [...commonOrgGroup.EML, 'EMP'],
+      JER: [...commonOrgGroup.JER, 'JTT'],
+      MMA: [...commonOrgGroup.MMA, 'MHA'],
     },
   },
 ]
