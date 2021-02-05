@@ -90,7 +90,7 @@ const orgGroupByDate = [
       ...commonOrgGroup,
       EML: [...commonOrgGroup.EML, 'EMP'],
       JER: [...commonOrgGroup.JER, 'JTT'],
-      MMA: [...commonOrgGroup.MMA, 'MHA'],
+      MMA: [...commonOrgGroup.MMA, 'MAH'],
     },
   },
 ]
