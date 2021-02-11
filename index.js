@@ -10,9 +10,10 @@ const pgParametrize = require('pg-parameterize')
 const _ = require('lodash')
 const pastDueMsg = 'Overdue requests are displayed in red'
 const orgMap = {
-  AED: 'Ministry of Advanced Education, Skills and Training',
-  AGR: 'Ministry of Agriculture',
+  AED: 'Ministry of Advanced Education and Skills Training',
+  AGR: 'Ministry of Agriculture, Food and Fisheries',
   BRD: 'Board Resourcing and Development Office',
+  CAS: 'Crown Agencies Secretariat',
   CFD: 'Ministry of Children and Family Development',
   CSC: 'Ministry of Community, Sport and Cultural Development',
   CTZ: "Ministry of Citizens' Services",
@@ -20,7 +21,7 @@ const orgMap = {
   EDU: 'Ministry of Education',
   EGM: 'Ministry of Energy and Mines',
   EMB: 'Emergency Management BC',
-  EMP: 'Ministry of Energy, Mines and Petroleum Resources',
+  EML: 'Ministry of Energy, Mines and Low Carbon Innovation',
   FIN: 'Ministry of Finance',
   FNR:
     'Ministry of Forests, Lands, Natural Resource Operations and Rural Development',
@@ -30,11 +31,11 @@ const orgMap = {
   IRR: 'Ministry of Indigenous Relations and Reconciliation',
   JAG: 'Ministry of Justice and Attorney General',
   JTI: 'Ministry of Jobs, Tourism, and Innovation',
-  JTT: 'Ministry of Jobs, Economic Development and Competitiveness',
+  JER: 'Ministry of Jobs, Economic Recovery and Innovation',
   LBR: 'Ministry of Labour',
   LDB: 'Liquor Distribution Branch',
   MAG: 'Ministry of Attorney General',
-  MAH: 'Ministry of Municipal Affairs and Housing',
+  MMA: 'Ministry of Municipal Affairs',
   MHA: 'Ministry of Mental Health and Addictions',
   MIT: 'Ministry of International Trade',
   MOE: 'Ministry of Environment and Climate Change Strategy',
@@ -45,19 +46,19 @@ const orgMap = {
   OOP: 'Office of the Premier',
   PSA: 'Public Service Agency',
   PSS: 'Ministry of Public Safety and Solicitor General',
-  TAC: 'Ministry of Tourism, Arts and Culture',
+  TAC: 'Ministry of Tourism, Arts, Culture and Sport',
   TRA: 'Ministry of Transportation and Infrastructure',
 }
 
 const commonOrgGroup = {
   ...Object.keys(orgMap).reduce((a, e) => ((a[e] = [e]), a), {}),
-  EMP: ['EMP', 'EGM'],
-  MAH: ['MAH', 'CSC'],
+  EML: ['EML', 'EGM'],
+  MMA: ['MMA', 'CSC'],
   MOE: ['MOE', 'EAO'],
-  EMP: ['EMP', 'EGM', 'NGD'],
+  EML: ['EML', 'EGM', 'NGD'],
   PSS: ['PSS', 'EMB'],
   MAG: ['MAG', 'JAG'],
-  JTT: ['JTT', 'JTI', 'MIT', 'MSB'],
+  JER: ['JER', 'JTI', 'MIT', 'MSB'],
   FIN: ['FIN', 'PSA'],
 }
 
@@ -68,8 +69,8 @@ const orgGroupByDate = [
       ...commonOrgGroup,
       CTZ: [...commonOrgGroup.CTZ, 'BRD'],
       FIN: [...commonOrgGroup.FIN, 'GCP'],
-      EMP: [...commonOrgGroup.EMP, 'HOU'],
-      JTT: [...commonOrgGroup.JTT, 'LDB'],
+      EML: [...commonOrgGroup.EML, 'HOU'],
+      JER: [...commonOrgGroup.JER, 'LDB'],
       MAG: [...commonOrgGroup.MAG, 'OCC'],
     },
   },
@@ -79,8 +80,17 @@ const orgGroupByDate = [
       ...commonOrgGroup,
       FIN: [...commonOrgGroup.FIN, 'BRD'],
       CTZ: [...commonOrgGroup.CTZ, 'GCP'],
-      MAH: [...commonOrgGroup.MAH, 'HOU'],
+      MMA: [...commonOrgGroup.MMA, 'HOU'],
       PSS: [...commonOrgGroup.PSS, 'LDB', 'OCC'],
+    },
+  },
+  {
+    date: moment('2020-11-26'),
+    orgGroup: {
+      ...commonOrgGroup,
+      EML: [...commonOrgGroup.EML, 'EMP'],
+      JER: [...commonOrgGroup.JER, 'JTT'],
+      MMA: [...commonOrgGroup.MMA, 'MAH'],
     },
   },
 ]
