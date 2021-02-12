@@ -23,6 +23,7 @@
     "pdfmake": "^0.1.65",
     "pg": "^8.0.3",
     "pg-parameterize": "^2.0.2",
-    "session-file-store": "^1.4.0"
+    "session-file-store": "^1.4.0",
+    "yn": "^4.0.0"
   }
 }
