@@ -7,6 +7,7 @@ const FileStore = require('session-file-store')(session)
 const Keycloak = require('keycloak-connect')
 const storeOptions = { logFn: () => {} }
 const pgParametrize = require('pg-parameterize')
+const yn = require('yn')
 const _ = require('lodash')
 const pastDueMsg = 'Overdue requests are displayed in red'
 const orgMap = {
@@ -172,7 +173,11 @@ if (process.env.FILE_STORE_PATH) {
 const store = new FileStore(storeOptions)
 const keycloak = new Keycloak({ store: store, idpHint: 'idir' })
 if (process.env.TRUST_PROXY) {
-  app.set('trust proxy', process.env.TRUST_PROXY)
+  const tf = yn(process.env.TRUST_PROXY)
+  /* This allows valid URI redirects to be generated when behind a proxy
+     see: https://www.keycloak.org/docs/latest/securing_apps/#configuration-for-proxies
+     and: https://expressjs.com/en/guide/behind-proxies.html */
+  app.set('trust proxy', (typeof tf === "boolean") ? tf : process.env.TRUST_PROXY)
 }
 app.use(
   session({
