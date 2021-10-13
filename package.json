@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "FOI report download",
   "main": "index.js",
-  "repository": "https://github.com/f-w/foi-report-download",
+  "repository": "https://github.com/bcgov/foi-report-download",
   "author": "f-w <fred.wen@gov.bc.ca>",
   "license": "Apache-2.0",
   "scripts": {
