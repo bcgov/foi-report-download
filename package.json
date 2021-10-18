@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "FOI report download",
   "main": "index.js",
-  "repository": "https://github.com/f-w/foi-report-download",
+  "repository": "https://github.com/bcgov/foi-report-download",
   "author": "f-w <fred.wen@gov.bc.ca>",
   "license": "Apache-2.0",
   "scripts": {
@@ -11,7 +11,7 @@
     "start": "node ."
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "body-parser": "^1.19.0",
     "ejs": "^3.0.1",
     "excel4node": "^1.7.2",
