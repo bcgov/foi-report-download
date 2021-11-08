@@ -343,8 +343,10 @@ app.post('/FOI-report', async (req, res) => {
   let { query: qryTxt, parameters } = composeQry(selectStmt, true)
   qryTxt += ' order by start_date desc limit 5000'
   try {
-    //const { rows } = await pool.query(pgParametrize.toOrdinal(qryTxt), _.flatten(parameters)
-    const { rows } = await pool.query("select request_id, applicant_type, description, start_date, duedate, current_activity, analyst, no_pages_in_request::integer, end_date, status, publication, type from foi.foi WHERE start_date >= '2012-01-01' AND start_date < '2015-07-01' AND proc_org in ('AGR') AND applicant_type in ('Political Party') AND status in ('Amended','Assigned','DAddRvwLog','Disposition Accepted',  'Documents Added',  'Documents Delivered','On Hold-Fee Related',  'On Hold-Need Info/Clarification',  'On Hold-Other','Perfected',  'Received',  'Request for Docs Sent') AND type in ('General',  'Personal',  'Consultation',  'Review',  'Complaint') union all select request_id, applicant_type, description, start_date, duedate, current_activity, analyst, no_pages_in_request::integer, end_date, status, publication, type from foi.foi WHERE start_date >= '2015-07-01' AND start_date < '2020-11-26' AND proc_org in ('AGR') AND applicant_type in ('Political Party') AND status in ('Amended',  'Assigned',  'DAddRvwLog',  'Disposition Accepted','Documents Added',  'Documents Delivered',  'On Hold-Fee Related',  'On Hold-Need Info/Clarification','On Hold-Other',  'Perfected',  'Received',  'Request for Docs Sent') AND type in ('General',  'Personal',  'Consultation',  'Review',  'Complaint') union all select request_id, applicant_type, description, start_date, duedate, current_activity, analyst, no_pages_in_request::integer, end_date, status, publication, type from foi.foi WHERE start_date >= '2020-11-26' AND proc_org in ('AGR') AND applicant_type in ('Political Party') AND status in ('Amended',  'Assigned',  'DAddRvwLog',  'Disposition Accepted',  'Documents Added',  'Documents Delivered',  'On Hold-Fee Related',  'On Hold-Need Info/Clarification',  'On Hold-Other',  'Perfected',  'Received',  'Request for Docs Sent') AND type in ('General',  'Personal','Consultation','Review','Complaint') order by start_date desc limit 5000;")
+    const { rows } = await pool.query(
+      pgParametrize.toOrdinal(qryTxt),
+      _.flatten(parameters)
+    )
     switch (req.body.format) {
       case 'Excel':
         // Require library
@@ -474,7 +476,7 @@ app.post('/FOI-report', async (req, res) => {
         const { rows: summaryRows } = await pool.query(
           pgParametrize.toOrdinal(qryTxt),
           _.flatten(parameters)
-        )
+          )
         const generalSummary = summaryRows.reduce(
           (acc, e) => {
             if (e.type !== 'General') {
