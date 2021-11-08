@@ -476,7 +476,7 @@ app.post('/FOI-report', async (req, res) => {
         const { rows: summaryRows } = await pool.query(
           pgParametrize.toOrdinal(qryTxt),
           _.flatten(parameters)
-          )
+        )
         const generalSummary = summaryRows.reduce(
           (acc, e) => {
             if (e.type !== 'General') {
