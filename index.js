@@ -35,6 +35,7 @@ const orgMap = {
   JER: 'Ministry of Jobs, Economic Recovery and Innovation',
   LBR: 'Ministry of Labour',
   LDB: 'Liquor Distribution Branch',
+  LWR: 'Ministry of Land, Water and Resource Stewardship',
   MAG: 'Ministry of Attorney General',
   MMA: 'Ministry of Municipal Affairs',
   MHA: 'Ministry of Mental Health and Addictions',
@@ -48,8 +49,7 @@ const orgMap = {
   PSA: 'Public Service Agency',
   PSS: 'Ministry of Public Safety and Solicitor General',
   TAC: 'Ministry of Tourism, Arts, Culture and Sport',
-  TRA: 'Ministry of Transportation and Infrastructure',
-  LWR: 'Ministry of Land, Water and Resource Stewardship'
+  TRA: 'Ministry of Transportation and Infrastructure'
 }
 
 const commonOrgGroup = {
