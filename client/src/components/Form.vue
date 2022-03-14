@@ -245,7 +245,8 @@ export default {
       {
         value: 'TRA',
         text: 'TRA - Ministry of Transportation and Infrastructure'
-      }
+      },
+      { value: 'LWR', text: 'LWR - Ministry of Land, Water and Resource Stewardship' }
     ]
   }),
   watch: {

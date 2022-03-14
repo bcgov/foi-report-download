@@ -49,6 +49,7 @@ const orgMap = {
   PSS: 'Ministry of Public Safety and Solicitor General',
   TAC: 'Ministry of Tourism, Arts, Culture and Sport',
   TRA: 'Ministry of Transportation and Infrastructure',
+  LWR: 'Ministry of Land, Water and Resource Stewardship'
 }
 
 const commonOrgGroup = {
