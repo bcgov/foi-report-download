@@ -12,20 +12,19 @@ const _ = require('lodash')
 const pastDueMsg = 'Overdue requests are displayed in red'
 const orgMap = {
   AED: 'Ministry of Advanced Education and Skills Training',
-  AGR: 'Ministry of Agriculture, Food and Fisheries',
+  AGR: 'Ministry of Agriculture and Food',
   BRD: 'Board Resourcing and Development Office',
   CAS: 'Crown Agencies Secretariat',
   CFD: 'Ministry of Children and Family Development',
   CSC: 'Ministry of Community, Sport and Cultural Development',
   CTZ: "Ministry of Citizens' Services",
   EAO: 'Environmental Assessment Office',
-  EDU: 'Ministry of Education',
+  EDU: 'Ministry of Education and Child Care',
   EGM: 'Ministry of Energy and Mines',
   EMB: 'Emergency Management BC',
   EML: 'Ministry of Energy, Mines and Low Carbon Innovation',
   FIN: 'Ministry of Finance',
-  FNR:
-    'Ministry of Forests, Lands, Natural Resource Operations and Rural Development',
+  FOR: 'Ministry of Forests',
   GCP: 'Government Communications and Public Engagement',
   HOU: 'Office of Housing and Construction Standards',
   HTH: 'Ministry of Health',
@@ -93,6 +92,13 @@ const orgGroupByDate = [
       EML: [...commonOrgGroup.EML, 'EMP'],
       JER: [...commonOrgGroup.JER, 'JTT'],
       MMA: [...commonOrgGroup.MMA, 'MAH'],
+    },
+  },
+  {
+    date: moment('2022-04-01'),
+    orgGroup: {
+      ...commonOrgGroup,
+      FOR: [...commonOrgGroup.FOR, 'FNR']
     },
   },
 ]
