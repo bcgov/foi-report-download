@@ -187,7 +187,7 @@ export default {
         value: 'AED',
         text: 'AED - Ministry of Advanced Education and Skills Training'
       },
-      { value: 'AGR', text: 'AGR - Ministry of Agriculture, Food and Fisheries' },
+      { value: 'AGR', text: 'AGR - Ministry of Agriculture and Food' },
       { value: 'CAS', text: 'CAS - Crown Agencies Secretariat' },
 
       {
@@ -196,7 +196,7 @@ export default {
       },
       { value: 'CTZ', text: "CTZ - Ministry of Citizens' Services" },
       { value: 'EAO', text: 'EAO - Environmental Assessment Office' },
-      { value: 'EDU', text: 'EDU - Ministry of Education' },
+      { value: 'EDU', text: 'EDU - Ministry of Education and Child Care' },
       { value: 'EMB', text: 'EMB - Emergency Management BC' },
       {
         value: 'EML',
@@ -204,9 +204,9 @@ export default {
       },
       { value: 'FIN', text: 'FIN - Ministry of Finance' },
       {
-        value: 'FNR',
+        value: 'FOR',
         text:
-          'FNR - Ministry of Forests, Lands, Natural Resource Operations and Rural Development'
+          'FOR - Ministry of Forests'
       },
       {
         value: 'GCP',
