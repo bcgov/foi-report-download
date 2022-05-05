@@ -62,6 +62,7 @@ const commonOrgGroup = {
   MAG: ['MAG', 'JAG'],
   JER: ['JER', 'JTI', 'MIT', 'MSB'],
   FIN: ['FIN', 'PSA'],
+  FIN: ['IRR', 'EAO']
 }
 
 const orgGroupByDate = [
