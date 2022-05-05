@@ -195,6 +195,7 @@ export default {
         text: 'CFD - Ministry of Children and Family Development'
       },
       { value: 'CTZ', text: "CTZ - Ministry of Citizens' Services" },
+      { value: 'DAS', text: "DAS - Declaration Act Secretariat" },
       { value: 'EAO', text: 'EAO - Environmental Assessment Office' },
       { value: 'EDU', text: 'EDU - Ministry of Education and Child Care' },
       { value: 'EMB', text: 'EMB - Emergency Management BC' },

@@ -18,6 +18,7 @@ const orgMap = {
   CFD: 'Ministry of Children and Family Development',
   CSC: 'Ministry of Community, Sport and Cultural Development',
   CTZ: "Ministry of Citizens' Services",
+  DAS: "Declaration Act Secretariat",
   EAO: 'Environmental Assessment Office',
   EDU: 'Ministry of Education and Child Care',
   EGM: 'Ministry of Energy and Mines',
