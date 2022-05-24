@@ -56,13 +56,9 @@ const commonOrgGroup = {
   ...Object.keys(orgMap).reduce((a, e) => ((a[e] = [e]), a), {}),
   EML: ['EML', 'EGM'],
   MMA: ['MMA', 'CSC'],
-  MOE: ['MOE', 'EAO'],
   EML: ['EML', 'EGM', 'NGD'],
-  PSS: ['PSS', 'EMB'],
   MAG: ['MAG', 'JAG'],
-  JER: ['JER', 'JTI', 'MIT', 'MSB'],
-  FIN: ['FIN', 'PSA'],
-  IRR: ['IRR', 'DAS']
+  JER: ['JER', 'JTI', 'MIT', 'MSB']
 }
 
 const orgGroupByDate = [
