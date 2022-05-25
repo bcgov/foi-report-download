@@ -13,7 +13,7 @@
       </div>
       <v-toolbar-title>FOI Report Download</v-toolbar-title>
     </v-app-bar>
-    <v-content>
+    <v-main>
       <v-container>
         <v-row>
           <v-col cols="12">
@@ -118,7 +118,7 @@
         </v-row>
       </v-container>
       <Form />
-    </v-content>
+    </v-main>
     <v-footer color="#036" padless>
       <v-row justify="center" no-gutters>
         <v-btn
