@@ -3,10 +3,10 @@
 
 [![img](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
-This is an intranet web-app allowing authenticated users to specify filters and 
-download FOI report in PDF or Excel format.
+This is an intranet web-app allowing authenticated users to specify filters and download FOI report in PDF or Excel format.
 
 ## Features
+* VueJS frontend and NodeJS backend; with Keycloak authentication on backend (using a confidendial client from [Common Hosted Single Sign-On (CSS)](https://bcgov.github.io/sso-requests/my-dashboard/)).
 * SiteMinder login
 * A form allowing user to specify filters and reporting file format
 * Download report in either pdf or Excel format
@@ -32,8 +32,8 @@ VS Code is the preferred dev tool.
   * localhost has access to Redshift
   * localhost has Node.js v10.15.1 installed (other Node.js versions may work but have not been tested)
   * localhost has applicable env var above defined
-  * access to Keycloak realm admin console
-  * setup a Keycloak client with http://localhost:8080 as *Root URL*
+  * access to a Keycloak realm admin console or to the [CSS dashboards](https://bcgov.github.io/sso-requests/my-dashboard/)
+  * setup a Keycloak client with `http://localhost:8080/*` as a valid URI redirect (the "Development" installation download from the CSS provides this)
   
 ##### Install & Launch
 1. Run
