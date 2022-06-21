@@ -20,7 +20,7 @@ This is an intranet web-app allowing authenticated users to specify filters and 
 | PGHOST                  | Yes       |            |                            |
 | PGPASSWORD              | Yes       |            |                            |
 | PGDATABASE              | Yes       |            |                            |
-| PGPORT                  | No        | 5439       |                            |
+| PGPORT                  | No        | 5439       | Use 443 if proxying        |
 | SNOWPLOW_TRACKER_URL    | Yes       |            | snowplow tracker url       |
 | SNOWPLOW_COLLECTOR_HOST | Yes       |            | snowplow collector host    |
 | FILE_STORE_PATH         | No        | ./sessions | path to session file store |
@@ -30,7 +30,7 @@ This is an intranet web-app allowing authenticated users to specify filters and 
 VS Code is the preferred dev tool.
 ##### Requirements
   * localhost has access to Redshift
-  * localhost has Node.js v10.15.1 installed (other Node.js versions may work but have not been tested)
+  * localhost has Node.js v12.22.11 installed (other Node.js versions may work but have not been tested)
   * localhost has applicable env var above defined
   * access to a Keycloak realm admin console or to the [CSS dashboards](https://bcgov.github.io/sso-requests/my-dashboard/)
   * setup a Keycloak client with `http://localhost:8080/*` as a valid URI redirect (the "Development" installation download from the CSS provides this)
