@@ -14,15 +14,7 @@
       <v-toolbar-title>FOI Report Download</v-toolbar-title>
     </v-app-bar>
     <v-main>
-      <v-container>
-      <!-- Added as part of GDXDSD-5430, remove this banner 19-25 when asked -->
-        <v-row>
-          <v-col class="d-flex" cols="12">
-            <v-alert type="warning" icon="mdi-alert-circle">
-              Please be advised that the data produced by this reporting tool is currently out of date. Please contact your FOI contact at IAO for Ministry-specific data, and FOI.Operations@gov.bc.ca for status updates on coming fixes.
-            </v-alert>
-           </v-col>
-        </v-row>
+      <v-container>       
         <v-row>
           <v-col cols="12">
             <h2>
