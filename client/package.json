@@ -13,7 +13,7 @@
     "core-js": "^3.8.1",
     "css-loader": "6.7.3",
     "html-webpack-plugin": "5.5.0",
-    "loader-utils": "^2.0.0",
+    "loader-utils": "^3.2.1",
     "postcss": "8.4.21",
     "vue": "^2.6.12",
     "vuetify": "^2.6.10",
