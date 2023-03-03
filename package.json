@@ -21,6 +21,7 @@
     "json5": "^2.2.2",
     "jszip": "^3.7.0",
     "keycloak-connect": "^21.0.1",
+    "loader-utils": "^2.0.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.2",
     "pdfmake": "^0.1.65",
