@@ -13,6 +13,7 @@
   "dependencies": {
     "axios": "^0.21.2",
     "body-parser": "^1.19.2",
+    "cacache": "14.0.0",
     "chokidar": "^3.5.3",
     "ejs": "^3.1.6",
     "excel4node": "^1.2.1",
@@ -35,7 +36,7 @@
     "vue-template-compiler": "^2.6.10",
     "vuetify": "^2.0.0",
     "vuetify-loader": "1.7.0",
-    "webpack": "4.0.0",
+    "webpack": "^5.75.0",
     "yn": "^4.0.0"
   }
 }

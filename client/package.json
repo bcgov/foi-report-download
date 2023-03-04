@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "acorn": "8.8.2",
+    "cacache": "14.0.0",
     "check-peer-dependencies": "^4.1.0",
     "core-js": "^3.8.1",
     "css-loader": "6.7.3",
@@ -16,6 +17,8 @@
     "json5": "2.2.2",
     "loader-utils": "^3.2.1",
     "postcss": "8.4.21",
+    "ssri": "7.1.1",
+    "terser-webpack-plugin": "^5.3.6",
     "vue": "^2.6.12",
     "vuetify": "^2.6.10",
     "webpack": "^5.0.0"
