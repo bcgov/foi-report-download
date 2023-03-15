@@ -21,7 +21,7 @@
     "terser-webpack-plugin": "^5.3.6",
     "vue": "^2.6.12",
     "vuetify": "^2.6.10",
-    "webpack": "^5.0.0"
+    "webpack": "^5.76.0"
   },
   "devDependencies": {
     "@mdi/font": "^5.8.55",
