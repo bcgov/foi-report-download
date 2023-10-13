@@ -183,10 +183,7 @@ export default {
     selectedOrgs: [null],
     orgs: [
       { value: null, text: '(All Organizations)' },
-      {
-        value: 'AED',
-        text: 'AED - Ministry of Advanced Education and Skills Training'
-      },
+      
       { value: 'AGR', text: 'AGR - Ministry of Agriculture and Food' },
       { value: 'CAS', text: 'CAS - Crown Agencies Secretariat' },
 
@@ -194,11 +191,12 @@ export default {
         value: 'CFD',
         text: 'CFD - Ministry of Children and Family Development'
       },
+      { value: 'COR', text: "COR - BC Corrections" },
       { value: 'CTZ', text: "CTZ - Ministry of Citizens' Services" },
       { value: 'DAS', text: "DAS - Declaration Act Secretariat" },
       { value: 'EAO', text: 'EAO - Environmental Assessment Office' },
-      { value: 'EDU', text: 'EDU - Ministry of Education and Child Care' },
-      { value: 'EMB', text: 'EMB - Emergency Management BC' },
+      { value: 'ECC', text: 'ECC - Ministry of Education and Child Care' },
+      { value: 'EMC', text: 'EMC - Ministry of Emergency Management and Climate Readiness' },
       {
         value: 'EML',
         text: 'EML - Ministry of Energy, Mines and Low Carbon Innovation'
@@ -213,18 +211,18 @@ export default {
         value: 'GCP',
         text: 'GCP - Government Communications and Public Engagement'
       },
+      { value: 'HSG', text: 'HSG - Ministry of Housing' },
       { value: 'HTH', text: 'HTH - Ministry of Health' },
       {
         value: 'IRR',
         text: 'IRR - Ministry of Indigenous Relations and Reconciliation'
       },
       {
-        value: 'JER',
-        text: 'JER - Ministry of Jobs, Economic Recovery and Innovation'
+        value: 'JED',
+        text: 'JED - Ministry of Jobs, Economic Development and Innovation'
       },
       { value: 'LBR', text: 'LBR - Ministry of Labour' },
       { value: 'LDB', text: 'LDB - Liquor Distribution Branch' },
-      { value: 'LWR', text: 'LWR - Ministry of Land, Water and Resource Stewardship' },
       { value: 'MAG', text: 'MAG - Ministry of Attorney General' },
       { value: 'MMA', text: 'MMA - Ministry of Municipal Affairs' },
       { value: 'MHA', text: 'MHA - Ministry of Mental Health and Addictions' },
@@ -236,9 +234,13 @@ export default {
         value: 'MSD',
         text: 'MSD - Ministry of Social Development and Poverty Reduction'
       },
-      { value: 'OCC', text: 'OCC - Office of the Chief Coroner' },
+      { value: 'OCC', text: 'OCC - Coroners Service of BC' },
       { value: 'OOP', text: 'OOP - Office of the Premier' },
       { value: 'PSA', text: 'PSA - Public Service Agency' },
+      {
+        value: 'PSE',
+        text: 'PSE - Ministry of Post-Secondary Education and Future Skills'
+      },
       {
         value: 'PSS',
         text: 'PSS - Ministry of Public Safety and Solicitor General'
@@ -247,6 +249,10 @@ export default {
       {
         value: 'TRA',
         text: 'TRA - Ministry of Transportation and Infrastructure'
+      },
+      {
+        value: 'WLR',
+        text: 'WLR - Ministry of Water, Land and Resource Stewardship'
       }
     ]
   }),
