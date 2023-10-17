@@ -224,8 +224,8 @@ export default {
       { value: 'LBR', text: 'LBR - Ministry of Labour' },
       { value: 'LDB', text: 'LDB - Liquor Distribution Branch' },
       { value: 'MAG', text: 'MAG - Ministry of Attorney General' },
-      { value: 'MMA', text: 'MMA - Ministry of Municipal Affairs' },
       { value: 'MHA', text: 'MHA - Ministry of Mental Health and Addictions' },
+      { value: 'MMA', text: 'MMA - Ministry of Municipal Affairs' },
       {
         value: 'MOE',
         text: 'MOE - Ministry of Environment and Climate Change Strategy'
