@@ -11,54 +11,47 @@ const yn = require('yn')
 const _ = require('lodash')
 const pastDueMsg = 'Overdue requests are displayed in red'
 const orgMap = {
-  AED: 'Ministry of Advanced Education and Skills Training',
   AGR: 'Ministry of Agriculture and Food',
-  BRD: 'Board Resourcing and Development Office',
   CAS: 'Crown Agencies Secretariat',
   CFD: 'Ministry of Children and Family Development',
-  CSC: 'Ministry of Community, Sport and Cultural Development',
+  COR: 'BC Corrections',
   CTZ: "Ministry of Citizens' Services",
   DAS: "Declaration Act Secretariat",
   EAO: 'Environmental Assessment Office',
-  EDU: 'Ministry of Education and Child Care',
-  EGM: 'Ministry of Energy and Mines',
-  EMB: 'Emergency Management BC',
+  ECC: 'Ministry of Education and Child Care',
+  EMC: 'Ministry of Emergency Management and Climate Readiness',
   EML: 'Ministry of Energy, Mines and Low Carbon Innovation',
   FIN: 'Ministry of Finance',
   FOR: 'Ministry of Forests',
   GCP: 'Government Communications and Public Engagement',
-  HOU: 'Office of Housing and Construction Standards',
+  HSG: 'Ministry of Housing',
   HTH: 'Ministry of Health',
   IRR: 'Ministry of Indigenous Relations and Reconciliation',
-  JAG: 'Ministry of Justice and Attorney General',
-  JTI: 'Ministry of Jobs, Tourism, and Innovation',
-  JER: 'Ministry of Jobs, Economic Recovery and Innovation',
+  JED: 'Ministry of Jobs, Economic Development and Innovation',
   LBR: 'Ministry of Labour',
   LDB: 'Liquor Distribution Branch',
-  LWR: 'Ministry of Land, Water and Resource Stewardship',
   MAG: 'Ministry of Attorney General',
-  MMA: 'Ministry of Municipal Affairs',
   MHA: 'Ministry of Mental Health and Addictions',
-  MIT: 'Ministry of International Trade',
+  MMA: 'Ministry of Municipal Affairs',
   MOE: 'Ministry of Environment and Climate Change Strategy',
-  MSB: 'Ministry of Small Business and Red Tape Reduction',
   MSD: 'Ministry of Social Development and Poverty Reduction',
-  NGD: 'Ministry of Natural Gas Development',
-  OCC: 'Office of the Chief Coroner',
+  OCC: 'Coroners Service of BC',
   OOP: 'Office of the Premier',
   PSA: 'Public Service Agency',
+  PSE: 'Ministry of Post-Secondary Education and Future Skills',
   PSS: 'Ministry of Public Safety and Solicitor General',
   TAC: 'Ministry of Tourism, Arts, Culture and Sport',
-  TRA: 'Ministry of Transportation and Infrastructure'
+  TRA: 'Ministry of Transportation and Infrastructure',
+  WLR: 'Ministry of Water, Land and Resource Stewardship'
 }
 
 const commonOrgGroup = {
   ...Object.keys(orgMap).reduce((a, e) => ((a[e] = [e]), a), {}),
-  EML: ['EML', 'EGM'],
   MMA: ['MMA', 'CSC'],
   EML: ['EML', 'EGM', 'NGD'],
   MAG: ['MAG', 'JAG'],
-  JER: ['JER', 'JTI', 'MIT', 'MSB']
+  JED: ['JED', 'JER', 'JTI', 'MIT', 'MSB'],
+  WLR: ['WLR', 'LWR']
 }
 
 const orgGroupByDate = [
@@ -97,6 +90,18 @@ const orgGroupByDate = [
     orgGroup: {
       ...commonOrgGroup,
       FOR: [...commonOrgGroup.FOR, 'FNR']
+    },
+  },
+  {
+    date: moment('2023-10-17'),
+    orgGroup: {
+      ...commonOrgGroup,
+      ECC: [...commonOrgGroup.ECC, 'EDU'],
+      EMC: [...commonOrgGroup.EMC, 'EMB'],
+      JED: [...commonOrgGroup.JED, 'JER'],
+      PSE: [...commonOrgGroup.PSE, 'AED'],
+      WLR: [...commonOrgGroup.WLR, 'LWR'],
+
     },
   },
 ]
