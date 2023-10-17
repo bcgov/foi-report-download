@@ -22,14 +22,6 @@
               reporting on FOI requests.
             </h2>
             <p>
-              We’ve heard your collective feedback and have created this tool to
-              allow you to run file reports on an as and when needed basis, so
-              you no longer need to rely on Monday’s Executive Weekly Reports
-              for your mid-/late-week meetings. As an additional feature, and
-              also based on your feedback, we have included an option to have
-              the report produced in either Excel or PDF format.
-            </p>
-            <p>
               <v-expansion-panels>
                 <v-expansion-panel>
                   <v-expansion-panel-header><h2>Instructions for use:</h2></v-expansion-panel-header>
@@ -68,7 +60,7 @@
               <li>
                 IAO’s
                 <a
-                  href="https://citz.sp.gov.bc.ca/sites/CIRMO/IAO/FOI_Intel/Dashboards/Forms/AllItems.aspx"
+                  href="https://bcgov.sharepoint.com/sites/CITZ-CIRMO_FOI_Intel"
                   >Dashboards</a
                 >
                 will take you to three Excel spreadsheets that have pivot tables
@@ -88,7 +80,7 @@
                 New FOI response packages that are suitable for publication are
                 published on the
                 <a
-                  href="https://www2.gov.bc.ca/gov/content/governments/about-the-bc-government/open-government/open-information/search-open-information-resources"
+                  href="https://www2.gov.bc.ca/gov/content/governments/about-the-bc-government/open-government/open-information"
                   >Open Information</a
                 >
                 website daily and a number of other proactive disclosure
@@ -96,7 +88,7 @@
               </li>
               <li>
                 <a
-                  href="https://www2.gov.bc.ca/gov/content/governments/about-the-bc-government/open-government/open-information/foi-request-statistics"
+                  href="https://www2.gov.bc.ca/gov/content/governments/about-the-bc-government/open-government/open-information/completed-foi-requests#reporting"
                   >Annual Reports</a
                 >
                 on the Administration of FOIPPA are published on the IAO
@@ -106,12 +98,7 @@
             </p>
             <h2>IAO Contacts</h2>
             <p>
-            Your
-            <a
-              href="https://www2.gov.bc.ca/gov/content/governments/about-the-bc-government/open-government/open-information/freedom-of-information/managers-information-access"
-              >IAO Manager</a
-            >
-            is available to discuss ad hoc reporting requests and any other
+            Your IAO Manager is available to discuss ad hoc reporting requests and any other
             issues relating to FOI requests.
             </p>
           </v-col>
