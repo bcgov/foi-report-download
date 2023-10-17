@@ -50,7 +50,7 @@ const commonOrgGroup = {
   MMA: ['MMA', 'CSC'],
   EML: ['EML', 'EGM', 'NGD'],
   MAG: ['MAG', 'JAG'],
-  JED: ['JED', 'JER', 'JTI', 'MIT', 'MSB'],
+  JER: ['JER', 'JTI', 'MIT', 'MSB','JED'],
   WLR: ['WLR', 'LWR']
 }
 
