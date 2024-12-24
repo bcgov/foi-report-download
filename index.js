@@ -201,6 +201,10 @@ app.use(
 app.use(keycloak.middleware())
 const PdfPrinter = require('pdfmake')
 const { Pool } = require('pg')
+/* The pool connection automatically takes connection details from environment variables
+   by default if they are not explictiy set
+   see: https://node-postgres.com/apis/pool
+   and: https://node-postgres.com/apis/client */
 const pool = new Pool({
   port: process.env.PGPORT || 5439,
   ssl: {
