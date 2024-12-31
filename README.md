@@ -20,7 +20,7 @@ This is an intranet web-app allowing authenticated users to specify filters and 
 | PGHOST                  | Yes       |            |                            |
 | PGPASSWORD              | Yes       |            |                            |
 | PGDATABASE              | Yes       |            |                            |
-| PGPORT                  | No        | 5439       | Use 443 if proxying        |
+| PGPORT                  | No        | 5439       |                            |
 | SNOWPLOW_TRACKER_URL    | Yes       |            | snowplow tracker url       |
 | SNOWPLOW_COLLECTOR_HOST | Yes       |            | snowplow collector host    |
 | FILE_STORE_PATH         | No        | ./sessions | path to session file store |

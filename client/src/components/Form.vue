@@ -107,7 +107,7 @@
       <v-row>
         <v-col class="d-flex" cols="12">
           <v-alert type="warning" icon="mdi-alert-circle">
-            Report is limited to 5000 results.
+            Report is limited to 5,000 results.
           </v-alert>
         </v-col>
       </v-row>
