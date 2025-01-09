@@ -30,7 +30,7 @@ This is an intranet web-app allowing authenticated users to specify filters and 
 VS Code is the preferred dev tool.
 ##### Requirements
   * localhost has access to Redshift
-  * localhost has Node.js v14.19.0 installed (other Node.js versions may work but have not been tested)
+  * localhost has Node.js v16.20.2 installed (other Node.js versions may work but have not been tested)
   * localhost has applicable env var above defined
   * access to a Keycloak realm admin console or to the [CSS dashboards](https://bcgov.github.io/sso-requests/my-dashboard/)
   * setup a Keycloak client with `http://localhost:8080/*` as a valid URI redirect (the "Development" installation download from the CSS provides this)
