@@ -356,6 +356,11 @@ app.post('/FOI-report', async (req, res) => {
   }
   let { query: qryTxt, parameters } = composeQry(selectStmt, true)
   qryTxt += ' order by start_date desc limit 5000'
+
+  if (!(parameters instanceof Array)) { // Prevents DoS.
+    return [];
+  }
+
   try {
     const { rows } = await pool.query(
       pgParametrize.toOrdinal(qryTxt),
