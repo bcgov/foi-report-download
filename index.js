@@ -356,6 +356,11 @@ app.post('/FOI-report', async (req, res) => {
   }
   let { query: qryTxt, parameters } = composeQry(selectStmt, true)
   qryTxt += ' order by start_date desc limit 5000'
+
+  if (!(parameters instanceof Array)) { // Prevents DoS.
+    return [];
+  }
+
   try {
     const { rows } = await pool.query(
       pgParametrize.toOrdinal(qryTxt),
@@ -487,6 +492,11 @@ app.post('/FOI-report', async (req, res) => {
       case 'PDF':
         let { query: qryTxt, parameters } = composeQry(summarySelectStmt, false)
         qryTxt = `select type, applicant_type, status, is_past_due::boolean, count(*)::integer as count from (${qryTxt}) group by 1,2,3,4`
+
+        if (!(parameters instanceof Array)) { // Prevents DoS.
+          return [];
+        }
+
         const { rows: summaryRows } = await pool.query(
           pgParametrize.toOrdinal(qryTxt),
           _.flatten(parameters)
