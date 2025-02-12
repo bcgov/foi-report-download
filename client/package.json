@@ -42,6 +42,10 @@
     "vue-template-compiler": "^2.6.12",
     "vuetify-loader": "^1.6.0"
   },
+  "resolutions": {
+    "braces": "3.0.3"
+  },
+
   "eslintConfig": {
     "root": true,
     "env": {
