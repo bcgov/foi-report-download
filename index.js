@@ -228,7 +228,12 @@ const pdfFonts = {
   },
 }
 
-app.get('/ping', async (req, res) => {
+const pingLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+})
+
+app.get('/ping', pingLimiter, async (req, res) => {
   try {
     const { rows } = await pool.query('SELECT $1::text as message', ['OK!'])
     res.end(rows[0].message)
