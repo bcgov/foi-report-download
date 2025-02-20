@@ -25,6 +25,8 @@ This is an intranet web-app allowing authenticated users to specify filters and 
 | SNOWPLOW_COLLECTOR_HOST | Yes       |            | snowplow collector host    |
 | FILE_STORE_PATH         | No        | ./sessions | path to session file store |
 | TRUST_PROXY             | No        |            | express.js trust proxy     |
+| NODE_ENV                | Yes       | production | in local set it to dev     |
+
 
 #### Development
 VS Code is the preferred dev tool.
