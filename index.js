@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const rateLimit = require('express-rate-limit')
 const port = process.env.port || 8080
 let session = require('express-session')
 const moment = require('moment')
@@ -196,6 +197,10 @@ app.use(
     resave: false,
     saveUninitialized: true,
     store: store,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+    },
   })
 )
 app.use(keycloak.middleware())
@@ -231,8 +236,15 @@ app.get('/ping', async (req, res) => {
     res.status(500).end()
   }
 })
+
+
+const foiReportLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+}) 
 app.use(keycloak.protect())
-app.post('/FOI-report', async (req, res) => {
+
+app.post('/FOI-report', foiReportLimiter, async (req, res) => {
   if (req.body.downloadToken) {
     res.cookie('downloadToken', req.body.downloadToken)
   }
