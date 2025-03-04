@@ -1,0 +1,32 @@
+# Use OpenShift's built-in Node.js 16 UBI8 image
+FROM nodejs:16-ubi8 AS build
+
+# Set working directory
+WORKDIR /opt/app-root/src
+
+# Remove previous dependencies and clean cache
+RUN rm -rf node_modules && npm cache clean --force
+
+# Copy package.json and package-lock.json first (to leverage caching)
+COPY package.json package-lock.json ./
+
+# Install dependencies with legacy peer dependencies
+RUN npm install --legacy-peer-deps
+
+# Copy the full application source code AFTER installing dependencies
+COPY . .
+
+# Set working directory for frontend build
+WORKDIR /opt/app-root/src/client
+
+# Remove old dependencies, clean cache, install fresh, and build Vue frontend
+RUN rm -rf node_modules && npm cache clean --force && npm install --legacy-peer-deps && npm run build
+
+# Return to main application directory
+WORKDIR /opt/app-root/src
+
+# Expose the application port
+EXPOSE 8080
+
+# Set the default command to run the app
+CMD ["npm", "start"]
