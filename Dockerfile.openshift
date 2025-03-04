@@ -1,5 +1,5 @@
 # Use OpenShift's built-in Node.js 16 UBI8 image
-FROM nodejs:16-ubi8 AS build
+FROM image-registry.openshift-image-registry.svc:5000/openshift/nodejs:16-ubi8 AS build
 
 # Set working directory
 WORKDIR /opt/app-root/src
