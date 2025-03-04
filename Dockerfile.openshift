@@ -1,28 +1,31 @@
-# Use OpenShift's built-in Node.js 16 UBI8 image
+# Dockerfile.openshift
+
+# Use OpenShift’s built-in Node.js 16 UBI8 image
 FROM image-registry.openshift-image-registry.svc:5000/openshift/nodejs:16-ubi8 AS build
+
+# Switch to root so we can fix file permissions
+USER root
 
 # Set working directory
 WORKDIR /opt/app-root/src
 
-# Remove previous dependencies and clean cache
-RUN rm -rf node_modules && npm cache clean --force
-
-# Copy package.json and package-lock.json first (to leverage caching)
-COPY package.json package-lock.json ./
-
-# Install dependencies with legacy peer dependencies
-RUN npm install --legacy-peer-deps
-
-# Copy the full application source code AFTER installing dependencies
+# Copy the entire application source code (ensure your .dockerignore excludes node_modules)
 COPY . .
 
-# Set working directory for frontend build
+# Change ownership of the source files to the non-root user (1001)
+RUN chown -R 1001:0 /opt/app-root/src
+
+# Switch back to the default non-root user
+USER 1001
+
+# Install backend dependencies
+RUN npm install --legacy-peer-deps
+
+# Build the frontend: switch to the client directory
 WORKDIR /opt/app-root/src/client
+RUN npm install --legacy-peer-deps && npm run build
 
-# Remove old dependencies, clean cache, install fresh, and build Vue frontend
-RUN rm -rf node_modules && npm cache clean --force && npm install --legacy-peer-deps && npm run build
-
-# Return to main application directory
+# Return to the main app directory
 WORKDIR /opt/app-root/src
 
 # Expose the application port
