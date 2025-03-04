@@ -11,6 +11,7 @@
     "start": "node ."
   },
   "dependencies": {
+    "@mdi/font": "^6.9.96",
     "axios": "^1.6.0",
     "body-parser": "^1.20.3",
     "cacache": "14.0.0",
