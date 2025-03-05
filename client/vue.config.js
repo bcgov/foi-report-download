@@ -1,3 +1,5 @@
+const webpack = require('webpack')
+
 module.exports = {
   transpileDependencies: ['vuetify'],
   devServer: {
@@ -14,5 +16,16 @@ module.exports = {
       args[0].minify = false
       return args
     })
+  },
+  configureWebpack: {
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_DEBUG: JSON.stringify(process.env.NODE_DEBUG)
+        }
+      })
+    ],
+    
+    
   }
 }
