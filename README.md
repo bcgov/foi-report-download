@@ -42,18 +42,16 @@ VS Code is the preferred dev tool.
   ```
   git clone https://github.com/bcgov/foi-report-download.git
   cd foi-report-download
-  npm i -g yarn
-  yarn install
+  npm install --legacy-peer-dep
   ```
 2. Download keycloak.json from Keycloak admin console client's Installation tab to ./keycloak.json
 3. Run
    ```
-   yarn run start
+   npm start
    ```
   
     If everything works out, the output should be something like
     ```
-    yarn run v1.22.4
     $ node .
     launch http://localhost:8080 to explore
     ```
