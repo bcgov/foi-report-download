@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@mdi/font": "^6.9.96",
-    "axios": "^1.6.0",
+    "axios": "^1.8.2",
     "body-parser": "^1.20.3",
     "cacache": "14.0.0",
     "chokidar": "^3.5.3",
