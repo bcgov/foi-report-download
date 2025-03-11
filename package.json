@@ -43,18 +43,18 @@
     "vue-template-compiler": "^2.6.10",
     "vuetify": "^2.0.0",
     "vuetify-loader": "1.7.0",
-    "webpack": "4.47.0",
+    "webpack": "5.98.0",
     "yn": "^4.0.0"
   },
   "overrides": {
     "mini-css-extract-plugin": "0.8.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.5.19",
-    "@vue/cli-plugin-eslint": "^4.5.19",
-    "@vue/cli-plugin-router": "^4.5.19",
-    "@vue/cli-plugin-vuex": "^4.5.19",
-    "@vue/cli-service": "^4.5.19",
+    "@vue/cli-plugin-babel": "^5.0.8",
+    "@vue/cli-plugin-eslint": "^5.0.8",
+    "@vue/cli-plugin-router": "^5.0.8",
+    "@vue/cli-plugin-vuex": "^5.0.8",
+    "@vue/cli-service": "^5.0.8",
     "eslint": "^6.8.0"
   }
 }
