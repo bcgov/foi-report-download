@@ -3,7 +3,6 @@
     ref="form"
     autocomplete="off"
     v-model="valid"
-    lazy-validation
     action="/FOI-report"
     method="post"
   >
@@ -16,7 +15,7 @@
             name="orgCode"
             label="Organization"
             multiple
-            outlined
+            variant="outlined"
           ></v-select>
         </v-col>
       </v-row>
@@ -28,7 +27,7 @@
             name="status"
             v-model="selectedStatus"
             multiple
-            outlined
+            variant="outlined"
           ></v-select>
         </v-col>
       </v-row>
@@ -40,7 +39,7 @@
             label="Applicant Type"
             name="applicantType"
             multiple
-            outlined
+            variant="outlined"
           ></v-select>
         </v-col>
       </v-row>
@@ -52,53 +51,31 @@
             label="Overdue"
             name="isOverdue"
             multiple
-            outlined
+            variant="outlined"
           ></v-select>
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12" sm="1">Start Date</v-col>
-        <v-col cols="12" sm="3"
-          ><date-input
-            label="From (inclusive)"
-            v-model="startDateFrom"
-            name="startDateFrom"
-          ></date-input
-        ></v-col>
-        <v-col cols="12" sm="3"
-          ><date-input
-            label="To (inclusive)"
-            v-model="startDateTo"
-            name="startDateTo"
-          ></date-input
-        ></v-col>
+        <v-col cols="12" sm="3">
+          <date-input label="From (inclusive)" v-model="startDateFrom" name="startDateFrom"></date-input>
+        </v-col>
+        <v-col cols="12" sm="3">
+          <date-input label="To (inclusive)" v-model="startDateTo" name="startDateTo"></date-input>
+        </v-col>
       </v-row>
       <v-row>
         <v-col cols="12" sm="1">Due Date</v-col>
-        <v-col cols="12" sm="3"
-          ><date-input
-            label="From (inclusive)"
-            v-model="dueDateFrom"
-            name="dueDateFrom"
-          ></date-input
-        ></v-col>
-        <v-col cols="12" sm="3"
-          ><date-input
-            label="To (inclusive)"
-            v-model="dueDateTo"
-            name="dueDateTo"
-          ></date-input
-        ></v-col>
+        <v-col cols="12" sm="3">
+          <date-input label="From (inclusive)" v-model="dueDateFrom" name="dueDateFrom"></date-input>
+        </v-col>
+        <v-col cols="12" sm="3">
+          <date-input label="To (inclusive)" v-model="dueDateTo" name="dueDateTo"></date-input>
+        </v-col>
       </v-row>
       <v-row>
         <v-col cols="12">
-          <v-radio-group
-            name="format"
-            row
-            label="File Format"
-            v-model="fileFormat"
-            mandatory
-          >
+          <v-radio-group name="format" row label="File Format" v-model="fileFormat" mandatory>
             <v-radio label="PDF" value="PDF"></v-radio>
             <v-radio label="Excel" value="Excel"></v-radio>
           </v-radio-group>
@@ -113,21 +90,9 @@
       </v-row>
       <v-row>
         <v-col cols="12">
-          <v-btn
-            :disabled="!valid || isSubmitting"
-            color="success"
-            class="mr-4"
-            type="submit"
-            @click="validate"
-          >
+          <v-btn :disabled="!valid || isSubmitting" color="success" class="mr-4" type="submit" @click="validate">
             <span v-if="!isSubmitting">Submit</span>
-            <v-progress-circular
-              indeterminate
-              color="white"
-              class="mx-3"
-              v-if="isSubmitting"
-              >Submit</v-progress-circular
-            >
+            <v-progress-circular indeterminate color="white" class="mx-3" v-if="isSubmitting" />
           </v-btn>
           <v-btn color="error" class="mr-4" @click="reset">
             Reset
@@ -137,214 +102,111 @@
     </v-container>
     <input type="hidden" name="downloadToken" :value="downloadToken" />
   </v-form>
+
 </template>
 
-<script>
-import DateInput from './date-input'
-export default {
-  components: {
-    DateInput
-  },
-  data: () => ({
-    downloadTimer: null,
-    downloadToken: '',
-    isSubmitting: false,
-    valid: true,
-    startDateFrom: null,
-    startDateTo: null,
-    dueDateFrom: null,
-    dueDateTo: null,
-    fileFormat: 'PDF',
-    selectedStatus: ['All Open'],
-    status: [
-      'All Open',
-      'All Open excluding on-hold',
-      'All On-Hold',
-      'All Closed'
-    ],
-    selectedApplicantType: [null],
-    applicantType: [
-      { value: null, text: '(All Applicant Types)' },
-      'Business',
-      'Individual',
-      'Interest Group',
-      'Law Firm',
-      'Media',
-      'Other Governments',
-      'Other Public Body',
-      'Political Party',
-      'Researcher'
-    ],
-    selectedIsOverdue: [true, false],
-    isOverdue: [
-      { value: true, text: 'Overdue requests' },
-      { value: false, text: 'Non-overdue requests' }
-    ],
-    selectedOrgs: [null],
-    orgs: [
-      { value: null, text: '(All Organizations)' },
-      
-      { value: 'AGR', text: 'AGR - Ministry of Agriculture and Food' },
-      { value: 'CAS', text: 'CAS - Crown Agencies Secretariat' },
+<script setup>
+import { ref } from 'vue'
+import DateInput from './date-input.vue'
 
-      {
-        value: 'CFD',
-        text: 'CFD - Ministry of Children and Family Development'
-      },
-      { value: 'COR', text: "COR - BC Corrections" },
-      { value: 'CTZ', text: "CTZ - Ministry of Citizens' Services" },
-      { value: 'DAS', text: "DAS - Declaration Act Secretariat" },
-      { value: 'EAO', text: 'EAO - Environmental Assessment Office' },
-      { value: 'ECC', text: 'ECC - Ministry of Education and Child Care' },
-      { value: 'EMC', text: 'EMC - Ministry of Emergency Management and Climate Readiness' },
-      {
-        value: 'EML',
-        text: 'EML - Ministry of Energy, Mines and Low Carbon Innovation'
-      },
-      { value: 'FIN', text: 'FIN - Ministry of Finance' },
-      {
-        value: 'FOR',
-        text:
-          'FOR - Ministry of Forests'
-      },
-      {
-        value: 'GCP',
-        text: 'GCP - Government Communications and Public Engagement'
-      },
-      { value: 'HSG', text: 'HSG - Ministry of Housing' },
-      { value: 'HTH', text: 'HTH - Ministry of Health' },
-      {
-        value: 'IRR',
-        text: 'IRR - Ministry of Indigenous Relations and Reconciliation'
-      },
-      {
-        value: 'JED',
-        text: 'JED - Ministry of Jobs, Economic Development and Innovation'
-      },
-      { value: 'LBR', text: 'LBR - Ministry of Labour' },
-      { value: 'LDB', text: 'LDB - Liquor Distribution Branch' },
-      { value: 'MAG', text: 'MAG - Ministry of Attorney General' },
-      { value: 'MHA', text: 'MHA - Ministry of Mental Health and Addictions' },
-      { value: 'MMA', text: 'MMA - Ministry of Municipal Affairs' },
-      {
-        value: 'MOE',
-        text: 'MOE - Ministry of Environment and Climate Change Strategy'
-      },
-      {
-        value: 'MSD',
-        text: 'MSD - Ministry of Social Development and Poverty Reduction'
-      },
-      { value: 'OCC', text: 'OCC - Coroners Service of BC' },
-      { value: 'OOP', text: 'OOP - Office of the Premier' },
-      { value: 'PSA', text: 'PSA - Public Service Agency' },
-      {
-        value: 'PSE',
-        text: 'PSE - Ministry of Post-Secondary Education and Future Skills'
-      },
-      {
-        value: 'PSS',
-        text: 'PSS - Ministry of Public Safety and Solicitor General'
-      },
-      { value: 'TAC', text: 'TAC - Ministry of Tourism, Arts, Culture and Sport' },
-      {
-        value: 'TRA',
-        text: 'TRA - Ministry of Transportation and Infrastructure'
-      },
-      {
-        value: 'WLR',
-        text: 'WLR - Ministry of Water, Land and Resource Stewardship'
-      }
-    ]
-  }),
-  watch: {
-    selectedOrgs: function(newVal) {
-      this.allItemToggler(newVal, 'selectedOrgs')
-    },
-    selectedApplicantType: function(newVal) {
-      this.allItemToggler(newVal, 'selectedApplicantType')
+const form = ref(null)
+const valid = ref(true)
+const isSubmitting = ref(false)
+const downloadToken = ref('')
+
+const startDateFrom = ref(null)
+const startDateTo = ref(null)
+const dueDateFrom = ref(null)
+const dueDateTo = ref(null)
+const fileFormat = ref('PDF')
+
+const selectedStatus = ref(['All Open'])
+const selectedApplicantType = ref([null])
+const selectedIsOverdue = ref([true, false])
+const selectedOrgs = ref([null])
+
+const status = ['All Open', 'All Open excluding on-hold', 'All On-Hold', 'All Closed']
+
+const applicantType = [
+  { value: null, title: '(All Applicant Types)' },
+  'Business', 'Individual', 'Interest Group', 'Law Firm', 'Media', 'Other Governments',
+  'Other Public Body', 'Political Party', 'Researcher'
+]
+
+const isOverdue = [
+  { value: true, title: 'Overdue requests' },
+  { value: false, title: 'Non-overdue requests' }
+]
+
+const orgs = [
+  { value: null, title: '(All Organizations)' },
+  { value: 'AGR', title: 'AGR - Ministry of Agriculture and Food' },
+  { value: 'CAS', title: 'CAS - Crown Agencies Secretariat' },
+  { value: 'CFD', title: 'CFD - Ministry of Children and Family Development' },
+  { value: 'COR', title: 'COR - BC Corrections' },
+  { value: 'CTZ', title: "CTZ - Ministry of Citizens' Services" },
+  { value: 'DAS', title: "DAS - Declaration Act Secretariat" },
+  { value: 'EAO', title: 'EAO - Environmental Assessment Office' },
+  { value: 'ECC', title: 'ECC - Ministry of Education and Child Care' },
+  { value: 'EMC', title: 'EMC - Ministry of Emergency Management and Climate Readiness' },
+  { value: 'EML', title: 'EML - Ministry of Energy, Mines and Low Carbon Innovation' },
+  { value: 'FIN', title: 'FIN - Ministry of Finance' },
+  { value: 'FOR', title: 'FOR - Ministry of Forests' },
+  { value: 'GCP', title: 'GCP - Government Communications and Public Engagement' },
+  { value: 'HSG', title: 'HSG - Ministry of Housing' },
+  { value: 'HTH', title: 'HTH - Ministry of Health' },
+  { value: 'IRR', title: 'IRR - Ministry of Indigenous Relations and Reconciliation' },
+  { value: 'JED', title: 'JED - Ministry of Jobs, Economic Development and Innovation' },
+  { value: 'LBR', title: 'LBR - Ministry of Labour' },
+  { value: 'LDB', title: 'LDB - Liquor Distribution Branch' },
+  { value: 'MAG', title: 'MAG - Ministry of Attorney General' },
+  { value: 'MHA', title: 'MHA - Ministry of Mental Health and Addictions' },
+  { value: 'MMA', title: 'MMA - Ministry of Municipal Affairs' },
+  { value: 'MOE', title: 'MOE - Ministry of Environment and Climate Change Strategy' },
+  { value: 'MSD', title: 'MSD - Ministry of Social Development and Poverty Reduction' },
+  { value: 'OCC', title: 'OCC - Coroners Service of BC' },
+  { value: 'OOP', title: 'OOP - Office of the Premier' },
+  { value: 'PSA', title: 'PSA - Public Service Agency' },
+  { value: 'PSE', title: 'PSE - Ministry of Post-Secondary Education and Future Skills' },
+  { value: 'PSS', title: 'PSS - Ministry of Public Safety and Solicitor General' },
+  { value: 'TAC', title: 'TAC - Ministry of Tourism, Arts, Culture and Sport' },
+  { value: 'TRA', title: 'TRA - Ministry of Transportation and Infrastructure' },
+  { value: 'WLR', title: 'WLR - Ministry of Water, Land and Resource Stewardship' }
+]
+
+const validate = () => {
+  form.value.validate()
+  isSubmitting.value = true
+  downloadToken.value = Date.now().toString()
+
+  window.snowplow('trackSelfDescribingEvent', {
+    schema: 'iglu:ca.bc.gov.foi/foi_report/jsonschema/2-0-0',
+    data: {
+      organization: selectedOrgs.value,
+      status: selectedStatus.value,
+      applicant_type: selectedApplicantType.value,
+      is_overdue: selectedIsOverdue.value.length === 1 ? (selectedIsOverdue.value[0] ? 'Yes' : 'No') : 'All',
+      start_date_start: startDateFrom.value,
+      start_date_end: startDateTo.value,
+      due_date_start: dueDateFrom.value,
+      due_date_end: dueDateTo.value,
+      file_format: fileFormat.value
     }
-  },
-  methods: {
-    allItemToggler(newVal, dataField) {
-      if (newVal.length === 0) {
-        return this[dataField].push(null)
-      }
-      let nullIdx = newVal.indexOf(null)
-      if (nullIdx < 0) return
-      if (newVal.length === 1 && nullIdx === 0) return
-      if (nullIdx === newVal.length - 1) {
-        newVal.splice(0, newVal.length - 1)
-      }
-      this[dataField].splice(nullIdx, 1)
-    },
-    validate() {
-      this.$refs.form.validate()
-      let snowPlowIsOverdue = 'All'
-      if (this.selectedIsOverdue.length === 1) {
-        snowPlowIsOverdue = this.selectedIsOverdue[0] === true ? 'Yes' : 'No'
-      }
-      window.snowplow('trackSelfDescribingEvent', {
-        schema: 'iglu:ca.bc.gov.foi/foi_report/jsonschema/2-0-0',
-        data: {
-          organization: this.selectedOrgs,
-          status: this.selectedStatus,
-          applicant_type: this.selectedApplicantType,
-          is_overdue: snowPlowIsOverdue,
-          start_date_start: this.startDateFrom,
-          start_date_end: this.startDateTo,
-          due_date_start: this.dueDateFrom,
-          due_date_end: this.dueDateTo,
-          file_format: this.fileFormat
-        }
-      })
-      this.blockResubmit()
-    },
-    reset() {
-      this.$refs.form.reset()
-    },
-    getCookie(name) {
-      var parts = document.cookie.split(name + '=')
-      if (parts.length == 2)
-        return parts
-          .pop()
-          .split(';')
-          .shift()
-    },
-    expireCookie(cName) {
-      document.cookie =
-        encodeURIComponent(cName) +
-        '=deleted; expires=' +
-        new Date(0).toUTCString()
-    },
-    setFormToken() {
-      this.downloadToken = new Date().getTime()
-    },
-    // Prevents double-submits by waiting for a cookie from the server.
-    blockResubmit() {
-      window.setTimeout(
-        function() {
-          this.isSubmitting = true
-        }.bind(this),
-        0
-      )
-      document.body.style.cursor = 'wait'
-      this.setFormToken()
-      this.downloadTimer = window.setInterval(
-        function() {
-          var token = this.getCookie('downloadToken')
-          if (token == this.downloadToken) {
-            this.unblockSubmit()
-          }
-        }.bind(this),
-        1000
-      )
-    },
-    unblockSubmit() {
-      this.isSubmitting = false
-      document.body.style.cursor = 'unset'
-      window.clearInterval(this.downloadTimer)
-      this.expireCookie('downloadToken')
+  })
+
+  // Simulate form submission handling, set cursor and submission state
+  document.body.style.cursor = 'wait'
+
+  const checkDownloadInterval = setInterval(() => {
+    const cookieToken = document.cookie.split('downloadToken=')[1]?.split(';')[0]
+    if (cookieToken === downloadToken.value) {
+      clearInterval(checkDownloadInterval)
+      isSubmitting.value = false
+      document.body.style.cursor = 'default'
+      document.cookie = 'downloadToken=;expires=Thu, 01 Jan 1970 00:00:01 GMT;'
     }
-  }
+  }, 1000)
 }
+
+const reset = () => form.value.reset()
 </script>
