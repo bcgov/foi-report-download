@@ -5,6 +5,7 @@
     v-model="valid"
     action="/FOI-report"
     method="post"
+    @submit.prevent="validate"
   >
     <v-container>
       <v-row>
@@ -90,7 +91,7 @@
       </v-row>
       <v-row>
         <v-col cols="12">
-          <v-btn :disabled="!valid || isSubmitting" color="success" class="mr-4" type="submit" @click="validate">
+          <v-btn :disabled="!valid || isSubmitting" color="success" class="mr-4" type="submit">
             <span v-if="!isSubmitting">Submit</span>
             <v-progress-circular indeterminate color="white" class="mx-3" v-if="isSubmitting" />
           </v-btn>
@@ -102,7 +103,6 @@
     </v-container>
     <input type="hidden" name="downloadToken" :value="downloadToken" />
   </v-form>
-
 </template>
 
 <script setup>
@@ -175,38 +175,19 @@ const orgs = [
 ]
 
 const validate = () => {
-  form.value.validate()
-  isSubmitting.value = true
-  downloadToken.value = Date.now().toString()
+  form.value.validate();
+  if (!valid.value) return;
 
-  // window.snowplow('trackSelfDescribingEvent', {
+  isSubmitting.value = true;
+  downloadToken.value = Date.now().toString();
+
+  // window.snowplow('trackSelfDescribingEvent', { 
   //   schema: 'iglu:ca.bc.gov.foi/foi_report/jsonschema/2-0-0',
-  //   data: {
-  //     organization: selectedOrgs.value,
-  //     status: selectedStatus.value,
-  //     applicant_type: selectedApplicantType.value,
-  //     is_overdue: selectedIsOverdue.value.length === 1 ? (selectedIsOverdue.value[0] ? 'Yes' : 'No') : 'All',
-  //     start_date_start: startDateFrom.value,
-  //     start_date_end: startDateTo.value,
-  //     due_date_start: dueDateFrom.value,
-  //     due_date_end: dueDateTo.value,
-  //     file_format: fileFormat.value
-  //   }
-  // })
+  //   data: { organization: selectedOrgs.value, file_format: fileFormat.value }
+  // });
 
-  // Simulate form submission handling, set cursor and submission state
-  document.body.style.cursor = 'wait'
+  form.value.$el.submit();
+};
 
-  const checkDownloadInterval = setInterval(() => {
-    const cookieToken = document.cookie.split('downloadToken=')[1]?.split(';')[0]
-    if (cookieToken === downloadToken.value) {
-      clearInterval(checkDownloadInterval)
-      isSubmitting.value = false
-      document.body.style.cursor = 'default'
-      document.cookie = 'downloadToken=;expires=Thu, 01 Jan 1970 00:00:01 GMT;'
-    }
-  }, 1000)
-}
-
-const reset = () => form.value.reset()
+const reset = () => form.value.reset();
 </script>
