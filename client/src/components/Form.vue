@@ -179,20 +179,20 @@ const validate = () => {
   isSubmitting.value = true
   downloadToken.value = Date.now().toString()
 
-  window.snowplow('trackSelfDescribingEvent', {
-    schema: 'iglu:ca.bc.gov.foi/foi_report/jsonschema/2-0-0',
-    data: {
-      organization: selectedOrgs.value,
-      status: selectedStatus.value,
-      applicant_type: selectedApplicantType.value,
-      is_overdue: selectedIsOverdue.value.length === 1 ? (selectedIsOverdue.value[0] ? 'Yes' : 'No') : 'All',
-      start_date_start: startDateFrom.value,
-      start_date_end: startDateTo.value,
-      due_date_start: dueDateFrom.value,
-      due_date_end: dueDateTo.value,
-      file_format: fileFormat.value
-    }
-  })
+  // window.snowplow('trackSelfDescribingEvent', {
+  //   schema: 'iglu:ca.bc.gov.foi/foi_report/jsonschema/2-0-0',
+  //   data: {
+  //     organization: selectedOrgs.value,
+  //     status: selectedStatus.value,
+  //     applicant_type: selectedApplicantType.value,
+  //     is_overdue: selectedIsOverdue.value.length === 1 ? (selectedIsOverdue.value[0] ? 'Yes' : 'No') : 'All',
+  //     start_date_start: startDateFrom.value,
+  //     start_date_end: startDateTo.value,
+  //     due_date_start: dueDateFrom.value,
+  //     due_date_end: dueDateTo.value,
+  //     file_format: fileFormat.value
+  //   }
+  // })
 
   // Simulate form submission handling, set cursor and submission state
   document.body.style.cursor = 'wait'
