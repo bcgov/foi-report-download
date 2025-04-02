@@ -37,8 +37,13 @@ const date = ref(props.modelValue)
 const menu = ref(false)
 
 watch(date, (newDate) => {
-  emit('update:modelValue', newDate)
+  if (newDate instanceof Date) {
+    emit('update:modelValue', newDate.toISOString().split('T')[0]) // "YYYY-MM-DD"
+  } else {
+    emit('update:modelValue', newDate)
+  }
 })
+
 
 const save = () => {
   menu.value = false
