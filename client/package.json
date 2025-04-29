@@ -25,8 +25,8 @@
   "devDependencies": {
     "@mdi/font": "^5.8.55",
     "@vue/cli-plugin-babel": "^5.0.8",
-    "@vue/cli-plugin-eslint": "~4.5.9",
-    "@vue/cli-service": "^4.5.19",
+    "@vue/cli-plugin-eslint": "~5.0.8",
+    "@vue/cli-service": "^5.0.8",
     "babel-eslint": "^10.1.0",
     "css-loader": "^3.6.0",
     "eslint": "6.8.0",
@@ -43,7 +43,7 @@
     "vuetify-loader": "^1.6.0",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.3"
+    "webpack-dev-server": "^5.2.1"
   },
   "resolutions": {
     "braces": "3.0.3",
