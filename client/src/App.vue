@@ -148,4 +148,28 @@ footer {
   color: #003366; // gov blue
 }
 
+.v-checkbox {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.v-select .v-checkbox {
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 1 !important; // Ensure checkboxes are fully visible
+}
+
+.v-select .v-checkbox .v-label {
+  margin-left: 8px !important;
+}
+
+.v-selection-control__input input {
+  opacity: 1 !important; // Ensure the input is visible for debugging
+  position: static !important; // Reset position for visibility
+  width: auto !important; // Adjust width for visibility
+  height: auto !important; // Adjust height for visibility
+}
+
 </style>

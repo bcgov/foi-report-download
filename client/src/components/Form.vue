@@ -22,7 +22,16 @@
               label="Organization"
               multiple
               variant="outlined"
-            />
+            >
+              <template #item="{ item, index }">
+                <v-checkbox
+                  :value="item.value"
+                  :label="item.title || item"
+                  v-model="selectedOrgs"
+                  :key="index"
+                />
+              </template>
+            </v-select>
           </v-col>
         </v-row>
 
