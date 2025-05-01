@@ -4,9 +4,9 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
   server: {
-    port: 8000, // keeping your previous port
+    port: 8000, 
     proxy: {
-      '/api': 'http://localhost:8080' // Adjust '/api' to your actual backend route if needed
+      '/FOI-report': 'http://localhost:8080' 
     }
   },
   define: {

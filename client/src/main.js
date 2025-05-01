@@ -23,9 +23,9 @@ const vuetify = createVuetify({
   components,
   directives,
   icons: {
-    defaultSet: 'mdi', // Sets Material Design Icons as the default icon set
-    aliases,           // Icon name aliases like 'close', 'menu', etc.
-    sets: { mdi },     // The actual icon set configuration object
+    defaultSet: 'mdi',
+    aliases,
+    sets: { mdi },
   },
 })
 

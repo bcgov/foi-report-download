@@ -81,10 +81,18 @@
         <v-row>
           <v-col cols="12" sm="1">Start Date</v-col>
           <v-col cols="12" sm="3">
-            <date-input label="From (inclusive)" v-model="startDateFrom" name="startDateFrom" />
+            <date-input
+              label="From (inclusive)"
+              v-model="startDateFrom"
+              name="startDateFrom"
+            />
           </v-col>
           <v-col cols="12" sm="3">
-            <date-input label="To (inclusive)" v-model="startDateTo" name="startDateTo" />
+            <date-input
+              label="To (inclusive)"
+              v-model="startDateTo"
+              name="startDateTo"
+            />
           </v-col>
         </v-row>
 
@@ -92,17 +100,31 @@
         <v-row>
           <v-col cols="12" sm="1">Due Date</v-col>
           <v-col cols="12" sm="3">
-            <date-input label="From (inclusive)" v-model="dueDateFrom" name="dueDateFrom" />
+            <date-input
+              label="From (inclusive)"
+              v-model="dueDateFrom"
+              name="dueDateFrom"
+            />
           </v-col>
           <v-col cols="12" sm="3">
-            <date-input label="To (inclusive)" v-model="dueDateTo" name="dueDateTo" />
+            <date-input
+              label="To (inclusive)"
+              v-model="dueDateTo"
+              name="dueDateTo"
+            />
           </v-col>
         </v-row>
 
         <!-- File Format -->
         <v-row>
           <v-col cols="12">
-            <v-radio-group name="format" row label="File Format" v-model="fileFormat" mandatory>
+            <v-radio-group
+              name="format"
+              row
+              label="File Format"
+              v-model="fileFormat"
+              mandatory
+            >
               <v-radio label="PDF" value="PDF" />
               <v-radio label="Excel" value="Excel" />
             </v-radio-group>
@@ -121,9 +143,19 @@
         <!-- Submit Buttons -->
         <v-row>
           <v-col cols="12">
-            <v-btn :disabled="!valid || isSubmitting" color="success" class="mr-4" type="submit">
+            <v-btn
+              :disabled="!valid || isSubmitting"
+              color="success"
+              class="mr-4"
+              type="submit"
+            >
               <span v-if="!isSubmitting">Submit</span>
-              <v-progress-circular v-else indeterminate color="white" class="mx-3" />
+              <v-progress-circular
+                v-else
+                indeterminate
+                color="white"
+                class="mx-3"
+              />
             </v-btn>
             <v-btn color="error" class="mr-4" @click="reset">Reset</v-btn>
           </v-col>
@@ -151,6 +183,7 @@ const dueDateFrom = ref(null)
 const dueDateTo = ref(null)
 const fileFormat = ref('PDF')
 
+// Multi-selects initialized as empty arrays
 const selectedStatus = ref(['All Open'])
 const selectedApplicantType = ref([null])
 const selectedIsOverdue = ref([true, false])
@@ -159,8 +192,15 @@ const selectedOrgs = ref([null])
 const status = ['All Open', 'All Open excluding on-hold', 'All On-Hold', 'All Closed']
 const applicantType = [
   { value: null, title: '(All Applicant Types)' },
-  'Business', 'Individual', 'Interest Group', 'Law Firm', 'Media',
-  'Other Governments', 'Other Public Body', 'Political Party', 'Researcher'
+  'Business',
+  'Individual',
+  'Interest Group',
+  'Law Firm',
+  'Media',
+  'Other Governments',
+  'Other Public Body',
+  'Political Party',
+  'Researcher'
 ]
 const isOverdue = [
   { value: true, title: 'Overdue requests' },
@@ -229,7 +269,6 @@ const validate = () => {
     }
   })
 
-  // Start polling for downloadToken cookie
   downloadTimer = setInterval(() => {
     const cookie = getCookie('downloadToken')
     if (cookie === downloadToken.value) {
@@ -237,7 +276,6 @@ const validate = () => {
     }
   }, 1000)
 
-  // Submit to hidden iframe
   form.value.$el.submit()
 }
 
@@ -249,8 +287,8 @@ const unblockSubmit = () => {
 }
 
 const getCookie = (name) => {
-  const parts = document.cookie.split(name + '=')
-  if (parts.length === 2) return parts.pop().split(';').shift()
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'))
+  return match ? match[2] : null
 }
 
 const expireCookie = (name) => {

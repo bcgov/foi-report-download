@@ -15,7 +15,7 @@
     </v-app-bar>
 
     <v-main>
-      <v-container>       
+      <v-container>
         <v-row>
           <v-col cols="12">
             <h2>
@@ -23,7 +23,7 @@
               reporting on FOI requests.
             </h2>
 
-            <v-expansion-panels v-model="instructionsPanel" class="mb-4" multiple>
+            <v-expansion-panels v-model="instructionsPanel" class="mb-4">
               <v-expansion-panel>
                 <v-expansion-panel-title class="text-h6 font-weight-bold">
                   Instructions for use:
@@ -42,8 +42,6 @@
                 </v-expansion-panel-text>
               </v-expansion-panel>
             </v-expansion-panels>
-
-
 
             <h2>FOI Performance and other statistics:</h2>
             <ul>
@@ -85,17 +83,19 @@
                 website.
               </li>
             </ul>
+            <br />
 
             <h2>IAO Contacts</h2>
             <p>
-            Your IAO Manager is available to discuss ad hoc reporting requests and any other
-            issues relating to FOI requests.
+              Your IAO Manager is available to discuss ad hoc reporting requests and any other
+              issues relating to FOI requests.
             </p>
           </v-col>
         </v-row>
       </v-container>
 
-      <Form />
+      <!-- Added color="primary" to Form to enforce blue theme -->
+      <Form color="primary" />
     </v-main>
 
     <v-footer color="#036" padless>
@@ -119,7 +119,11 @@
 import { ref } from 'vue'
 import Form from './components/Form.vue'
 import logo from './assets/logo.svg'
-const instructionsPanel = ref([0]) // Open first panel by default
+
+// Keeps track of the open expansion panel (default: not open)
+const instructionsPanel = ref(null)
+
+// List of footer links with URLs and display text
 const links = ref([
   { href: 'https://www2.gov.bc.ca/gov/content/home/disclaimer', text: 'Disclaimer' },
   { href: 'https://www2.gov.bc.ca/gov/content/home/privacy', text: 'Privacy' },
@@ -129,7 +133,7 @@ const links = ref([
 ])
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .v-app-bar {
   border-bottom: 2px solid #fcba19 !important;
 }
@@ -144,32 +148,28 @@ footer {
     border-left: 1px solid #4b5e73;
   }
 }
-.v-expansion-panel-title__icon {
-  color: #003366; // gov blue
+
+
+
+.v-application a {
+  color: #1976d2; // gov blue
 }
 
-.v-checkbox {
-  display: flex !important;
-  align-items: center !important;
+// Standard dropdown hover + active
+
+.v-list-item:hover {
+  background-color:rgba(25, 118, 210, 0.58) !important;
+  color: white !important;
 }
 
-.v-select .v-checkbox {
-  display: flex !important;
-  align-items: center !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  opacity: 1 !important; // Ensure checkboxes are fully visible
+//  Hover effect for checkboxes inside custom dropdown templates
+.v-overlay-container .v-input:hover,
+.v-overlay-container .v-checkbox:hover {
+  background-color:rgba(25, 118, 210, 0.58) !important;
 }
 
-.v-select .v-checkbox .v-label {
-  margin-left: 8px !important;
+.v-overlay-container .v-input:hover .v-label,
+.v-overlay-container .v-checkbox:hover .v-label {
+  color: white !important;
 }
-
-.v-selection-control__input input {
-  opacity: 1 !important; // Ensure the input is visible for debugging
-  position: static !important; // Reset position for visibility
-  width: auto !important; // Adjust width for visibility
-  height: auto !important; // Adjust height for visibility
-}
-
 </style>
