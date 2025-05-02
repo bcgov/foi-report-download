@@ -1,6 +1,10 @@
 <template>
   <div>
-    <iframe name="hiddenDownloader" style="display: none;"></iframe>
+    <iframe
+      name="hiddenDownloader"
+      style="display: none;"
+      ref="downloaderIframe"
+    ></iframe>
 
     <v-form
       ref="form"
@@ -140,7 +144,7 @@
           </v-col>
         </v-row>
 
-        <!-- Submit Buttons -->
+        <!-- Submit & Reset Buttons -->
         <v-row>
           <v-col cols="12">
             <v-btn
@@ -149,33 +153,33 @@
               class="mr-4"
               type="submit"
             >
-              <span v-if="!isSubmitting">Submit</span>
-              <v-progress-circular
-                v-else
-                indeterminate
-                color="white"
-                class="mx-3"
-              />
+              Submit
             </v-btn>
             <v-btn color="error" class="mr-4" @click="reset">Reset</v-btn>
           </v-col>
         </v-row>
-      </v-container>
 
-      <input type="hidden" name="downloadToken" :value="downloadToken" />
+        <!-- Message under Submit Button -->
+        <v-row v-if="showMessage">
+          <v-col cols="12">
+            <v-alert type="info" border="start" density="compact" class="mt-2">
+              Your report is generating and should start downloading shortly, Please reload or reset the form to submit again.
+            </v-alert>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-form>
   </div>
 </template>
 
 <script setup>
-import { ref, onBeforeUnmount } from 'vue'
+import { ref } from 'vue'
 import DateInput from './date-input.vue'
 
 const form = ref(null)
 const valid = ref(true)
 const isSubmitting = ref(false)
-const downloadToken = ref('')
-let downloadTimer = null
+const showMessage = ref(false)
 
 const startDateFrom = ref(null)
 const startDateTo = ref(null)
@@ -183,7 +187,6 @@ const dueDateFrom = ref(null)
 const dueDateTo = ref(null)
 const fileFormat = ref('PDF')
 
-// Multi-selects initialized as empty arrays
 const selectedStatus = ref(['All Open'])
 const selectedApplicantType = ref([null])
 const selectedIsOverdue = ref([true, false])
@@ -246,60 +249,15 @@ const validate = () => {
   form.value.validate()
   if (!valid.value) return
 
-  downloadToken.value = Date.now().toString()
   isSubmitting.value = true
-  document.body.style.cursor = 'wait'
-
-  const isOverdueValue = selectedIsOverdue.value.length === 1
-    ? (selectedIsOverdue.value[0] === true ? 'Yes' : 'No')
-    : 'All'
-
-  window.snowplow?.('trackSelfDescribingEvent', {
-    schema: 'iglu:ca.bc.gov.foi/foi_report/jsonschema/2-0-0',
-    data: {
-      organization: selectedOrgs.value,
-      status: selectedStatus.value,
-      applicant_type: selectedApplicantType.value,
-      is_overdue: isOverdueValue,
-      start_date_start: startDateFrom.value,
-      start_date_end: startDateTo.value,
-      due_date_start: dueDateFrom.value,
-      due_date_end: dueDateTo.value,
-      file_format: fileFormat.value
-    }
-  })
-
-  downloadTimer = setInterval(() => {
-    const cookie = getCookie('downloadToken')
-    if (cookie === downloadToken.value) {
-      unblockSubmit()
-    }
-  }, 1000)
+  showMessage.value = true
 
   form.value.$el.submit()
 }
 
-const unblockSubmit = () => {
-  isSubmitting.value = false
-  document.body.style.cursor = 'unset'
-  clearInterval(downloadTimer)
-  expireCookie('downloadToken')
-}
-
-const getCookie = (name) => {
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'))
-  return match ? match[2] : null
-}
-
-const expireCookie = (name) => {
-  document.cookie = `${encodeURIComponent(name)}=deleted; expires=${new Date(0).toUTCString()}`
-}
-
 const reset = () => {
   form.value.reset()
+  isSubmitting.value = false
+  showMessage.value = false
 }
-
-onBeforeUnmount(() => {
-  if (downloadTimer) clearInterval(downloadTimer)
-})
 </script>
