@@ -1,6 +1,6 @@
 # Dockerfile.local
 
-FROM node:16-bullseye AS build
+FROM node:18-alpine AS build
 
 # Mimic local environment by disabling CI mode
 ENV CI=false
