@@ -40,9 +40,7 @@
     "tough-cookie": "^5.1.2",
     "yn": "^4.0.0"
   },
-  "overrides": {
-    "mini-css-extract-plugin": "0.8.0"
-  },
+
   "devDependencies": {
     "eslint": "^6.8.0"
   }
