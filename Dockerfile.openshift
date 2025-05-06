@@ -46,13 +46,14 @@ COPY --from=build /opt/app-root/src/fonts ./fonts
 
 # (Optional) Fix file permissions again, useful for OpenShift UID
 USER root
-RUN chown -R 1001:0 /opt/app-root/src && chmod -R g+rwX /opt/app-root/src
+RUN mkdir -p $NPM_CONFIG_CACHE && chmod -R g+rwX $NPM_CONFIG_CACHE \
+    && chown -R 1001:0 /opt/app-root/src && chmod -R g+rwX /opt/app-root/src
 
 # Switch back to non-root
 USER 1001
 
 # Install only production dependencies
-RUN npm install --omit=dev
+RUN npm install
 
 # Expose the application port
 EXPOSE 8080
