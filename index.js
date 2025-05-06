@@ -256,6 +256,19 @@ app.post('/FOI-report', foiReportLimiter, async (req, res) => {
   if (!req.body || !req.body.format) {
     res.status(403).end('missing format')
   }
+  
+  const normalizeDate = (input) => {
+    try {
+      return moment(new Date(input)).format('YYYY-MM-DD')
+    } catch (e) {
+      return input
+    }
+  }
+  
+  if (req.body.startDateFrom) req.body.startDateFrom = normalizeDate(req.body.startDateFrom)
+  if (req.body.startDateTo) req.body.startDateTo = normalizeDate(req.body.startDateTo)
+  if (req.body.dueDateFrom) req.body.dueDateFrom = normalizeDate(req.body.dueDateFrom)
+  if (req.body.dueDateTo) req.body.dueDateTo = normalizeDate(req.body.dueDateTo)
 
   const selectStmt =
     'select request_id, applicant_type, description, start_date, duedate, ' +

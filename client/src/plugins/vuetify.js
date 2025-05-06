@@ -1,12 +1,9 @@
-import Vue from 'vue'
-import Vuetify from 'vuetify/lib'
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
 import '@mdi/font/css/materialdesignicons.css'
-import 'roboto-fontface/css/roboto/roboto-fontface.css'
 
-Vue.use(Vuetify)
-
-export default new Vuetify({
+export default createVuetify({
   icons: {
-    iconfont: 'mdi',
+    defaultSet: 'mdi',
   },
 })
