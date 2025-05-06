@@ -1,4 +1,6 @@
-# Use OpenShift’s built-in Node.js 16 UBI8 image
+# ---------------------------
+# Build Stage
+# ---------------------------
 FROM node:18-alpine AS build
 
 # Set working directory
@@ -7,7 +9,7 @@ WORKDIR /opt/app-root/src
 # Copy the entire application source code
 COPY . .
 
-# Switch to root so we can fix file permissions
+# Switch to root to fix file permissions
 USER root
 
 # Ensure correct ownership of all files for any OpenShift assigned UID
@@ -25,8 +27,32 @@ RUN chmod -R g+rwX /opt/app-root/src/.npm
 # Switch back to a non-root user (OpenShift will override this with a random UID)
 USER 1001
 
-# Install backend dependencies
+# Install backend dependencies + build the frontend
 RUN npm install
+RUN cd client && npm install && npm run build
+
+# ---------------------------
+# Runtime Stage
+# ---------------------------
+FROM node:18-alpine
+
+WORKDIR /opt/app-root/src
+
+# Copy ONLY the needed runtime files + the built frontend
+COPY --from=build /opt/app-root/src/client/dist ./client/dist
+COPY --from=build /opt/app-root/src/*.js ./
+COPY --from=build /opt/app-root/src/package*.json ./
+COPY --from=build /opt/app-root/src/fonts ./fonts
+
+# (Optional) Fix file permissions again, useful for OpenShift UID
+USER root
+RUN chown -R 1001:0 /opt/app-root/src && chmod -R g+rwX /opt/app-root/src
+
+# Switch back to non-root
+USER 1001
+
+# Install only production dependencies
+RUN npm install --omit=dev
 
 # Expose the application port
 EXPOSE 8080
