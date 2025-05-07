@@ -43,17 +43,8 @@ FROM node:18-alpine
 # Set working directory inside the container
 WORKDIR /opt/app-root/src
 
-# Copy package.json from the build stage
-COPY --from=build /opt/app-root/src/package.json ./
-
-# Copy installed node_modules from the build stage
-COPY --from=build /opt/app-root/src/node_modules ./node_modules
-
-# Copy backend entry point (index.js) from the build stage
-COPY --from=build /opt/app-root/src/index.js ./
-
-# Copy built frontend (Vue.js dist folder) from the build stage
-COPY --from=build /opt/app-root/src/client/dist ./client/dist
+# Copy EVERYTHING from build stage
+COPY --from=build /opt/app-root/src /opt/app-root/src
 
 # Switch to root user to fix permissions for runtime
 USER root
