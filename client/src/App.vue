@@ -20,7 +20,7 @@
           <v-col cols="12">
             <h2>
               Welcome to the Information Access Operations one stop shop for
-              reporting on FOI requests.
+              reporting on FOI requests
             </h2>
 
             <v-expansion-panels v-model="instructionsPanel" class="mb-4">
