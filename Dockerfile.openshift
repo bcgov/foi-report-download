@@ -25,6 +25,9 @@ RUN chmod -R g+rwX /opt/app-root/src/.npm
 # Switch back to a non-root user (OpenShift will override this with a random UID)
 USER 1001
 
+# Force remove old bui
+RUN rm -rf client/dist
+
 # Install backend dependencies
 RUN npm install
 
