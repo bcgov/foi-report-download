@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import keycloak from './auth/keycloak'
 
 // Imports Vuetify's base styles for all components
 import 'vuetify/styles'
@@ -29,6 +30,20 @@ const vuetify = createVuetify({
   },
 })
 
-const app = createApp(App)
-app.use(vuetify)
-app.mount('#app')
+keycloak.init({
+  onLoad: 'login-required',
+  pkceMethod: 'S256',
+  checkLoginIframe: false
+}).then(authenticated => {
+  if (authenticated) {
+    const app = createApp(App)
+    app.config.globalProperties.$keycloak = keycloak
+    app.use(vuetify)
+    app.mount('#app')
+  } else {
+    console.warn('Not authenticated, redirecting...')
+    keycloak.login()
+  }
+}).catch(err => {
+  console.error('Keycloak init failed:', err)
+})

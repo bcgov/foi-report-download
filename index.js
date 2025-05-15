@@ -2,13 +2,8 @@ const express = require('express')
 const app = express()
 const rateLimit = require('express-rate-limit')
 const port = process.env.port || 8080
-let session = require('express-session')
 const moment = require('moment')
-const FileStore = require('session-file-store')(session)
-const Keycloak = require('keycloak-connect')
-const storeOptions = { logFn: () => {} }
 const pgParametrize = require('pg-parameterize')
-const yn = require('yn')
 const _ = require('lodash')
 const pastDueMsg = 'Overdue requests are displayed in red'
 const orgMap = {
@@ -177,33 +172,6 @@ const typeMap = {
   Consultations: ['Consultation'],
   'OIPC Reviews/Complaints': ['Review', 'Complaint'],
 }
-
-if (process.env.FILE_STORE_PATH) {
-  storeOptions.path = process.env.FILE_STORE_PATH
-}
-const store = new FileStore(storeOptions)
-const keycloak = new Keycloak({ store: store, idpHint: 'idir' })
-if (process.env.TRUST_PROXY) {
-  const tf = yn(process.env.TRUST_PROXY)
-  /* This allows valid URI redirects to be generated when behind a proxy
-     see: https://www.keycloak.org/docs/latest/securing_apps/#configuration-for-proxies
-     and: https://expressjs.com/en/guide/behind-proxies.html */
-  app.set('trust proxy', (typeof tf === "boolean") ? tf : process.env.TRUST_PROXY)
-}
-app.use(
-  session({
-    name: 'foiRequestDownload',
-    secret: 'secret',
-    resave: false,
-    saveUninitialized: true,
-    store: store,
-    cookie: {
-      secure: process.env.NODE_ENV === 'production',
-      httpOnly: true,
-    },
-  })
-)
-app.use(keycloak.middleware())
 const PdfPrinter = require('pdfmake')
 const { Pool } = require('pg')
 /* The pool connection automatically takes connection details from environment variables
@@ -247,7 +215,6 @@ const foiReportLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
 }) 
-app.use(keycloak.protect())
 
 app.post('/FOI-report', foiReportLimiter, async (req, res) => {
   if (req.body.downloadToken) {
