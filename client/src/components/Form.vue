@@ -175,6 +175,8 @@
 <script setup>
 import { ref } from 'vue'
 import DateInput from './date-input.vue'
+import keycloak from '../auth/keycloak.js'
+
 
 const form = ref(null)
 const valid = ref(true)
@@ -251,6 +253,18 @@ const validate = () => {
 
   isSubmitting.value = true
   showMessage.value = true
+  
+  const tokenFieldId = 'kc-token-field'
+  let tokenInput = document.getElementById(tokenFieldId)
+  if (!tokenInput) {
+    tokenInput = document.createElement('input')
+    tokenInput.type = 'hidden'
+    tokenInput.name = 'Authorization'
+    tokenInput.id = tokenFieldId
+    form.value.$el.appendChild(tokenInput)
+  }
+  tokenInput.value = `Bearer ${keycloak.token}`
+
 
   form.value.$el.submit()
 }

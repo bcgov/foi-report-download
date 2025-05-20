@@ -1,4 +1,5 @@
 const express = require('express')
+const checkJwt = require('./authMiddleware');
 const app = express()
 const rateLimit = require('express-rate-limit')
 const port = process.env.port || 8080
@@ -216,7 +217,8 @@ const foiReportLimiter = rateLimit({
   max: 100, // limit each IP to 100 requests per windowMs
 }) 
 
-app.post('/FOI-report', foiReportLimiter, async (req, res) => {
+app.post('/FOI-report', checkJwt, foiReportLimiter, async (req, res) => {
+
   if (req.body.downloadToken) {
     res.cookie('downloadToken', req.body.downloadToken)
   }
