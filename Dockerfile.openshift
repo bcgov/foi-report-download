@@ -14,17 +14,14 @@ COPY . .
 # Switch to root user to adjust file permissions
 USER root
 
-# Ensure files are owned by OpenShift's random UID (1001:0) and have correct group write permissions
-RUN chown -R 1001:0 /opt/app-root/src && chmod -R g+rwX /opt/app-root/src
+# Ensure files are owned by OpenShift-compatible permissions (root:0) and have correct group write permissions
+RUN chown -R root:0 /opt/app-root/src && chmod -R g+rwX /opt/app-root/src
 
-# Configure npm to use a writable cache directory
-ENV NPM_CONFIG_CACHE=/opt/app-root/src/.npm
+# Configure npm to use a writable cache directory in /tmp to avoid permission issues
+ENV NPM_CONFIG_CACHE=/tmp/.npm
 
 # Create the npm cache directory and set permissions
-RUN mkdir -p $NPM_CONFIG_CACHE && chmod -R g+rwX $NPM_CONFIG_CACHE
-
-# Double-check permissions for the npm cache directory
-RUN chmod -R g+rwX /opt/app-root/src/.npm
+RUN mkdir -p $NPM_CONFIG_CACHE && chmod -R 777 $NPM_CONFIG_CACHE
 
 # Switch back to non-root user (OpenShift will assign a random UID)
 USER 1001
@@ -49,8 +46,14 @@ COPY --from=build /opt/app-root/src /opt/app-root/src
 # Switch to root user to fix permissions for runtime
 USER root
 
-# Ensure all files are owned by OpenShift's random UID (1001:0) and have correct group write permissions
-RUN chown -R 1001:0 /opt/app-root/src && chmod -R g+rwX /opt/app-root/src
+# Ensure all files are owned by root:0 and have correct group write permissions
+RUN chown -R root:0 /opt/app-root/src && chmod -R g+rwX /opt/app-root/src
+
+# Configure npm to use a writable cache directory in /tmp
+ENV NPM_CONFIG_CACHE=/tmp/.npm
+
+# Create the npm cache directory and set permissions
+RUN mkdir -p $NPM_CONFIG_CACHE && chmod -R 777 $NPM_CONFIG_CACHE
 
 # Switch back to non-root user for runtime
 USER 1001
