@@ -62,4 +62,5 @@ USER 1001
 EXPOSE 8080
 
 # Define the container startup command
+
 CMD ["npm", "start"]
