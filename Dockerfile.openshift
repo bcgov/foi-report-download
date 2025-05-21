@@ -1,65 +1,65 @@
-# ---------------------------
-# Build Stage
-# ---------------------------
+# -------------------------
+# Build stage
+# -------------------------
+
+# Use Node.js 18 Alpine image as the build environment
 FROM node:18-alpine AS build
 
-# Set working directory
+# Set working directory inside the container
 WORKDIR /opt/app-root/src
 
-# Copy the entire application source code
+# Copy all source code into the container
 COPY . .
 
-# Switch to root to fix file permissions
+# Switch to root user to adjust file permissions
 USER root
 
-# Ensure correct ownership of all files for any OpenShift assigned UID
-RUN chown -R 1001:0 /opt/app-root/src && chmod -R g+rwX /opt/app-root/src
+# Ensure files are owned by OpenShift-compatible permissions (root:0) and have correct group write permissions
+RUN chown -R root:0 /opt/app-root/src && chmod -R g+rwX /opt/app-root/src
 
-# Set npm cache to a writable directory inside the user's home
-ENV NPM_CONFIG_CACHE=/opt/app-root/src/.npm
+# Configure npm to use a writable cache directory in /tmp to avoid permission issues
+ENV NPM_CONFIG_CACHE=/tmp/.npm
 
-# Ensure the new cache directory exists and is writable by any non-root user
-RUN mkdir -p $NPM_CONFIG_CACHE && chmod -R g+rwX $NPM_CONFIG_CACHE
+# Create the npm cache directory and set permissions
+RUN mkdir -p $NPM_CONFIG_CACHE && chmod -R 777 $NPM_CONFIG_CACHE
 
-# Allow group write permissions so OpenShift's random UID can write
-RUN chmod -R g+rwX /opt/app-root/src/.npm
-
-# Switch back to a non-root user (OpenShift will override this with a random UID)
+# Switch back to non-root user (OpenShift will assign a random UID)
 USER 1001
 
-# Install backend dependencies + build the frontend
+# Install backend dependencies (includes frontend build step via postinstall)
 RUN npm install
-RUN cd client && npm install && npm run build
 
-# ---------------------------
-# Runtime Stage
-# ---------------------------
+
+# -------------------------
+# Runtime stage
+# -------------------------
+
+# Use Node.js 18 Alpine image for the runtime environment
 FROM node:18-alpine
 
+# Set working directory inside the container
 WORKDIR /opt/app-root/src
 
-# Copy ONLY the needed runtime files + the built frontend
-COPY --from=build /opt/app-root/src/client/dist ./client/dist
-COPY --from=build /opt/app-root/src/*.js ./
-COPY --from=build /opt/app-root/src/package*.json ./
-COPY --from=build /opt/app-root/src/fonts ./fonts
+# Copy EVERYTHING from build stage
+COPY --from=build /opt/app-root/src /opt/app-root/src
 
-# (Optional) Fix file permissions again, useful for OpenShift UID
+# Switch to root user to fix permissions for runtime
 USER root
 
-ENV NPM_CONFIG_CACHE=/opt/app-root/src/.npm
+# Ensure all files are owned by root:0 and have correct group write permissions
+RUN chown -R root:0 /opt/app-root/src && chmod -R g+rwX /opt/app-root/src
 
-RUN mkdir -p $NPM_CONFIG_CACHE && chmod -R g+rwX $NPM_CONFIG_CACHE \
-    && chown -R 1001:0 /opt/app-root/src && chmod -R g+rwX /opt/app-root/src
+# Configure npm to use a writable cache directory in /tmp
+ENV NPM_CONFIG_CACHE=/tmp/.npm
 
-# Switch back to non-root
+# Create the npm cache directory and set permissions
+RUN mkdir -p $NPM_CONFIG_CACHE && chmod -R 777 $NPM_CONFIG_CACHE
+
+# Switch back to non-root user for runtime
 USER 1001
 
-# Install only production dependencies
-RUN npm install
-
-# Expose the application port
+# Expose application port
 EXPOSE 8080
 
-# Set the default command to run the app
+# Define the container startup command
 CMD ["npm", "start"]

@@ -85,18 +85,10 @@
         <v-row>
           <v-col cols="12" sm="1">Start Date</v-col>
           <v-col cols="12" sm="3">
-            <date-input
-              label="From (inclusive)"
-              v-model="startDateFrom"
-              name="startDateFrom"
-            />
+            <date-input label="From (inclusive)" v-model="startDateFrom" name="startDateFrom" />
           </v-col>
           <v-col cols="12" sm="3">
-            <date-input
-              label="To (inclusive)"
-              v-model="startDateTo"
-              name="startDateTo"
-            />
+            <date-input label="To (inclusive)" v-model="startDateTo" name="startDateTo" />
           </v-col>
         </v-row>
 
@@ -104,18 +96,10 @@
         <v-row>
           <v-col cols="12" sm="1">Due Date</v-col>
           <v-col cols="12" sm="3">
-            <date-input
-              label="From (inclusive)"
-              v-model="dueDateFrom"
-              name="dueDateFrom"
-            />
+            <date-input label="From (inclusive)" v-model="dueDateFrom" name="dueDateFrom" />
           </v-col>
           <v-col cols="12" sm="3">
-            <date-input
-              label="To (inclusive)"
-              v-model="dueDateTo"
-              name="dueDateTo"
-            />
+            <date-input label="To (inclusive)" v-model="dueDateTo" name="dueDateTo" />
           </v-col>
         </v-row>
 
@@ -147,12 +131,7 @@
         <!-- Submit & Reset Buttons -->
         <v-row>
           <v-col cols="12">
-            <v-btn
-              :disabled="!valid || isSubmitting"
-              color="success"
-              class="mr-4"
-              type="submit"
-            >
+            <v-btn :disabled="!valid || isSubmitting" color="success" class="mr-4" type="submit">
               Submit
             </v-btn>
             <v-btn color="error" class="mr-4" @click="reset">Reset</v-btn>
@@ -163,7 +142,7 @@
         <v-row v-if="showMessage">
           <v-col cols="12">
             <v-alert type="info" border="start" density="compact" class="mt-2">
-              Your report is generating and should start downloading shortly, Please reload or reset the form to submit again.
+              Your report is generating and should start downloading shortly. Please reload or reset the form to submit again.
             </v-alert>
           </v-col>
         </v-row>
@@ -173,7 +152,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import DateInput from './date-input.vue'
 
 const form = ref(null)
@@ -195,15 +174,8 @@ const selectedOrgs = ref([null])
 const status = ['All Open', 'All Open excluding on-hold', 'All On-Hold', 'All Closed']
 const applicantType = [
   { value: null, title: '(All Applicant Types)' },
-  'Business',
-  'Individual',
-  'Interest Group',
-  'Law Firm',
-  'Media',
-  'Other Governments',
-  'Other Public Body',
-  'Political Party',
-  'Researcher'
+  'Business', 'Individual', 'Interest Group', 'Law Firm', 'Media',
+  'Other Governments', 'Other Public Body', 'Political Party', 'Researcher'
 ]
 const isOverdue = [
   { value: true, title: 'Overdue requests' },
@@ -251,13 +223,33 @@ const validate = () => {
 
   isSubmitting.value = true
   showMessage.value = true
-
   form.value.$el.submit()
 }
 
 const reset = () => {
-  form.value.reset()
+  selectedStatus.value = ['All Open']
+  selectedApplicantType.value = [null]
+  selectedIsOverdue.value = [true, false]
+  selectedOrgs.value = [null]
+  startDateFrom.value = null
+  startDateTo.value = null
+  dueDateFrom.value = null
+  dueDateTo.value = null
+  fileFormat.value = 'PDF'
+
   isSubmitting.value = false
   showMessage.value = false
+  form.value.resetValidation()
 }
+
+// Re-enable submit if any field changes
+watch(
+  [selectedStatus, selectedApplicantType, selectedIsOverdue, selectedOrgs, startDateFrom, startDateTo, dueDateFrom, dueDateTo, fileFormat],
+  () => {
+    if (isSubmitting.value) {
+      isSubmitting.value = false
+      showMessage.value = false
+    }
+  }
+)
 </script>
