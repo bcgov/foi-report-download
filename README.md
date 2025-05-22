@@ -6,8 +6,7 @@
 This is an intranet web-app allowing authenticated users to specify filters and download FOI report in PDF or Excel format.
 
 ## Features
-* VueJS frontend and NodeJS backend; with Keycloak authentication on backend (using a confidendial client from [Common Hosted Single Sign-On (CSS)](https://bcgov.github.io/sso-requests/my-dashboard/)).
-* SiteMinder login
+* VueJS frontend and NodeJS backend; with Keycloak authentication on frontend (using a public client from [Common Hosted Single Sign-On (CSS)](https://bcgov.github.io/sso-requests/my-dashboard/)).
 * A form allowing user to specify filters and reporting file format
 * Download report in either pdf or Excel format
 
@@ -32,22 +31,20 @@ This is an intranet web-app allowing authenticated users to specify filters and 
 VS Code is the preferred dev tool.
 ##### Requirements
   * localhost has access to Redshift
-  * localhost has Node.js v16.20.2 installed (other Node.js versions may work but have not been tested)
+  * localhost has Node.js v18.8.0 installed (other Node.js versions may work but have not been tested)
   * localhost has applicable env var above defined
-  * access to a Keycloak realm admin console or to the [CSS dashboards](https://bcgov.github.io/sso-requests/my-dashboard/)
-  * setup a Keycloak client with `http://localhost:8080/*` as a valid URI redirect (the "Development" installation download from the CSS provides this)
   
 ##### Install & Launch
 1. Run
   ```
   git clone https://github.com/bcgov/foi-report-download.git
   cd foi-report-download
-  npm install --legacy-peer-dep
+  npm install
   ```
 2. Download keycloak.json from Keycloak admin console client's Installation tab to ./keycloak.json
 3. Run
    ```
-   npm start
+   npm run start
    ```
   
     If everything works out, the output should be something like
@@ -55,11 +52,11 @@ VS Code is the preferred dev tool.
     $ node .
     launch http://localhost:8080 to explore
     ```
-4. Open http://localhost:8080 in browser and login to the app.
+4. Open http://localhost:8080 in browser and login to the app using IDIR-MFA if you are not already logged in.
 
 ## Project Status
 
-This project is currently under development and actively supported by the GDX Analytics Team.
+This project is stable and actively supported by the GDX Analytics Team.
 
 ## Related Repositories
  
