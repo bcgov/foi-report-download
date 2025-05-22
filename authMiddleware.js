@@ -17,6 +17,7 @@ if (project === 'test') {
 const client = jwksClient({
   jwksUri: `${keycloakBaseUrl}/realms/standard/protocol/openid-connect/certs`
 });
+console.log(`[authMiddleware] Keycloak base URL: ${keycloakBaseUrl}`);
 
 // Helper to get signing key
 function getKey(header, callback) {
