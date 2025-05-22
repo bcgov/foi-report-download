@@ -15,6 +15,8 @@ switch (project) {
     url = 'https://dev.loginproxy.gov.bc.ca/auth';
 }
 
+console.log('Keycloak URL:', url);
+
 const keycloak = new Keycloak({
   url,
   realm: 'standard',
