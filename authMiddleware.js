@@ -1,9 +1,21 @@
 const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
 
+// Prefer VITE_PROJECT if set, fallback to dev for local development
+const project = process.env.VITE_PROJECT || 'dev';
+
+let keycloakBaseUrl;
+if (project === 'test') {
+  keycloakBaseUrl = 'https://test.loginproxy.gov.bc.ca/auth';
+} else if (project === 'prod') {
+  keycloakBaseUrl = 'https://loginproxy.gov.bc.ca/auth';
+} else {
+  keycloakBaseUrl = 'https://dev.loginproxy.gov.bc.ca/auth';
+}
+
 // Setup JWKS client to fetch public keys from Keycloak
 const client = jwksClient({
-  jwksUri: 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs'
+  jwksUri: `${keycloakBaseUrl}/realms/standard/protocol/openid-connect/certs`
 });
 
 // Helper to get signing key
@@ -26,7 +38,7 @@ function checkJwt(req, res, next) {
 
   jwt.verify(token, getKey, {
     audience: 'foi-report-download-6037',
-    issuer: 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard',
+    issuer: `${keycloakBaseUrl}/realms/standard`,
     algorithms: ['RS256'],
   }, (err, decoded) => {
     if (err) {
@@ -38,6 +50,5 @@ function checkJwt(req, res, next) {
     next();
   });
 }
-
 
 module.exports = checkJwt;

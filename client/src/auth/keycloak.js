@@ -1,7 +1,22 @@
 import Keycloak from 'keycloak-js';
 
+const project = import.meta.env.VITE_PROJECT || 'dev';
+
+let url;
+switch (project) {
+  case 'test':
+    url = 'https://test.loginproxy.gov.bc.ca/auth';
+    break;
+  case 'prod':
+    url = 'https://loginproxy.gov.bc.ca/auth';
+    break;
+  case 'dev':
+  default:
+    url = 'https://dev.loginproxy.gov.bc.ca/auth';
+}
+
 const keycloak = new Keycloak({
-  url: 'https://dev.loginproxy.gov.bc.ca/auth',
+  url,
   realm: 'standard',
   clientId: 'foi-report-download-6037',
 });
