@@ -3,7 +3,6 @@ import Keycloak from 'keycloak-js';
 export function createKeycloak(project = 'dev') {
   let url
 
-    url = 'https://test.loginproxy.gov.bc.ca/auth';
   switch (project) {
     case 'test':
       url = 'https://test.loginproxy.gov.bc.ca/auth'
