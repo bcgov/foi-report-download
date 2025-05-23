@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import keycloak from './auth/keycloak'
+// Replace static import with dynamic factory
+import { createKeycloak } from './auth/keycloak'
 
 // Imports Vuetify's base styles for all components
 import 'vuetify/styles'
@@ -30,20 +31,28 @@ const vuetify = createVuetify({
   },
 })
 
-keycloak.init({
-  onLoad: 'login-required',
-  pkceMethod: 'S256',
-  checkLoginIframe: false
-}).then(authenticated => {
-  if (authenticated) {
-    const app = createApp(App)
-    app.config.globalProperties.$keycloak = keycloak
-    app.use(vuetify)
-    app.mount('#app')
-  } else {
-    console.warn('Not authenticated, redirecting...')
-    keycloak.login()
-  }
-}).catch(err => {
-  console.error('Keycloak init failed:', err)
-})
+// Fetch runtime env and bootstrap app after Keycloak config is ready
+fetch('/env')
+  .then(res => res.json())
+  .then(env => {
+    const project = env.VITE_PROJECT || 'dev'
+    const keycloak = createKeycloak(project)
+
+    keycloak.init({
+      onLoad: 'login-required',
+      pkceMethod: 'S256',
+      checkLoginIframe: false
+    }).then(authenticated => {
+      if (authenticated) {
+        const app = createApp(App)
+        app.config.globalProperties.$keycloak = keycloak
+        app.use(vuetify)
+        app.mount('#app')
+      } else {
+        console.warn('Not authenticated, redirecting...')
+        keycloak.login()
+      }
+    }).catch(err => {
+      console.error('Keycloak init failed:', err)
+    })
+  })
