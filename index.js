@@ -792,6 +792,12 @@ app.engine('html', require('ejs').renderFile)
 app.get('/', function (req, res) {
   res.render('index.html')
 })
+app.get('/env', (req, res) => {
+  res.json({
+    VITE_PROJECT: process.env.VITE_PROJECT || 'dev'
+  });
+});
+
 app.use(express.static('client/dist'))
 app.listen(port, function () {
   // don't timeout in 2min for node<13
