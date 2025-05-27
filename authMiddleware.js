@@ -43,8 +43,10 @@ function checkJwt(req, res, next) {
     algorithms: ['RS256'],
   }, (err, decoded) => {
     if (err) {
+      console.error('[authMiddleware] Token verification error:', err)
       return res.status(401).send('Invalid token');
     }
+    console.log('[authMiddleware] Token verified:', decoded)
     req.user = decoded;
     console.log(`[authMiddleware] Report was downloaded by an Authenticated user: ${decoded.idir_username}`);
 
