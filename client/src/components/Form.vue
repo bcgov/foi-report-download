@@ -221,26 +221,43 @@ const orgs = [
   { value: 'WLR', title: 'WLR - Ministry of Water, Land and Resource Stewardship' }
 ]
 
-const validate = () => {
+const validate = async () => {
   form.value.validate()
   if (!valid.value) return
 
   isSubmitting.value = true
   showMessage.value = true
-  
-  const tokenFieldId = 'kc-token-field'
-  let tokenInput = document.getElementById(tokenFieldId)
-  if (!tokenInput) {
-    tokenInput = document.createElement('input')
-    tokenInput.type = 'hidden'
-    tokenInput.name = 'Authorization'
-    tokenInput.id = tokenFieldId
-    form.value.$el.appendChild(tokenInput)
-  }
-  tokenInput.value = `Bearer ${keycloak.token}`
 
-  form.value.$el.submit()
+  try {
+    // Ensure token is fresh and not expired
+    await keycloak.updateToken(30)
+
+    if (!keycloak.token || keycloak.token === 'undefined') {
+      console.error('Keycloak token is missing or invalid.')
+      showMessage.value = false
+      isSubmitting.value = false
+      return
+    }
+
+    const tokenFieldId = 'kc-token-field'
+    let tokenInput = document.getElementById(tokenFieldId)
+    if (!tokenInput) {
+      tokenInput = document.createElement('input')
+      tokenInput.type = 'hidden'
+      tokenInput.name = 'Authorization'
+      tokenInput.id = tokenFieldId
+      form.value.$el.appendChild(tokenInput)
+    }
+    tokenInput.value = `Bearer ${keycloak.token}`
+
+    form.value.$el.submit()
+  } catch (err) {
+    console.error('Error while validating Keycloak token:', err)
+    showMessage.value = false
+    isSubmitting.value = false
+  }
 }
+
 
 const reset = () => {
   selectedStatus.value = ['All Open']

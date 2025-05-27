@@ -31,11 +31,19 @@ function getKey(header, callback) {
 function checkJwt(req, res, next) {
   const authHeader = req.headers.authorization || req.body.Authorization;
 
+  console.log('[authMiddleware] Received Authorization:', authHeader);
+
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    console.warn('[authMiddleware] Missing or improperly formatted Authorization header');
     return res.status(401).send('Missing or invalid Authorization');
   }
 
   const token = authHeader.split(' ')[1];
+
+  if (!token || token === 'undefined') {
+    console.warn('[authMiddleware] Token is undefined or empty');
+    return res.status(401).send('Invalid token');
+  }
 
   jwt.verify(token, getKey, {
     audience: 'foi-report-download-6037',
@@ -43,10 +51,11 @@ function checkJwt(req, res, next) {
     algorithms: ['RS256'],
   }, (err, decoded) => {
     if (err) {
-      console.error('[authMiddleware] Token verification error:', err)
+      console.error('[authMiddleware] Token verification error:', err);
       return res.status(401).send('Invalid token');
     }
-    console.log('[authMiddleware] Token verified:', decoded)
+
+    console.log('[authMiddleware] Token verified:', decoded);
     req.user = decoded;
     console.log(`[authMiddleware] Report was downloaded by an Authenticated user: ${decoded.idir_username}`);
 
