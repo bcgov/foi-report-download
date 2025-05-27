@@ -1,13 +1,17 @@
-# Use OpenShift’s built-in Node.js 16 UBI8 image
-FROM node:16-bullseye AS build
+# -------------------------
+# Build stage
+# -------------------------
 
-# Set working directory
+# Use Node.js 18 Alpine image as the build environment
+FROM node:18-alpine AS build
+
+# Set working directory inside the container
 WORKDIR /opt/app-root/src
 
-# Copy the entire application source code
+# Copy all source code into the container
 COPY . .
 
-# Switch to root so we can fix file permissions
+# Switch to root user to adjust file permissions
 USER root
 
 # Ensure files are owned by OpenShift-compatible permissions (root:0) and have correct group write permissions
@@ -22,11 +26,41 @@ RUN mkdir -p $NPM_CONFIG_CACHE && chmod -R 777 $NPM_CONFIG_CACHE
 # Switch back to non-root user (OpenShift will assign a random UID)
 USER 1001
 
-# Install backend dependencies
-RUN npm install --legacy-peer-deps
+# Install backend dependencies (includes frontend build step via postinstall)
+RUN npm install
 
-# Expose the application port
+
+# -------------------------
+# Runtime stage
+# -------------------------
+
+# Use Node.js 18 Alpine image for the runtime environment
+FROM node:18-alpine
+
+# Set working directory inside the container
+WORKDIR /opt/app-root/src
+
+# Copy EVERYTHING from build stage
+COPY --from=build /opt/app-root/src /opt/app-root/src
+
+# Switch to root user to fix permissions for runtime
+USER root
+
+# Ensure all files are owned by root:0 and have correct group write permissions
+RUN chown -R root:0 /opt/app-root/src && chmod -R g+rwX /opt/app-root/src
+
+# Configure npm to use a writable cache directory in /tmp
+ENV NPM_CONFIG_CACHE=/tmp/.npm
+
+# Create the npm cache directory and set permissions
+RUN mkdir -p $NPM_CONFIG_CACHE && chmod -R 777 $NPM_CONFIG_CACHE
+
+# Switch back to non-root user for runtime
+USER 1001
+
+# Expose application port
 EXPOSE 8080
 
-# Set the default command to run the app
+# Define the container startup command
+
 CMD ["npm", "start"]

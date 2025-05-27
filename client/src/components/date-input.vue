@@ -1,14 +1,12 @@
 <template>
   <v-menu
-    ref="menu"
     v-model="menu"
     :close-on-content-click="false"
-    :return-value.sync="date"
     transition="scale-transition"
     offset-y
     min-width="290px"
   >
-    <template v-slot:activator="{ on }">
+    <template #activator="{ props }">
       <v-text-field
         v-model="date"
         :label="label"
@@ -16,30 +14,38 @@
         clearable
         readonly
         prepend-icon="mdi-calendar"
-        v-on="on"
+        v-bind="props"
       ></v-text-field>
     </template>
-    <v-date-picker v-model="date" no-title scrollable>
-      <v-spacer></v-spacer>
-      <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-      <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+    <v-date-picker v-model="date" hide-header>
+      <template #actions>
+        <v-spacer></v-spacer>
+        <v-btn variant="text" @click="menu = false">Cancel</v-btn>
+        <v-btn variant="text" @click="save">OK</v-btn>
+      </template>
     </v-date-picker>
   </v-menu>
 </template>
 
-<script>
-export default {
-  props: ['label', 'name', 'value'],
-  data: function() {
-    return {
-      date: this.value,
-      menu: false
-    }
-  },
-  watch: {
-    date: function(newDate) {
-      this.$emit('input', newDate)
-    }
+<script setup>
+import { ref, watch } from 'vue'
+
+const props = defineProps(['label', 'name', 'modelValue'])
+const emit = defineEmits(['update:modelValue'])
+
+const date = ref(props.modelValue)
+const menu = ref(false)
+
+watch(date, (newDate) => {
+  if (newDate instanceof Date) {
+    emit('update:modelValue', newDate.toISOString().split('T')[0]) // "YYYY-MM-DD"
+  } else {
+    emit('update:modelValue', newDate)
   }
+})
+
+
+const save = () => {
+  menu.value = false
 }
 </script>
