@@ -155,7 +155,19 @@
 import { ref, watch } from 'vue'
 import DateInput from './date-input.vue'
 import { createKeycloak } from '../auth/keycloak.js'
-const keycloak = createKeycloak()
+const keycloak = ref(null)
+
+onMounted(async () => {
+  const instance = createKeycloak()
+  await instance.init({
+    onLoad: 'login-required',
+    pkceMethod: 'S256',
+    checkLoginIframe: false
+  })
+  keycloak.value = instance
+})
+
+
 const form = ref(null)
 const valid = ref(true)
 const isSubmitting = ref(false)
@@ -227,9 +239,9 @@ const validate = async () => {
 
   try {
     // Ensure token is fresh and not expired
-    await keycloak.updateToken(30)
+    await keycloak.value.updateToken(30)
 
-    if (!keycloak.token || keycloak.token === 'undefined') {
+    if (!keycloak.value.token || keycloak.value.token === 'undefined') {
       console.error('Keycloak token is missing or invalid.')
       showMessage.value = false
       isSubmitting.value = false
@@ -245,7 +257,7 @@ const validate = async () => {
       tokenInput.id = tokenFieldId
       form.value.$el.appendChild(tokenInput)
     }
-    tokenInput.value = `Bearer ${keycloak.token}`
+    tokenInput.value = `Bearer ${keycloak.value.token}`
 
     form.value.$el.submit()
   } catch (err) {
