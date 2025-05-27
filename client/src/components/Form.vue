@@ -155,10 +155,7 @@
 import { ref, watch } from 'vue'
 import DateInput from './date-input.vue'
 import { createKeycloak } from '../auth/keycloak.js'
-const keycloak = createKeycloak
-
-
-
+const keycloak = createKeycloak()
 const form = ref(null)
 const valid = ref(true)
 const isSubmitting = ref(false)
