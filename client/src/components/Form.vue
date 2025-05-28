@@ -160,11 +160,6 @@ onMounted(() => {
   const instance = getCurrentInstance()
   keycloak = instance.appContext.config.globalProperties.$keycloak
 })
-
-
-
-
-
 const form = ref(null)
 const valid = ref(true)
 const isSubmitting = ref(false)
