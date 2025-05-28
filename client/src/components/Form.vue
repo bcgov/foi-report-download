@@ -155,7 +155,8 @@
 import { ref, watch } from 'vue'
 import DateInput from './date-input.vue'
 import { createKeycloak } from '../auth/keycloak.js'
-const keycloak = createKeycloak
+const keycloak = createKeycloak(import.meta.env.VITE_PROJECT || 'dev')
+
 
 
 
