@@ -152,10 +152,15 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, getCurrentInstance } from 'vue'
 import DateInput from './date-input.vue'
-import { createKeycloak } from '../auth/keycloak.js'
-const keycloak = createKeycloak(import.meta.env.VITE_PROJECT || 'dev')
+let keycloak 
+
+onMounted(() => {
+  const instance = getCurrentInstance()
+  keycloak = instance.appContext.config.globalProperties.$keycloak
+})
+
 
 
 
@@ -226,6 +231,11 @@ const validate = () => {
   form.value.validate()
   if (!valid.value) return
 
+  if (!keycloak?.token) {
+    console.error('Keycloak token is missing or not yet initialized')
+    return
+  }
+
   isSubmitting.value = true
   showMessage.value = true
   
@@ -242,6 +252,8 @@ const validate = () => {
 
   form.value.$el.submit()
 }
+
+
 
 const reset = () => {
   selectedStatus.value = ['All Open']
