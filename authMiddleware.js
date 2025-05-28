@@ -27,15 +27,19 @@ function getKey(header, callback) {
   });
 }
 
-// Middleware function
 function checkJwt(req, res, next) {
-  const authHeader = req.headers.authorization || req.body.Authorization;
+  const authHeader = req.headers['authorization'] || req.body.Authorization;
+
+  console.log('[checkJwt] Incoming request to:', req.originalUrl);
+  console.log('[checkJwt] Authorization header:', authHeader);
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    console.warn('[checkJwt] Missing or invalid Authorization header');
     return res.status(401).send('Missing or invalid Authorization');
   }
 
   const token = authHeader.split(' ')[1];
+  console.log('[checkJwt] Extracted token:', token.substring(0, 20), '...');
 
   jwt.verify(token, getKey, {
     audience: 'foi-report-download-6037',
@@ -43,13 +47,15 @@ function checkJwt(req, res, next) {
     algorithms: ['RS256'],
   }, (err, decoded) => {
     if (err) {
+      console.error('[checkJwt] Token verification failed:', err.message);
       return res.status(401).send('Invalid token');
     }
-    req.user = decoded;
-    console.log(`[authMiddleware] Report was downloaded by an Authenticated user: ${decoded.idir_username}`);
+    console.log('[checkJwt] Token verified for user:', decoded.idir_username || decoded.preferred_username);
 
+    req.user = decoded;
     next();
   });
 }
+
 
 module.exports = checkJwt;
