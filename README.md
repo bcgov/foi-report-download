@@ -1,7 +1,7 @@
-> [!NOTE]
-> This repository has been retired and is no longer actively maintained.
+> [!IMPORTANT]
+> The FOI Report Download application has been discontinued and is no longer maintained.
 
-# FOI Report Download
+# FOI Report Download (Discontinued)
 ---
 
 [![img](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
@@ -59,7 +59,7 @@ VS Code is the preferred dev tool.
 
 ## Project Status
 
-This repository has been retired and is no longer actively maintained
+This repository is no longer maintained.
 
 ## Related Repositories
  
