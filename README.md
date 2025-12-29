@@ -1,3 +1,6 @@
+> [!NOTE]
+> This repository has been retired and is no longer actively maintained.
+
 # FOI Report Download
 ---
 
@@ -56,7 +59,7 @@ VS Code is the preferred dev tool.
 
 ## Project Status
 
-This project is stable and actively supported by the GDX Analytics Team.
+This repository has been retired and is no longer actively maintained
 
 ## Related Repositories
  
