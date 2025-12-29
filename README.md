@@ -2,9 +2,8 @@
 > The FOI Report Download application has been discontinued and is no longer maintained.
 
 # FOI Report Download (Discontinued)
----
 
-[![img](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
+[![Lifecycle:Retired](https://img.shields.io/badge/Lifecycle-Retired-d45500)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
 This is an intranet web-app allowing authenticated users to specify filters and download FOI report in PDF or Excel format.
 
