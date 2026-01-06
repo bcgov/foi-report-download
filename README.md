@@ -1,7 +1,9 @@
-# FOI Report Download
----
+> [!IMPORTANT]
+> The FOI Report Download application has been discontinued and is no longer maintained.
 
-[![img](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
+# FOI Report Download (Discontinued)
+
+[![Lifecycle:Retired](https://img.shields.io/badge/Lifecycle-Retired-d45500)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
 This is an intranet web-app allowing authenticated users to specify filters and download FOI report in PDF or Excel format.
 
@@ -56,7 +58,7 @@ VS Code is the preferred dev tool.
 
 ## Project Status
 
-This project is stable and actively supported by the GDX Analytics Team.
+This repository is no longer maintained.
 
 ## Related Repositories
  
